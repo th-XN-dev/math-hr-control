@@ -2298,6 +2298,12 @@
             <span style="display:flex;align-items:center;gap:10px;">🏷️ Tizim versiyasi</span>
             <span id="app-version-label" style="color:var(--text2);font-weight:700;"></span>
           </div>
+          <button class="btn btn-secondary btn-full" onclick="forceUpdate()" style="margin-top:12px;" id="btn-force-update">
+            🔄 Dasturni yangilash
+          </button>
+          <div style="font-size:11px;color:var(--text3);margin-top:8px;text-align:center;">
+            Yangi versiya chiqqan bo'lsa, shu tugma orqali yuklab oling.
+          </div>
         </div>
       </div>
     </div>
@@ -2753,7 +2759,7 @@
     // ============================================================
     // STATE
     // ============================================================
-    const APP_VERSION = 'upg 14';
+    const APP_VERSION = 'upg 15';
     let currentUser = null;
     let students = [], teachers = [], groups = [], staffList = [], branches = [], tasks = [], attendances = [], admins = [];
     let selectedStatus = null, selectedReason = null, selectedTeacher = null, selectedGroup = null, selectedLevel = null;
@@ -3054,6 +3060,37 @@
       localStorage.removeItem('session');
       currentUser = null;
       location.reload();
+    }
+
+    // Dasturni majburan yangilash: SW keshini tozalab, eng yangi versiyani yuklaydi
+    async function forceUpdate() {
+      const btn = document.getElementById('btn-force-update');
+      if (btn) { btn.disabled = true; btn.textContent = '⏳ Yangilanmoqda...'; }
+      showToast('Yangi versiya tekshirilmoqda...', 2000, 'ok');
+      try {
+        // 1) Barcha keshlarni tozalash
+        if ('caches' in window) {
+          const keys = await caches.keys();
+          await Promise.all(keys.map(k => caches.delete(k)));
+        }
+        // 2) Service worker'ni yangilash / kutayotganini faollashtirish
+        if ('serviceWorker' in navigator) {
+          const regs = await navigator.serviceWorker.getRegistrations();
+          for (const reg of regs) {
+            try { await reg.update(); } catch (_) { }
+            if (reg.waiting) reg.waiting.postMessage('skipWaiting');
+          }
+        }
+      } catch (e) {
+        console.warn('forceUpdate:', e);
+      }
+      // 3) Sahifani to'liq qayta yuklash (keshni chetlab)
+      setTimeout(() => {
+        // URL'ga vaqt qo'shib, brauzer keshini ham chetlab o'tamiz
+        const u = new URL(location.href);
+        u.searchParams.set('_v', Date.now());
+        location.replace(u.toString());
+      }, 700);
     }
 
     async function saveProfile() {
