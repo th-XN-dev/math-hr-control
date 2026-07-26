@@ -52,7 +52,7 @@ self.addEventListener('fetch', e => {
 });
 
 self.addEventListener('push', e => {
-  let data = { title: 'JONY KIDS', body: 'Yangi bildirishnoma' };
+  let data = { title: 'JONY MATH', body: 'Yangi bildirishnoma' };
   try { if (e.data) data = e.data.json(); } catch(_) {}
   e.waitUntil(self.registration.showNotification(data.title, {
     body: data.body, icon: './icon-192.png', badge: './icon-192.png', vibrate: [100, 50, 100]

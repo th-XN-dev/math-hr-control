@@ -1,5 +1,5 @@
 -- =============================================
--- JONY KIDS EduPanel — Supabase SQL Setup
+-- JONY MATH hr-control — Supabase SQL Setup
 -- Ushbu SQL ni Supabase SQL Editor'da ishga tushiring
 -- =============================================
 
