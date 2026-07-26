@@ -9,7 +9,7 @@
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <title>JONY MATH</title>
+  <title>JONY KIDS — EduPanel</title>
   <link rel="manifest" href="manifest.json">
   <link rel="apple-touch-icon" href="icon-192.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -1172,6 +1172,243 @@
       background: var(--accent-soft);
     }
 
+    /* ============================================================
+       HISOBOT TIZIMI (REPORTS) — Excel uslubidagi jadval
+       ============================================================ */
+    .rep-table-wrap {
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      overflow: auto;
+      -webkit-overflow-scrolling: touch;
+      background: var(--card);
+    }
+
+    table.rep-table {
+      border-collapse: collapse;
+      width: 100%;
+      font-size: 13px;
+      min-width: 320px;
+    }
+
+    table.rep-table th,
+    table.rep-table td {
+      border-right: 1px solid var(--line);
+      border-bottom: 1px solid var(--line);
+      padding: 0;
+      text-align: center;
+      white-space: nowrap;
+    }
+
+    table.rep-table th {
+      background: var(--bg3);
+      font-weight: 600;
+      font-size: 11px;
+      color: var(--text2);
+      padding: 9px 8px;
+      position: sticky;
+      top: 0;
+      z-index: 2;
+    }
+
+    /* O'quvchi ismi ustuni — chapda muzlatilgan */
+    table.rep-table .rep-name-col {
+      position: sticky;
+      left: 0;
+      z-index: 1;
+      background: var(--card);
+      text-align: left;
+      padding: 10px 12px;
+      font-weight: 600;
+      min-width: 130px;
+      max-width: 160px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      border-right: 1.5px solid var(--line-strong);
+    }
+
+    table.rep-table th.rep-name-col {
+      background: var(--bg3);
+      z-index: 3;
+    }
+
+    table.rep-table tr:last-child td {
+      border-bottom: none;
+    }
+
+    table.rep-table td:last-child,
+    table.rep-table th:last-child {
+      border-right: none;
+    }
+
+    /* Coin katak — +/- boshqaruv */
+    .coin-cell {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 2px;
+      padding: 5px 6px;
+    }
+
+    .coin-btn {
+      width: 26px;
+      height: 26px;
+      border: 1px solid var(--line);
+      background: var(--bg);
+      border-radius: 7px;
+      font-size: 15px;
+      font-weight: 700;
+      cursor: pointer;
+      color: var(--text2);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      user-select: none;
+      transition: all 0.1s;
+      flex-shrink: 0;
+    }
+
+    .coin-btn:active {
+      transform: scale(0.9);
+      background: var(--bg3);
+    }
+
+    .coin-btn.plus:active {
+      background: var(--accent-soft);
+      color: var(--accent);
+    }
+
+    .coin-val {
+      min-width: 34px;
+      font-weight: 700;
+      font-size: 15px;
+      font-family: 'Sora', sans-serif;
+      cursor: pointer;
+      padding: 2px;
+    }
+
+    .coin-val.over {
+      color: var(--yellow);
+    }
+
+    /* Test daraja katak — rang gradient 1(qizil)..5(yashil) */
+    .test-cell {
+      cursor: pointer;
+      font-weight: 700;
+      font-size: 14px;
+      padding: 12px 8px;
+      transition: background 0.1s;
+      min-width: 46px;
+    }
+
+    .test-1 { background: rgba(220, 91, 75, 0.85); color: #fff; }
+    .test-2 { background: rgba(224, 150, 70, 0.85); color: #fff; }
+    .test-3 { background: rgba(217, 180, 43, 0.8); color: #3a2e00; }
+    .test-4 { background: rgba(130, 180, 80, 0.85); color: #fff; }
+    .test-5 { background: rgba(57, 177, 103, 0.9); color: #fff; }
+    .test-empty { color: var(--text3); }
+
+    .dark .test-3 { color: #1a1500; }
+
+    /* Video checkbox katak */
+    .video-cell {
+      padding: 8px;
+    }
+
+    .video-check {
+      width: 24px;
+      height: 24px;
+      border-radius: 7px;
+      border: 1.5px solid var(--line-strong);
+      background: var(--bg);
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.12s;
+    }
+
+    .video-check.on {
+      background: var(--accent);
+      border-color: var(--accent);
+      color: #fff;
+    }
+
+    .video-reason {
+      font-size: 11px;
+      color: var(--yellow);
+      padding: 2px 6px;
+      cursor: pointer;
+    }
+
+    /* Period selector (kvartal/oy) */
+    .rep-period {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 12px;
+    }
+
+    .rep-period select,
+    .rep-period input {
+      padding: 9px 12px;
+      border-radius: 10px;
+      border: 1px solid var(--line);
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Manrope', sans-serif;
+      font-size: 13px;
+      font-weight: 600;
+    }
+
+    /* Auto-save indikator */
+    .rep-saving {
+      font-size: 12px;
+      color: var(--text3);
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .rep-saving.ok {
+      color: var(--accent2);
+    }
+
+    /* Statistika kartalari */
+    .rep-stat {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 14px;
+      margin-bottom: 10px;
+    }
+
+    .rep-stat-big {
+      font-size: 28px;
+      font-weight: 700;
+      font-family: 'Sora', sans-serif;
+      letter-spacing: -0.02em;
+    }
+
+    /* Reyting qatori */
+    .rank-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 9px 0;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .rank-row:last-child {
+      border-bottom: none;
+    }
+
+    .rank-medal {
+      width: 26px;
+      text-align: center;
+      font-weight: 700;
+      flex-shrink: 0;
+    }
+
     .hidden {
       display: none !important;
     }
@@ -1318,6 +1555,31 @@
         --shell: 920px;
       }
 
+      /* Davomat Hisobot: ikki panelli tartib (o'rtada jadval, o'ngda filtr+chart) */
+      #att-report.report-2col {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) 300px;
+        gap: 20px;
+        align-items: start;
+      }
+
+      #att-report.report-2col .report-main {
+        min-width: 0;
+      }
+
+      #att-report.report-2col .report-side {
+        position: sticky;
+        top: 84px;
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+      }
+
+      /* Yon paneldagi kartalar ixchamroq */
+      #att-report.report-2col .report-side .inp-group {
+        margin-bottom: 10px;
+      }
+
       body {
         background: var(--bg);
       }
@@ -1334,6 +1596,14 @@
         gap: 0;
         align-items: stretch;
         flex-direction: column;
+        /* Yon-nav uchun doimiy joy — kontent hech qachon nav ostiga tushmaydi */
+        padding-left: 96px;
+        box-sizing: border-box;
+      }
+
+      /* Davomat ochilganda shell kengroq (2 panelli hisobot uchun) */
+      #main-app:has(#page-attendance.active) {
+        max-width: 1180px;
       }
 
       /* Top bar: contained, sticky instead of full-width fixed */
@@ -1348,17 +1618,17 @@
         padding: 18px 28px;
       }
 
-      /* Sidebar nav (replaces bottom nav) */
+      /* Sidebar nav — har doim ekran chap chetida (barqaror) */
       .bottom-nav {
         position: fixed;
         top: 50%;
         transform: translateY(-50%);
-        left: max(16px, calc((100vw - var(--shell)) / 2 - 96px));
+        left: 16px;
         right: auto;
         bottom: auto;
         flex-direction: column;
         height: auto;
-        width: 72px;
+        width: 68px;
         border: 1px solid var(--line);
         border-radius: 18px;
         padding: 12px 8px;
@@ -1366,6 +1636,7 @@
         backdrop-filter: none;
         -webkit-backdrop-filter: none;
         background: var(--card);
+        z-index: 90;
       }
 
       .nav-item {
@@ -1390,17 +1661,6 @@
         height: 23px;
       }
 
-      /* When sidebar doesn't fit beside the shell, dock it to the left edge */
-      @media (max-width: 1130px) {
-        .bottom-nav {
-          left: 14px;
-        }
-
-        #main-app {
-          padding-left: 100px;
-        }
-      }
-
       /* Pages */
       .page {
         padding: 0 0 40px;
@@ -1410,6 +1670,11 @@
         padding: 28px;
         max-width: 760px;
         margin: 0 auto;
+      }
+
+      /* Davomat sahifasi kengroq — ikki panelli hisobot uchun */
+      #page-attendance .page-content {
+        max-width: 1040px;
       }
 
       /* Auth card a touch larger */
@@ -1628,7 +1893,7 @@
   <div id="auth-screen">
     <div class="auth-card">
       <div class="auth-logo">
-        <h1>JONY MATH</h1>
+        <h1>JONY KIDS</h1>
         <p id="auth-subtitle">O'quv markazi boshqaruv tizimi</p>
       </div>
       <div class="lang-btns">
@@ -1758,7 +2023,6 @@
           <div class="tab active" onclick="switchAttTab('checkin')" id="att-tab-checkin">Kelish/Ketish</div>
           <div class="tab" onclick="switchAttTab('report')" id="att-tab-report">Hisobot</div>
           <div class="tab" onclick="switchAttTab('late')" id="att-tab-late">Kechikkan</div>
-          <div class="tab" onclick="switchAttTab('issues')" id="att-tab-issues">Muammoli</div>
         </div>
         <!-- CHECK IN TAB -->
         <div id="att-checkin">
@@ -1769,69 +2033,76 @@
           <div id="today-attendance"></div>
         </div>
         <!-- REPORT TAB -->
-        <div id="att-report" class="hidden">
-          <div class="report-opt">
-            <button class="report-btn active" onclick="setReportPeriod('daily')" id="rp-daily">Kunlik</button>
-            <button class="report-btn" onclick="setReportPeriod('weekly')" id="rp-weekly">Haftalik</button>
-            <button class="report-btn" onclick="setReportPeriod('monthly')" id="rp-monthly">Oylik</button>
-            <button class="report-btn" onclick="setReportPeriod('custom')" id="rp-custom">Sana</button>
+        <div id="att-report" class="hidden report-2col">
+          <!-- O'RTA PANEL: muammoli holatlar + hisobot jadvali -->
+          <div class="report-main">
+            <!-- MUAMMOLI HOLATLAR -->
+            <div style="display:flex;gap:8px;align-items:center;margin-bottom:12px;">
+              <span style="font-size:13px;color:var(--text2);font-weight:700;">⚠️ Muammoli holatlar</span>
+              <input type="date" id="issues-date" onchange="renderIssues()"
+                style="margin-left:auto;padding:8px 12px;border-radius:10px;border:1px solid var(--line);background:var(--bg);color:var(--text);font-family:'Manrope',sans-serif;font-size:13px;">
+            </div>
+            <div id="issues-list" style="margin-bottom:20px;"></div>
+            <hr class="divider" style="margin:0 0 18px;">
+            <div style="font-size:13px;color:var(--text2);font-weight:700;margin-bottom:12px;">📊 Davomat hisoboti</div>
+            <div class="card" id="report-summary" style="display:none;margin-bottom:14px;"></div>
+            <div id="report-table"></div>
           </div>
-          <div id="report-date-range" style="display:none;gap:8px;margin-bottom:12px;flex-wrap:wrap;">
-            <input type="date" id="report-from" onchange="loadReport()"
-              style="flex:1;min-width:130px;padding:9px 12px;border-radius:12px;border:1px solid var(--line);background:var(--bg);color:var(--text);font-family:'Manrope',sans-serif;font-size:13px;">
-            <input type="date" id="report-to" onchange="loadReport()"
-              style="flex:1;min-width:130px;padding:9px 12px;border-radius:12px;border:1px solid var(--line);background:var(--bg);color:var(--text);font-family:'Manrope',sans-serif;font-size:13px;">
-          </div>
-          <div class="inp-group">
-            <label>Xodim</label>
-            <select id="report-staff" onchange="loadReport()">
-              <option value="">Barcha xodimlar</option>
-            </select>
-          </div>
-          <div class="inp-group">
-            <label>Filial</label>
-            <select id="report-branch" onchange="loadReport()">
-              <option value="">Barcha filiallar</option>
-            </select>
-          </div>
-          <div class="inp-group">
-            <label>Holat</label>
-            <select id="report-status" onchange="loadReport()">
-              <option value="">Barchasi</option>
-              <option value="late">Faqat kechikkan</option>
-              <option value="ontime">Faqat vaqtida</option>
-              <option value="auto">Faqat avto-yopilgan (tugatmagan)</option>
-            </select>
-          </div>
-          <button class="btn btn-secondary btn-full" onclick="exportExcel()" style="margin-bottom:8px;">
-            📊 Excel yuklab olish (jadval)
-          </button>
-          <button class="btn btn-secondary btn-full" onclick="exportExcelSessions()" style="margin-bottom:14px;">
-            📋 Excel: ish sessiyalari (Keldi–Ketdi)
-          </button>
-          <div class="card" id="report-summary" style="display:none;margin-bottom:14px;"></div>
-          <div class="card" id="report-chart-card" style="display:none;">
-            <div style="font-size:14px;font-weight:700;margin-bottom:14px;text-align:center;">Xodimlar bo'yicha
-              kelishlar</div>
-            <div style="display:flex;align-items:center;justify-content:center;gap:20px;flex-wrap:wrap;">
-              <svg id="donut-chart" width="180" height="180" viewBox="0 0 180 180"></svg>
-              <div id="donut-legend" style="display:flex;flex-direction:column;gap:8px;"></div>
+
+          <!-- O'NG PANEL: filtrlar + Excel + chart -->
+          <div class="report-side">
+            <div class="report-opt">
+              <button class="report-btn active" onclick="setReportPeriod('daily')" id="rp-daily">Kunlik</button>
+              <button class="report-btn" onclick="setReportPeriod('weekly')" id="rp-weekly">Haftalik</button>
+              <button class="report-btn" onclick="setReportPeriod('monthly')" id="rp-monthly">Oylik</button>
+              <button class="report-btn" onclick="setReportPeriod('custom')" id="rp-custom">Sana</button>
+            </div>
+            <div id="report-date-range" style="display:none;gap:8px;margin-bottom:12px;flex-wrap:wrap;">
+              <input type="date" id="report-from" onchange="loadReport()"
+                style="flex:1;min-width:130px;padding:9px 12px;border-radius:12px;border:1px solid var(--line);background:var(--bg);color:var(--text);font-family:'Manrope',sans-serif;font-size:13px;">
+              <input type="date" id="report-to" onchange="loadReport()"
+                style="flex:1;min-width:130px;padding:9px 12px;border-radius:12px;border:1px solid var(--line);background:var(--bg);color:var(--text);font-family:'Manrope',sans-serif;font-size:13px;">
+            </div>
+            <div class="inp-group">
+              <label>Xodim</label>
+              <select id="report-staff" onchange="loadReport()">
+                <option value="">Barcha xodimlar</option>
+              </select>
+            </div>
+            <div class="inp-group">
+              <label>Filial</label>
+              <select id="report-branch" onchange="loadReport()">
+                <option value="">Barcha filiallar</option>
+              </select>
+            </div>
+            <div class="inp-group">
+              <label>Holat</label>
+              <select id="report-status" onchange="loadReport()">
+                <option value="">Barchasi</option>
+                <option value="late">Faqat kechikkan</option>
+                <option value="ontime">Faqat vaqtida</option>
+                <option value="auto">Faqat avto-yopilgan (tugatmagan)</option>
+              </select>
+            </div>
+            <button class="btn btn-secondary btn-full" onclick="exportExcel()" style="margin-bottom:8px;">
+              📊 Excel yuklab olish (jadval)
+            </button>
+            <button class="btn btn-secondary btn-full" onclick="exportExcelSessions()" style="margin-bottom:14px;">
+              📋 Excel: ish sessiyalari (Keldi–Ketdi)
+            </button>
+            <div class="card" id="report-chart-card" style="display:none;">
+              <div style="font-size:14px;font-weight:700;margin-bottom:14px;text-align:center;">Xodimlar bo'yicha
+                kelishlar</div>
+              <div style="display:flex;align-items:center;justify-content:center;gap:20px;flex-wrap:wrap;">
+                <svg id="donut-chart" width="180" height="180" viewBox="0 0 180 180"></svg>
+                <div id="donut-legend" style="display:flex;flex-direction:column;gap:8px;"></div>
+              </div>
             </div>
           </div>
-          <div id="report-table"></div>
         </div>
         <!-- LATE TAB -->
         <div id="att-late" class="hidden">
           <div id="late-list"></div>
-        </div>
-        <!-- ISSUES TAB (kelmagan / tugatmagan) -->
-        <div id="att-issues" class="hidden">
-          <div style="display:flex;gap:8px;align-items:center;margin-bottom:14px;">
-            <span style="font-size:12px;color:var(--text2);font-weight:600;">📅 Sana:</span>
-            <input type="date" id="issues-date" onchange="renderIssues()"
-              style="flex:1;padding:9px 12px;border-radius:12px;border:1px solid var(--line);background:var(--bg);color:var(--text);font-family:'Manrope',sans-serif;font-size:13px;">
-          </div>
-          <div id="issues-list"></div>
         </div>
       </div>
     </div>
@@ -1904,6 +2175,60 @@
           <p style="font-size:13px;color:var(--text2);margin-bottom:14px;">Darajalar, kechikish va talaba holatlari
             uchun sabab teglarini boshqaring.</p>
           <div id="tags-groups"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- REPORTS PAGE (Hisobot tizimi) -->
+    <div class="page" id="page-reports">
+      <div class="page-content">
+        <!-- Guruh tanlash paneli -->
+        <div style="display:flex;gap:8px;align-items:center;margin-bottom:14px;">
+          <select id="rep-group-select" onchange="onRepGroupChange()"
+            style="flex:1;padding:11px 14px;border-radius:12px;border:1px solid var(--line);background:var(--bg);color:var(--text);font-family:'Manrope',sans-serif;font-size:14px;font-weight:600;">
+            <option value="">Guruh tanlash...</option>
+          </select>
+          <button class="btn btn-icon btn-primary" onclick="openAddRepGroup()" title="Yangi guruh">
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>
+          </button>
+        </div>
+
+        <!-- Admin uchun: o'qituvchi bo'yicha filtr -->
+        <div id="rep-teacher-filter" style="display:none;margin-bottom:14px;">
+          <div class="pill-row" id="rep-teacher-pills"></div>
+        </div>
+
+        <!-- Guruh tanlanmagan holat -->
+        <div id="rep-empty" class="empty">
+          <div class="empty-icon">📊</div>
+          <h3>Guruh tanlang</h3>
+          <p style="font-size:13px;">Hisobot yuritish uchun yuqoridan guruh tanlang yoki yangi guruh yarating.</p>
+        </div>
+
+        <!-- Guruh tanlangan holat -->
+        <div id="rep-main" style="display:none;">
+          <!-- Tablar: Video / Test / Coin / Statistika -->
+          <div class="tabs adm-tabs" style="margin-bottom:16px;">
+            <div class="tab active" id="rep-tab-coin" onclick="switchRepTab('coin')">💰 Coin</div>
+            <div class="tab" id="rep-tab-test" onclick="switchRepTab('test')">📝 Test</div>
+            <div class="tab" id="rep-tab-video" onclick="switchRepTab('video')">🎥 Video</div>
+            <div class="tab" id="rep-tab-stats" onclick="switchRepTab('stats')">📈 Statistika</div>
+          </div>
+
+          <!-- Guruh boshqaruv qatori -->
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;gap:8px;flex-wrap:wrap;">
+            <span id="rep-group-info" style="font-size:13px;color:var(--text2);"></span>
+            <button class="btn btn-sm btn-secondary" onclick="openManageMembers()">👥 O'quvchilar</button>
+          </div>
+
+          <!-- COIN moduli -->
+          <div id="rep-pane-coin" class="rep-pane"></div>
+          <!-- TEST moduli -->
+          <div id="rep-pane-test" class="rep-pane" style="display:none;"></div>
+          <!-- VIDEO moduli -->
+          <div id="rep-pane-video" class="rep-pane" style="display:none;"></div>
+          <!-- STATISTIKA moduli -->
+          <div id="rep-pane-stats" class="rep-pane" style="display:none;"></div>
         </div>
       </div>
     </div>
@@ -2011,6 +2336,15 @@
         <span id="nav-lbl-tasks">Vazifalar</span>
         <span id="tasks-badge"
           style="display:none;position:absolute;top:6px;right:50%;margin-right:-22px;background:var(--red);color:#fff;font-size:10px;font-weight:800;min-width:18px;height:18px;border-radius:9px;display:none;align-items:center;justify-content:center;padding:0 5px;">0</span>
+      </div>
+      <div class="nav-item" onclick="showPage('reports')" id="nav-reports" style="display:none">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+          <path d="M3 3v18h18" />
+          <rect x="7" y="12" width="3" height="6" />
+          <rect x="12" y="8" width="3" height="10" />
+          <rect x="17" y="4" width="3" height="14" />
+        </svg>
+        <span id="nav-lbl-reports">Hisobot</span>
       </div>
       <div class="nav-item" onclick="showPage('admin')" id="nav-admin">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
@@ -2350,6 +2684,64 @@
     </div>
   </div>
 
+  <!-- HISOBOT: Yangi guruh -->
+  <div class="modal-overlay" id="modal-rep-group">
+    <div class="modal">
+      <div class="modal-handle"></div>
+      <div class="modal-title" id="modal-rep-group-title">Yangi guruh</div>
+      <div class="inp-group">
+        <label>Guruh nomi *</label>
+        <input type="text" id="rep-group-name" placeholder="Masalan: Junior A — Dushanba/Chorshanba">
+      </div>
+      <div class="inp-group" id="rep-group-teacher-wrap" style="display:none;">
+        <label>O'qituvchi</label>
+        <select id="rep-group-teacher"></select>
+      </div>
+      <div style="display:flex;gap:10px;margin-top:8px;">
+        <button class="btn btn-secondary" onclick="closeModal('modal-rep-group')" style="flex:1">Bekor</button>
+        <button class="btn btn-primary" onclick="saveRepGroup()" style="flex:1">Yaratish</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- HISOBOT: O'quvchilarni boshqarish -->
+  <div class="modal-overlay" id="modal-members">
+    <div class="modal">
+      <div class="modal-handle"></div>
+      <div class="modal-title">Guruh o'quvchilari</div>
+      <div style="display:flex;gap:8px;margin-bottom:16px;">
+        <input type="text" id="member-name-input" list="member-student-list" placeholder="O'quvchi ismi..."
+          style="flex:1;padding:12px 14px;border-radius:12px;border:1px solid var(--line);background:var(--bg);color:var(--text);font-family:'Manrope',sans-serif;font-size:14px;"
+          onkeydown="if(event.key==='Enter')addMember()">
+        <datalist id="member-student-list"></datalist>
+        <button class="btn btn-primary" onclick="addMember()">Qo'shish</button>
+      </div>
+      <div style="font-size:12px;color:var(--text3);margin-bottom:8px;">
+        Asosiy talabalar ro'yxatidan tanlang yoki yangi ism yozing.
+      </div>
+      <div id="members-list" style="max-height:50vh;overflow-y:auto;"></div>
+      <button class="btn btn-secondary btn-full" onclick="closeModal('modal-members')" style="margin-top:14px;">Yopish</button>
+    </div>
+  </div>
+
+  <!-- HISOBOT: Video olinmagan sabab -->
+  <div class="modal-overlay" id="modal-video-reason">
+    <div class="modal">
+      <div class="modal-handle"></div>
+      <div class="modal-title">Video olinmadi — sabab</div>
+      <div style="font-size:13px;color:var(--text2);margin-bottom:16px;" id="video-reason-name"></div>
+      <div id="video-reason-options"></div>
+      <div class="inp-group" id="video-reason-note-wrap" style="display:none;">
+        <label>Izoh</label>
+        <input type="text" id="video-reason-note" placeholder="Sababni yozing...">
+      </div>
+      <div style="display:flex;gap:10px;margin-top:8px;">
+        <button class="btn btn-secondary" onclick="closeModal('modal-video-reason')" style="flex:1">Bekor</button>
+        <button class="btn btn-primary" onclick="videoSaveReason()" style="flex:1">Saqlash</button>
+      </div>
+    </div>
+  </div>
+
   <script>
     // ============================================================
     // CONFIG — Supabase
@@ -2407,7 +2799,7 @@
     // TRANSLATIONS
     const T = {
       uz: {
-        students: 'Talabalar', attend: 'Davomat', tasks: 'Vazifalar', mgmt: 'Boshqaruv', settings: 'Sozlamalar',
+        students: 'Talabalar', attend: 'Davomat', tasks: 'Vazifalar', reports: 'Hisobot', mgmt: 'Boshqaruv', settings: 'Sozlamalar',
         trial: 'Sinov', contract: 'Shartnoma', frozen: 'Muzlatilgan', left: 'Ketgan', returned: 'Qaytgan',
         add: 'Qo\'shish', save: 'Saqlash', cancel: 'Bekor', close: 'Yopish', edit: 'Tahrirlash', del: 'O\'chirish',
         login: 'Login', pass: 'Parol', enter: 'Kirish', logout: 'Chiqish',
@@ -2422,7 +2814,7 @@
         auth_sub: 'O\'quv markazi boshqaruv tizimi', wrong_creds: 'Login yoki parol noto\'g\'ri'
       },
       ru: {
-        students: 'Ученики', attend: 'Посещаемость', tasks: 'Задачи', mgmt: 'Управление', settings: 'Настройки',
+        students: 'Ученики', attend: 'Посещаемость', tasks: 'Задачи', reports: 'Отчёты', mgmt: 'Управление', settings: 'Настройки',
         trial: 'Пробный', contract: 'Договор', frozen: 'Заморожен', left: 'Ушёл', returned: 'Вернулся',
         add: 'Добавить', save: 'Сохранить', cancel: 'Отмена', close: 'Закрыть', edit: 'Изменить', del: 'Удалить',
         login: 'Логин', pass: 'Пароль', enter: 'Войти', logout: 'Выйти',
@@ -2437,7 +2829,7 @@
         auth_sub: 'Система управления учебным центром', wrong_creds: 'Неверный логин или пароль'
       },
       en: {
-        students: 'Students', attend: 'Attendance', tasks: 'Tasks', mgmt: 'Management', settings: 'Settings',
+        students: 'Students', attend: 'Attendance', tasks: 'Tasks', reports: 'Reports', mgmt: 'Management', settings: 'Settings',
         trial: 'Trial', contract: 'Contract', frozen: 'Frozen', left: 'Left', returned: 'Returned',
         add: 'Add', save: 'Save', cancel: 'Cancel', close: 'Close', edit: 'Edit', del: 'Delete',
         login: 'Login', pass: 'Password', enter: 'Enter', logout: 'Logout',
@@ -2475,6 +2867,7 @@
       document.getElementById('nav-lbl-attend').textContent = t('attend');
       document.getElementById('nav-lbl-tasks').textContent = t('tasks');
       document.getElementById('nav-lbl-admin').textContent = t('mgmt');
+      const repLbl = document.getElementById('nav-lbl-reports'); if (repLbl) repLbl.textContent = t('reports');
       document.getElementById('nav-lbl-settings').textContent = t('settings');
       document.getElementById('sl-trial').textContent = t('trial');
       document.getElementById('sl-contract').textContent = t('contract');
@@ -2702,12 +3095,13 @@
       const isStaff = currentUser.role !== 'admin' && currentUser.role !== 'superadmin';
 
       if (isStaff) {
-        // Xodim faqat: Davomatim + Vazifalar + Sozlamalar
+        // Xodim (o'qituvchi) faqat: Davomatim + Vazifalar + Hisobot + Sozlamalar
         document.getElementById('nav-myattend').style.display = '';
         document.getElementById('nav-students').style.display = 'none';
         document.getElementById('nav-attendance').style.display = 'none';
         document.getElementById('nav-admin').style.display = 'none';
         document.getElementById('nav-tasks').style.display = '';
+        document.getElementById('nav-reports').style.display = '';
         document.getElementById('nav-settings').style.display = '';
         document.getElementById('btn-add-task').style.display = 'none';
         try { setupMyAttendance(); } catch (e) { console.warn('setupMyAttendance:', e); }
@@ -2717,12 +3111,14 @@
         document.getElementById('nav-students').style.display = '';
         document.getElementById('nav-attendance').style.display = '';
         document.getElementById('nav-admin').style.display = '';
+        document.getElementById('nav-reports').style.display = '';
         document.getElementById('btn-add-task').style.display = '';
         // Admin uchun talabalar ruxsati (super admin doim ko'radi)
         if (currentUser.role === 'admin') {
           const perm = currentUser.permissions || {};
           document.getElementById('nav-students').style.display = perm.students !== false ? '' : 'none';
           document.getElementById('btn-add-student').style.display = perm.students !== false ? '' : 'none';
+          document.getElementById('nav-reports').style.display = perm.reports !== false ? '' : 'none';
         }
         if (currentUser.role === 'superadmin') {
           document.getElementById('adm-tab-admins').style.display = '';
@@ -2761,12 +3157,13 @@
       const navEl = document.getElementById('nav-' + page);
       if (pageEl) pageEl.classList.add('active');
       if (navEl) navEl.classList.add('active');
-      const titles = { myattend: t('attend'), students: t('students'), attendance: t('attend'), tasks: t('tasks'), admin: t('mgmt'), settings: t('settings') };
+      const titles = { myattend: t('attend'), students: t('students'), attendance: t('attend'), tasks: t('tasks'), reports: t('reports'), admin: t('mgmt'), settings: t('settings') };
       const titleEl = document.getElementById('page-title');
       if (titleEl) titleEl.textContent = titles[page] || '';
       if (page === 'myattend') refreshMyAttendance();
       if (page === 'attendance') { loadAttendance(); loadLate(); }
       if (page === 'tasks') { renderTasks(); markTasksSeen(); }
+      if (page === 'reports') { initReports(); }
       if (page === 'admin') { renderStaff(); renderBranches(); renderAdmins(); }
     }
 
@@ -3779,28 +4176,27 @@
     // ATTENDANCE (Admin)
     // ============================================================
     function switchAttTab(tab) {
-      ['checkin', 'report', 'late', 'issues'].forEach(t => {
+      ['checkin', 'report', 'late'].forEach(t => {
         document.getElementById('att-' + t).classList.toggle('hidden', t !== tab);
         document.getElementById('att-tab-' + t).classList.toggle('active', t === tab);
       });
-      if (tab === 'report') { populateReportBranch(); loadReport(); }
-      if (tab === 'late') loadLate();
-      if (tab === 'issues') {
+      if (tab === 'report') {
+        // Muammoli holatlar sanasi (bo'sh bo'lsa bugun) + hisobot
         const di = document.getElementById('issues-date');
         if (di && !di.value) di.value = uzNow().dateStr;
         renderIssues();
+        populateReportBranch();
+        loadReport();
       }
+      if (tab === 'late') loadLate();
     }
 
     // ============================================================
     // MUAMMOLI: kelmagan / tugatmagan (hisoblanadi)
     // ============================================================
-    async function renderIssues() {
-      const box = document.getElementById('issues-list');
-      box.innerHTML = `<div style="text-align:center;padding:20px;color:var(--text2);">Hisoblanmoqda...</div>`;
-      const dateStr = document.getElementById('issues-date').value || uzNow().dateStr;
-
-      // O'sha kun uchun barcha davomat yozuvlari (Tashkent kun chegarasi)
+    // Berilgan sana uchun davomat muammolarini hisoblaydi:
+    // { notCome:[], notClosed:[], late:[] } — kelmagan / tugatmagan / kech kelgan
+    async function computeAttIssues(dateStr) {
       const fromUtc = new Date(`${dateStr}T00:00:00+05:00`);
       const toUtc = new Date(fromUtc.getTime() + 24 * 3600 * 1000);
       const { data: recs } = await sb.from('attendance').select('*')
@@ -3808,50 +4204,46 @@
         .lt('time', toUtc.toISOString())
         .order('time', { ascending: true });
       const records = recs || [];
-
-      // Tanlangan kunning hafta kuni (Tashkent) — uzParts orqali aniq
       const dowLocal = uzParts(new Date(`${dateStr}T12:00:00+05:00`)).dow;
 
-      const notCome = [];   // kelmagan
-      const notClosed = []; // tugatmagan (checkin bor, checkout yo'q va smena+1soat o'tgan)
+      const notCome = [], notClosed = [], late = [];
       const nowMs = Date.now();
 
       staffList.forEach(st => {
         let shifts = st.shifts;
         if (typeof shifts === 'string') { try { shifts = JSON.parse(shifts); } catch (_) { shifts = []; } }
         if (!Array.isArray(shifts)) shifts = [];
-        // Shu kunga tegishli smenalar
         const todayShifts = shifts.filter(sh => {
           if (!sh || !sh.start) return false;
           if (!sh.days || !sh.days.length) return true;
           return sh.days.some(d => Number(d) === dowLocal);
         });
-        if (!todayShifts.length) return; // bugun ish kuni emas — e'tiborsiz
+        if (!todayShifts.length) return;
 
         const myRecs = records.filter(r => r.staff_id === st.id);
         const hasCheckin = myRecs.some(r => r.type === 'checkin');
-
-        // Eng erta smena boshlanishi o'tганmi? (kelmagan deb belgilash uchun)
-        const earliestStart = Math.min(...todayShifts.map(sh => {
-          const [h, m] = sh.start.split(':').map(Number); return h * 60 + m;
-        }));
+        const earliestStart = Math.min(...todayShifts.map(sh => { const [h, m] = sh.start.split(':').map(Number); return h * 60 + m; }));
         const nowLocal = uzNow();
         const isToday = dateStr === nowLocal.dateStr;
         const nowMin = nowLocal.hour * 60 + nowLocal.minute;
 
-        // KELMAGAN: hech qanday checkin yo'q VA (o'tган kun bo'lsa, yoki bugun bo'lsa eng erta smena boshlangan bo'lsa)
         if (!hasCheckin) {
           if (!isToday || nowMin >= earliestStart) {
-            notCome.push({ name: st.name, branch: st.branch_name || '', shifts: todayShifts });
+            notCome.push({ id: st.id, name: st.name, branch: st.branch_name || '', shifts: todayShifts });
           }
           return;
         }
 
-        // TUGATMAGAN: oxirgi yozuvi checkin (ochiq sessiya) va smena+1soat o'tган
+        // Kech kelgan (shu kunning checkin yozuvlaridan)
+        const checkins = myRecs.filter(r => r.type === 'checkin' && (r.late_minutes || 0) > 0);
+        checkins.forEach(r => {
+          late.push({ id: st.id, name: st.name, branch: r.branch_name || '', late_minutes: r.late_minutes, time: r.time, reason: r.late_reason, comment: r.late_comment });
+        });
+
+        // Tugatmagan
         const last = myRecs[myRecs.length - 1];
         if (last && last.type === 'checkin') {
-          // Shu checkin qaysi smenага? — eng yaqin boshlanишли
-          const [ch] = [uzParts(new Date(last.time))];
+          const ch = uzParts(new Date(last.time));
           const cMin = ch.hour * 60 + ch.minute;
           let near = todayShifts[0];
           todayShifts.forEach(sh => {
@@ -3866,46 +4258,89 @@
             dur = (eh * 60 + em) - (sh_h * 60 + sh_m);
             if (dur <= 0) dur += 1440;
           }
-          const expectedOut = new Date(last.time).getTime() + dur * 60000;
-          const deadline = expectedOut + 60 * 60000; // +1 soat
+          const deadline = new Date(last.time).getTime() + dur * 60000 + 60 * 60000;
           if (nowMs >= deadline) {
-            notClosed.push({ name: st.name, branch: last.branch_name || '', checkinTime: uzParts(new Date(last.time)) });
+            notClosed.push({ id: st.id, name: st.name, branch: last.branch_name || '', checkinTime: uzParts(new Date(last.time)) });
           }
         }
       });
-
-      // Chizish
-      let html = '';
-      html += `<div class="card" style="margin-bottom:14px;">
-    <div style="font-weight:700;font-size:14px;margin-bottom:12px;display:flex;align-items:center;gap:8px;">
-      <span style="color:var(--red);">❌</span> Kelmaganlar <span style="color:var(--text3);font-weight:400;">(${notCome.length})</span>
-    </div>`;
-      if (notCome.length) {
-        html += notCome.map(x => `<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-top:1px solid var(--glass-border);">
-      <span style="font-weight:600;">${esc(x.name)}</span>
-      <span style="font-size:12px;color:var(--text2);">${x.shifts.map(s => s.start + (s.end ? '–' + s.end : '')).join(', ')}</span>
-    </div>`).join('');
-      } else {
-        html += `<div style="font-size:13px;color:var(--text3);padding:6px 0;">Kelmaganlar yo'q ✓</div>`;
-      }
-      html += `</div>`;
-
-      html += `<div class="card">
-    <div style="font-weight:700;font-size:14px;margin-bottom:12px;display:flex;align-items:center;gap:8px;">
-      <span style="color:var(--yellow);">⚠️</span> Ketdim qilmaganlar <span style="color:var(--text3);font-weight:400;">(${notClosed.length})</span>
-    </div>`;
-      if (notClosed.length) {
-        html += notClosed.map(x => `<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-top:1px solid var(--glass-border);">
-      <span style="font-weight:600;">${esc(x.name)}</span>
-      <span style="font-size:12px;color:var(--text2);">Keldi: ${String(x.checkinTime.hour).padStart(2, '0')}:${String(x.checkinTime.minute).padStart(2, '0')} • Ketdim yo'q</span>
-    </div>`).join('');
-      } else {
-        html += `<div style="font-size:13px;color:var(--text3);padding:6px 0;">Hammasi Ketdim qilgan ✓</div>`;
-      }
-      html += `</div>`;
-
-      box.innerHTML = html;
+      return { notCome, notClosed, late };
     }
+
+    async function renderIssues() {
+      const box = document.getElementById('issues-list');
+      box.innerHTML = `<div style="text-align:center;padding:20px;color:var(--text2);">Hisoblanmoqda...</div>`;
+      const dateStr = document.getElementById('issues-date').value || uzNow().dateStr;
+      const iss = await computeAttIssues(dateStr);
+      box.innerHTML = buildIssuesHtml(iss);
+    }
+
+    // Muammoli holatlar blokini yasaydi (kelmagan + kech kelgan + tugatmagan)
+    // Ham "Muammoli" tabda, ham "Hisobot" tabda ishlatiladi.
+    function buildIssuesHtml(iss, opts = {}) {
+      const { notCome, notClosed, late } = iss;
+      let html = '';
+
+      // KELMAGANLAR (qizil)
+      html += `<div class="card" style="margin-bottom:12px;border-color:${notCome.length ? 'color-mix(in srgb, var(--red) 35%, var(--line))' : 'var(--line)'};">
+        <div style="font-weight:700;font-size:14px;margin-bottom:${notCome.length ? '12' : '0'}px;display:flex;align-items:center;gap:8px;">
+          <span style="color:var(--red);">⛔</span> Kelmaganlar
+          <span style="color:var(--text3);font-weight:400;">(${notCome.length})</span>
+        </div>`;
+      if (notCome.length) {
+        html += notCome.map(x => `<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-top:1px solid var(--line);">
+          <span style="font-weight:600;color:var(--red);">${esc(x.name)}</span>
+          <span style="font-size:12px;color:var(--text2);">${(x.shifts || []).map(s => s.start + (s.end ? '–' + s.end : '')).join(', ')}${x.branch ? ' • ' + esc(x.branch) : ''}</span>
+        </div>`).join('');
+      }
+      html += `</div>`;
+
+      // KECH KELGANLAR (sariq ogohlantirish)
+      html += `<div class="card" style="margin-bottom:12px;border-color:${late.length ? 'color-mix(in srgb, var(--yellow) 35%, var(--line))' : 'var(--line)'};">
+        <div style="font-weight:700;font-size:14px;margin-bottom:${late.length ? '12' : '0'}px;display:flex;align-items:center;gap:8px;">
+          <span style="color:var(--yellow);">⚠️</span> Kech kelganlar (ogohlantirish)
+          <span style="color:var(--text3);font-weight:400;">(${late.length})</span>
+        </div>`;
+      if (late.length) {
+        html += late.map(x => {
+          const tm = uzParts(new Date(x.time));
+          return `<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-top:1px solid var(--line);">
+            <span style="font-weight:600;">${esc(x.name)}</span>
+            <span style="display:flex;flex-direction:column;align-items:flex-end;gap:2px;">
+              <span class="late-badge">+${fmtDuration(x.late_minutes)} kech</span>
+              <span style="font-size:11px;color:var(--text3);">${String(tm.hour).padStart(2, '0')}:${String(tm.minute).padStart(2, '0')}${x.reason ? ' • ' + esc(x.reason) : ''}</span>
+            </span>
+          </div>`;
+        }).join('');
+      }
+      html += `</div>`;
+
+      // TUGATMAGANLAR (Ketdim qilmagan)
+      html += `<div class="card" style="border-color:${notClosed.length ? 'color-mix(in srgb, var(--yellow) 25%, var(--line))' : 'var(--line)'};">
+        <div style="font-weight:700;font-size:14px;margin-bottom:${notClosed.length ? '12' : '0'}px;display:flex;align-items:center;gap:8px;">
+          <span style="color:var(--text2);">🕓</span> Ketdim qilmaganlar
+          <span style="color:var(--text3);font-weight:400;">(${notClosed.length})</span>
+        </div>`;
+      if (notClosed.length) {
+        html += notClosed.map(x => `<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-top:1px solid var(--line);">
+          <span style="font-weight:600;">${esc(x.name)}</span>
+          <span style="font-size:12px;color:var(--text2);">Keldi: ${String(x.checkinTime.hour).padStart(2, '0')}:${String(x.checkinTime.minute).padStart(2, '0')} • Ketdim yo'q</span>
+        </div>`).join('');
+      }
+      html += `</div>`;
+
+      // Hammasi joyida bo'lsa
+      if (!notCome.length && !late.length && !notClosed.length) {
+        html = `<div class="card" style="text-align:center;border-color:color-mix(in srgb, var(--accent) 30%, var(--line));">
+          <div style="font-size:32px;margin-bottom:6px;">✅</div>
+          <div style="font-weight:700;color:var(--accent2);">Muammo yo'q</div>
+          <div style="font-size:13px;color:var(--text2);margin-top:4px;">Hamma vaqtida kelgan va ishni tugatgan.</div>
+        </div>`;
+      }
+      return html;
+    }
+
+    // Eski to'liq hisoblash bloki olib tashlandi — endi computeAttIssues ishlatiladi.
 
     function openCheckIn() {
       const now = new Date(); now.setSeconds(0); now.setMilliseconds(0);
@@ -3946,25 +4381,50 @@
       closeModal('modal-checkin');
     }
 
-    function renderTodayAttendance() {
+    async function renderTodayAttendance() {
       const el = document.getElementById('today-attendance');
-      if (!attendances.length) { el.innerHTML = `<div class="empty"><div class="empty-icon">📋</div><h3>${t('no_data')}</h3></div>`; return; }
-      el.innerHTML = attendances.map(a => {
+      // Bugungi muammolar (kelmagan/kech) — qizil/sariq ajratish uchun
+      let iss = { notCome: [], late: [], notClosed: [] };
+      try { iss = await computeAttIssues(uzNow().dateStr); } catch (_) { }
+
+      let html = '';
+      // KELMAGANLAR — tepada, qizil
+      if (iss.notCome.length) {
+        html += `<div class="card" style="margin-bottom:12px;border-color:color-mix(in srgb, var(--red) 40%, var(--line));background:color-mix(in srgb, var(--red) 5%, var(--card));">
+          <div style="font-weight:700;font-size:13px;color:var(--red);margin-bottom:10px;display:flex;align-items:center;gap:6px;">
+            ⛔ Kelmaganlar (${iss.notCome.length})
+          </div>
+          ${iss.notCome.map(x => `<div style="display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-top:1px solid var(--line);">
+            <span style="font-weight:600;color:var(--red);">${esc(x.name)}</span>
+            <span style="font-size:12px;color:var(--text2);">${(x.shifts || []).map(s => s.start + (s.end ? '–' + s.end : '')).join(', ')}</span>
+          </div>`).join('')}
+        </div>`;
+      }
+
+      // BELGILANGAN DAVOMAT (keldi/ketdi)
+      if (!attendances.length && !iss.notCome.length) {
+        el.innerHTML = `<div class="empty"><div class="empty-icon">📋</div><h3>${t('no_data')}</h3></div>`;
+        return;
+      }
+      html += attendances.map(a => {
         const time = new Date(a.time);
         const hm = time.getHours().toString().padStart(2, '0') + ':' + time.getMinutes().toString().padStart(2, '0');
-        return `<div class="shift-card">
+        const isLate = a.late_minutes > 0 && a.type === 'checkin';
+        return `<div class="shift-card"${isLate ? ' style="border-color:color-mix(in srgb, var(--yellow) 35%, var(--line));"' : ''}>
       <div class="shift-row">
         <div>
-          <div style="font-weight:700;font-size:14px;">${a.staff_name || '-'}</div>
-          <div style="font-size:12px;color:var(--text2);">${a.branch_name || ''}</div>
+          <div style="font-weight:700;font-size:14px;display:flex;align-items:center;gap:6px;">${isLate ? '<span title="Kech keldi" style="color:var(--yellow);">⚠️</span>' : ''}${esc(a.staff_name || '-')}</div>
+          <div style="font-size:12px;color:var(--text2);">${esc(a.branch_name || '')}</div>
         </div>
         <div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px;">
           <span class="time-badge">${a.type === 'checkin' ? '⬆' : '⬇'} ${hm}</span>
-          ${a.late_minutes > 0 ? `<span class="late-badge">+${fmtDuration(a.late_minutes)} kech</span>` : `<span class="on-time-badge">Vaqtida</span>`}
+          ${isLate ? `<span class="late-badge">+${fmtDuration(a.late_minutes)} kech</span>` : (a.type === 'checkin' ? `<span class="on-time-badge">Vaqtida</span>` : '')}
         </div>
       </div>
     </div>`;
       }).join('');
+
+      el.innerHTML = html;
     }
 
     function renderLate(data) {
@@ -5038,6 +5498,791 @@
     }
     function dismissInstall() {
       document.getElementById('install-banner').style.display = 'none';
+    }
+
+    // ================================================================
+    // ================  HISOBOT TIZIMI (REPORTS MODULE)  =============
+    // Izolyatsiya qilingan: asosiy kodga tegmaydi. Faqat sb, currentUser,
+    // showToast, withLoader, esc, openModal, closeModal, confirmDialog ni ishlatadi.
+    // ================================================================
+    const REP = {
+      groups: [],        // reports_groups
+      members: [],       // tanlangan guruh a'zolari
+      groupId: null,     // tanlangan guruh id
+      tab: 'coin',
+      teacherFilter: null, // admin uchun: o'qituvchi bo'yicha filtr (staff_id)
+      coinDate: null,    // coin: joriy dars sanasi
+      testMonth: null,   // test: joriy oy 'YYYY-MM'
+      videoQuarter: null,// video: joriy kvartal 'YYYY-QN'
+      loaded: false
+    };
+
+    function repIsAdmin() { return currentUser && (currentUser.role === 'admin' || currentUser.role === 'superadmin'); }
+
+    // Sana yordamchilari
+    function repToday() { return new Date().toISOString().slice(0, 10); }
+    function repThisMonth() { return new Date().toISOString().slice(0, 7); }
+    function repThisQuarter() {
+      const d = new Date();
+      return d.getFullYear() + '-Q' + (Math.floor(d.getMonth() / 3) + 1);
+    }
+
+    // ---- INIT: Hisobot sahifasi ochilganda ----
+    async function initReports() {
+      if (!REP.coinDate) REP.coinDate = repToday();
+      if (!REP.testMonth) REP.testMonth = repThisMonth();
+      if (!REP.videoQuarter) REP.videoQuarter = repThisQuarter();
+      // Admin uchun o'qituvchi filtri ko'rsatiladi
+      document.getElementById('rep-teacher-filter').style.display = repIsAdmin() ? '' : 'none';
+      await loadRepGroups();
+      if (repIsAdmin()) buildRepTeacherPills();
+    }
+
+    async function loadRepGroups() {
+      let q = sb.from('reports_groups').select('*').eq('archived', false).order('created_at');
+      // O'qituvchi faqat o'zinikini ko'radi (kodda filtrlash — asosiy tizim bilan bir xil)
+      if (!repIsAdmin()) {
+        q = q.eq('teacher_id', currentUser.id);
+      } else if (REP.teacherFilter) {
+        q = q.eq('teacher_id', REP.teacherFilter);
+      }
+      const { data, error } = await q;
+      if (error) { showToast('Guruhlar yuklanmadi: ' + error.message, 3500); REP.groups = []; }
+      else REP.groups = data || [];
+      fillRepGroupSelect();
+    }
+
+    function fillRepGroupSelect() {
+      const sel = document.getElementById('rep-group-select');
+      const prev = REP.groupId;
+      sel.innerHTML = '<option value="">Guruh tanlash...</option>' +
+        REP.groups.map(g => `<option value="${g.id}">${esc(g.name)}${repIsAdmin() && g.teacher_name ? ' — ' + esc(g.teacher_name) : ''}</option>`).join('');
+      // Avvalgi tanlov saqlansin (agar hali mavjud bo'lsa)
+      if (prev && REP.groups.some(g => g.id === prev)) { sel.value = prev; }
+      else { REP.groupId = null; showRepEmpty(); }
+    }
+
+    function showRepEmpty() {
+      document.getElementById('rep-empty').style.display = '';
+      document.getElementById('rep-main').style.display = 'none';
+    }
+
+    function buildRepTeacherPills() {
+      const c = document.getElementById('rep-teacher-pills');
+      if (!c) return;
+      // Barcha o'qituvchilar = staffList (davomat qiladigan xodimlar)
+      const teacherStaff = staffList.slice();
+      c.innerHTML = `<button class="pill${!REP.teacherFilter ? ' selected' : ''}" onclick="repSetTeacherFilter(null)">Barchasi</button>` +
+        teacherStaff.map(s => `<button class="pill${REP.teacherFilter === s.id ? ' selected' : ''}" onclick="repSetTeacherFilter('${s.id}')">${esc(s.name)}</button>`).join('');
+    }
+    async function repSetTeacherFilter(id) {
+      REP.teacherFilter = (REP.teacherFilter === id) ? null : id;
+      buildRepTeacherPills();
+      await loadRepGroups();
+    }
+
+    async function onRepGroupChange() {
+      const sel = document.getElementById('rep-group-select');
+      REP.groupId = sel.value || null;
+      if (!REP.groupId) { showRepEmpty(); return; }
+      await loadRepMembers();
+      document.getElementById('rep-empty').style.display = 'none';
+      document.getElementById('rep-main').style.display = '';
+      const g = REP.groups.find(x => x.id === REP.groupId);
+      document.getElementById('rep-group-info').textContent =
+        `${REP.members.length} o'quvchi` + (repIsAdmin() && g?.teacher_name ? ` • ${g.teacher_name}` : '');
+      renderRepTab();
+    }
+
+    async function loadRepMembers() {
+      const { data, error } = await sb.from('reports_members')
+        .select('*').eq('group_id', REP.groupId).eq('active', true).order('sort').order('student_name');
+      if (error) { showToast('O\'quvchilar yuklanmadi: ' + error.message, 3500); REP.members = []; }
+      else REP.members = data || [];
+    }
+
+    // ---- TAB almashtirish ----
+    function switchRepTab(tab) {
+      REP.tab = tab;
+      ['coin', 'test', 'video', 'stats'].forEach(t => {
+        document.getElementById('rep-tab-' + t).classList.toggle('active', t === tab);
+        document.getElementById('rep-pane-' + t).style.display = (t === tab) ? '' : 'none';
+      });
+      renderRepTab();
+    }
+
+    function renderRepTab() {
+      if (!REP.groupId) return;
+      if (REP.tab === 'coin') renderCoinPane();
+      else if (REP.tab === 'test') renderTestPane();
+      else if (REP.tab === 'video') renderVideoPane();
+      else if (REP.tab === 'stats') renderStatsPane();
+    }
+
+    // ================================================================
+    // GURUH CRUD
+    // ================================================================
+    let repEditGroupId = null;
+    function openAddRepGroup() {
+      repEditGroupId = null;
+      document.getElementById('rep-group-name').value = '';
+      document.getElementById('modal-rep-group-title').textContent = 'Yangi guruh';
+      // Admin uchun: o'qituvchi tanlash ko'rsatiladi
+      const teacherWrap = document.getElementById('rep-group-teacher-wrap');
+      if (repIsAdmin()) {
+        teacherWrap.style.display = '';
+        const sel = document.getElementById('rep-group-teacher');
+        sel.innerHTML = staffList.map(s => `<option value="${s.id}">${esc(s.name)}</option>`).join('');
+      } else {
+        teacherWrap.style.display = 'none';
+      }
+      openModal('modal-rep-group');
+      setTimeout(() => document.getElementById('rep-group-name').focus(), 300);
+    }
+    async function saveRepGroup() {
+      const name = document.getElementById('rep-group-name').value.trim();
+      if (!name) { showToast('Guruh nomini kiriting!'); return; }
+      // Ega: admin bo'lsa tanlangan o'qituvchi, aks holda o'zi
+      let teacherId, teacherName;
+      if (repIsAdmin()) {
+        teacherId = document.getElementById('rep-group-teacher').value;
+        teacherName = staffList.find(s => s.id === teacherId)?.name || null;
+      } else {
+        teacherId = currentUser.id;
+        teacherName = currentUser.name;
+      }
+      let ok = false;
+      await withLoader('Saqlanmoqda...', async () => {
+        const { error } = await sb.from('reports_groups')
+          .insert([{ name, teacher_id: teacherId, teacher_name: teacherName }]);
+        if (error) throw error;
+        await loadRepGroups();
+        ok = true;
+      }).catch(e => showToast('Xatolik: ' + (e.message || ''), 4000));
+      if (ok) { showToast('Guruh yaratildi', 1500, 'ok'); closeModal('modal-rep-group'); }
+    }
+
+    // ================================================================
+    // O'QUVCHILARNI BOSHQARISH (member CRUD)
+    // ================================================================
+    function openManageMembers() {
+      renderMembersList();
+      // Asosiy talabalar ro'yxatidan tanlash uchun to'ldirish
+      const g = REP.groups.find(x => x.id === REP.groupId);
+      const dl = document.getElementById('member-student-list');
+      if (dl) {
+        // Shu o'qituvchining talabalari birinchi (nom bo'yicha), keyin qolganlar
+        dl.innerHTML = students.map(s => `<option value="${esc(s.name)}">`).join('');
+      }
+      openModal('modal-members');
+    }
+    function renderMembersList() {
+      const el = document.getElementById('members-list');
+      if (!REP.members.length) {
+        el.innerHTML = `<p style="font-size:13px;color:var(--text3);text-align:center;padding:16px;">O'quvchi yo'q. Quyidan qo'shing.</p>`;
+        return;
+      }
+      el.innerHTML = REP.members.map(m => `
+        <div style="display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:1px solid var(--line);">
+          <span style="flex:1;font-size:14px;font-weight:500;">${esc(m.student_name)}</span>
+          <button class="btn btn-sm btn-danger" onclick="deleteMember('${m.id}')">🗑</button>
+        </div>`).join('');
+    }
+    async function addMember() {
+      const inp = document.getElementById('member-name-input');
+      const name = inp.value.trim();
+      if (!name) { showToast('Ism kiriting!'); return; }
+      // Asosiy students'da bor bo'lsa — bog'laymiz
+      const matched = students.find(s => s.name.toLowerCase() === name.toLowerCase());
+      const maxSort = Math.max(0, ...REP.members.map(m => m.sort || 0));
+      let ok = false;
+      await withLoader('Qo\'shilmoqda...', async () => {
+        const { error } = await sb.from('reports_members').insert([{
+          group_id: REP.groupId,
+          student_id: matched?.id || null,
+          student_name: name,
+          sort: maxSort + 1
+        }]);
+        if (error) throw error;
+        await loadRepMembers();
+        ok = true;
+      }).catch(e => showToast('Xatolik: ' + (e.message || ''), 4000));
+      if (ok) {
+        inp.value = '';
+        renderMembersList();
+        document.getElementById('rep-group-info').textContent = `${REP.members.length} o'quvchi`;
+        renderRepTab();
+        inp.focus();
+      }
+    }
+    async function deleteMember(id) {
+      if (!await confirmDialog('O\'quvchi o\'chirilsinmi?', 'Uning barcha coin/test/video yozuvlari ham o\'chadi.')) return;
+      let ok = false;
+      await withLoader('O\'chirilmoqda...', async () => {
+        const { error } = await sb.from('reports_members').delete().eq('id', id);
+        if (error) throw error;
+        await loadRepMembers();
+        ok = true;
+      }).catch(e => showToast('Xatolik: ' + (e.message || ''), 4000));
+      if (ok) {
+        renderMembersList();
+        document.getElementById('rep-group-info').textContent = `${REP.members.length} o'quvchi`;
+        renderRepTab();
+      }
+    }
+
+    // ================================================================
+    // COIN MODULI (dars bo'yicha +/- , auto-save, tarix)
+    // ================================================================
+    let coinData = {};   // { member_id: {id, coins} } — joriy sana uchun
+    let coinSaveTimers = {};
+
+    async function renderCoinPane() {
+      const pane = document.getElementById('rep-pane-coin');
+      if (!REP.members.length) {
+        pane.innerHTML = repNoMembers();
+        return;
+      }
+      // Joriy sana coin yozuvlarini yuklash
+      const { data } = await sb.from('reports_coin')
+        .select('*').eq('group_id', REP.groupId).eq('lesson_date', REP.coinDate);
+      coinData = {};
+      (data || []).forEach(r => { coinData[r.member_id] = { id: r.id, coins: r.coins }; });
+
+      const rows = REP.members.map(m => {
+        const c = coinData[m.id]?.coins || 0;
+        const over = c > 12;
+        return `<tr>
+          <td class="rep-name-col">${esc(m.student_name)}</td>
+          <td>
+            <div class="coin-cell">
+              <button class="coin-btn minus" onclick="coinAdjust('${m.id}',-1)">−</button>
+              <span class="coin-val${over ? ' over' : ''}" id="coin-v-${m.id}" onclick="coinManualInput('${m.id}')">${c}</span>
+              <button class="coin-btn plus" onclick="coinAdjust('${m.id}',1)">+</button>
+            </div>
+          </td>
+        </tr>`;
+      }).join('');
+
+      const total = Object.values(coinData).reduce((s, x) => s + (x.coins || 0), 0);
+      pane.innerHTML = `
+        <div class="rep-period">
+          <span style="font-size:13px;font-weight:600;color:var(--text2);">📅 Dars sanasi:</span>
+          <input type="date" id="coin-date" value="${REP.coinDate}" max="${repToday()}" onchange="coinChangeDate(this.value)">
+          <span class="rep-saving" id="coin-save-status"></span>
+        </div>
+        <div style="font-size:12px;color:var(--text3);margin-bottom:10px;">
+          Tavsiya: bir darsda 10–12 coin. Jami bugun: <b style="color:var(--text);">${total}</b>
+        </div>
+        <div class="rep-table-wrap">
+          <table class="rep-table">
+            <thead><tr><th class="rep-name-col">O'quvchi</th><th>Coin</th></tr></thead>
+            <tbody>${rows}</tbody>
+          </table>
+        </div>
+        <div style="display:flex;gap:8px;margin-top:12px;">
+          <button class="btn btn-sm btn-secondary" onclick="exportCoin()">📊 Excel eksport</button>
+        </div>`;
+    }
+
+    function coinChangeDate(val) {
+      REP.coinDate = val || repToday();
+      renderCoinPane();
+    }
+
+    async function coinAdjust(memberId, delta) {
+      const cur = coinData[memberId]?.coins || 0;
+      const next = cur + delta;
+      coinData[memberId] = { ...(coinData[memberId] || {}), coins: next };
+      const el = document.getElementById('coin-v-' + memberId);
+      if (el) { el.textContent = next; el.classList.toggle('over', next > 12); }
+      coinAutoSave(memberId);
+    }
+
+    function coinManualInput(memberId) {
+      const cur = coinData[memberId]?.coins || 0;
+      const val = prompt('Coin miqdorini kiriting:', cur);
+      if (val === null) return;
+      const n = parseInt(val, 10);
+      if (isNaN(n)) { showToast('Faqat son kiriting!'); return; }
+      coinData[memberId] = { ...(coinData[memberId] || {}), coins: n };
+      const el = document.getElementById('coin-v-' + memberId);
+      if (el) { el.textContent = n; el.classList.toggle('over', n > 12); }
+      coinAutoSave(memberId);
+    }
+
+    // Auto-save (debounce 600ms)
+    function coinAutoSave(memberId) {
+      const status = document.getElementById('coin-save-status');
+      if (status) { status.textContent = '⏳ saqlanmoqda...'; status.classList.remove('ok'); }
+      clearTimeout(coinSaveTimers[memberId]);
+      coinSaveTimers[memberId] = setTimeout(async () => {
+        const coins = coinData[memberId]?.coins || 0;
+        try {
+          // upsert: bor bo'lsa yangilaydi, yo'q bo'lsa qo'shadi (member_id+lesson_date unique)
+          const { data, error } = await sb.from('reports_coin').upsert({
+            group_id: REP.groupId, member_id: memberId,
+            teacher_id: (REP.groups.find(g => g.id === REP.groupId)?.teacher_id) || null,
+            lesson_date: REP.coinDate, coins
+          }, { onConflict: 'member_id,lesson_date' }).select().single();
+          if (error) throw error;
+          if (data) coinData[memberId] = { id: data.id, coins: data.coins };
+          if (status) { status.textContent = '✓ saqlandi'; status.classList.add('ok'); }
+        } catch (e) {
+          if (status) { status.textContent = '✗ xato'; status.classList.remove('ok'); }
+          showToast('Saqlanmadi: ' + (e.message || ''), 3000);
+        }
+      }, 600);
+    }
+
+    function exportCoin() {
+      const g = REP.groups.find(x => x.id === REP.groupId);
+      const rows = REP.members.map(m => ({
+        'O\'quvchi': m.student_name,
+        'Coin': coinData[m.id]?.coins || 0,
+        'Sana': REP.coinDate
+      }));
+      repExportXlsx(rows, `Coin_${g?.name || ''}_${REP.coinDate}`, 'Coin');
+    }
+
+    // ================================================================
+    // TEST / VIDEO / STATS — 3-4-5 bosqichlarda to'ldiriladi
+    // ================================================================
+    // ================================================================
+    // TEST MODULI (oylik, 1-5 daraja, rang gradient, auto-save, tarix)
+    // ================================================================
+    let testData = {};   // { member_id: {id, score} } — joriy oy uchun
+    let testSaveTimers = {};
+
+    async function renderTestPane() {
+      const pane = document.getElementById('rep-pane-test');
+      if (!REP.members.length) { pane.innerHTML = repNoMembers(); return; }
+
+      const { data } = await sb.from('reports_test')
+        .select('*').eq('group_id', REP.groupId).eq('month', REP.testMonth);
+      testData = {};
+      (data || []).forEach(r => { testData[r.member_id] = { id: r.id, score: r.score }; });
+
+      const rows = REP.members.map(m => {
+        const sc = testData[m.id]?.score;
+        const cls = sc ? 'test-' + sc : 'test-empty';
+        return `<tr>
+          <td class="rep-name-col">${esc(m.student_name)}</td>
+          <td class="test-cell ${cls}" id="test-c-${m.id}" onclick="testCycle('${m.id}')">${sc || '–'}</td>
+        </tr>`;
+      }).join('');
+
+      const scores = REP.members.map(m => testData[m.id]?.score).filter(Boolean);
+      const avg = scores.length ? (scores.reduce((a, b) => a + b, 0) / scores.length).toFixed(1) : '–';
+      const filled = scores.length;
+
+      pane.innerHTML = `
+        <div class="rep-period">
+          <span style="font-size:13px;font-weight:600;color:var(--text2);">📅 Oy:</span>
+          <input type="month" id="test-month" value="${REP.testMonth}" max="${repThisMonth()}" onchange="testChangeMonth(this.value)">
+          <span class="rep-saving" id="test-save-status"></span>
+        </div>
+        <div style="font-size:12px;color:var(--text3);margin-bottom:10px;">
+          Katakni bosib daraja bering (1→5). To'ldirilgan: <b style="color:var(--text);">${filled}/${REP.members.length}</b>
+          &nbsp;•&nbsp; O'rtacha: <b style="color:var(--text);">${avg}</b>
+        </div>
+        <div class="rep-table-wrap">
+          <table class="rep-table">
+            <thead><tr><th class="rep-name-col">O'quvchi</th><th>Daraja (1–5)</th></tr></thead>
+            <tbody>${rows}</tbody>
+          </table>
+        </div>
+        <div style="display:flex;gap:6px;margin-top:10px;flex-wrap:wrap;align-items:center;">
+          <span style="font-size:11px;color:var(--text3);">Ranglar:</span>
+          <span class="tag test-1" style="border:none;">1</span>
+          <span class="tag test-2" style="border:none;">2</span>
+          <span class="tag test-3" style="border:none;">3</span>
+          <span class="tag test-4" style="border:none;">4</span>
+          <span class="tag test-5" style="border:none;">5</span>
+        </div>
+        <div style="display:flex;gap:8px;margin-top:12px;">
+          <button class="btn btn-sm btn-secondary" onclick="exportTest()">📊 Excel eksport</button>
+        </div>`;
+    }
+
+    function testChangeMonth(val) {
+      REP.testMonth = val || repThisMonth();
+      renderTestPane();
+    }
+
+    // Katakni bosganda 1→2→3→4→5→(bo'sh)→1 aylanadi
+    function testCycle(memberId) {
+      const cur = testData[memberId]?.score || 0;
+      const next = cur >= 5 ? null : cur + 1;
+      testData[memberId] = { ...(testData[memberId] || {}), score: next };
+      const el = document.getElementById('test-c-' + memberId);
+      if (el) {
+        el.className = 'test-cell ' + (next ? 'test-' + next : 'test-empty');
+        el.textContent = next || '–';
+      }
+      testAutoSave(memberId);
+    }
+
+    function testAutoSave(memberId) {
+      const status = document.getElementById('test-save-status');
+      if (status) { status.textContent = '⏳ saqlanmoqda...'; status.classList.remove('ok'); }
+      clearTimeout(testSaveTimers[memberId]);
+      testSaveTimers[memberId] = setTimeout(async () => {
+        const score = testData[memberId]?.score || null;
+        try {
+          // upsert: bor bo'lsa yangilaydi, yo'q bo'lsa qo'shadi (member_id+month unique)
+          const { data, error } = await sb.from('reports_test').upsert({
+            group_id: REP.groupId, member_id: memberId,
+            teacher_id: (REP.groups.find(g => g.id === REP.groupId)?.teacher_id) || null,
+            month: REP.testMonth, score
+          }, { onConflict: 'member_id,month' }).select().single();
+          if (error) throw error;
+          if (data) testData[memberId] = { id: data.id, score: data.score };
+          if (status) { status.textContent = '✓ saqlandi'; status.classList.add('ok'); }
+        } catch (e) {
+          if (status) { status.textContent = '✗ xato'; status.classList.remove('ok'); }
+          showToast('Saqlanmadi: ' + (e.message || ''), 3000);
+        }
+      }, 500);
+    }
+
+    function exportTest() {
+      const g = REP.groups.find(x => x.id === REP.groupId);
+      const rows = REP.members.map(m => ({
+        'O\'quvchi': m.student_name,
+        'Daraja': testData[m.id]?.score || '',
+        'Oy': REP.testMonth
+      }));
+      repExportXlsx(rows, `Test_${g?.name || ''}_${REP.testMonth}`, 'Test');
+    }
+    // ================================================================
+    // VIDEO MODULI (kvartal, checkbox + sabab, tarix)
+    // ================================================================
+    let videoData = {};  // { member_id: {id, taken, reason, reason_note} }
+    const VIDEO_REASONS = {
+      slow: 'O\'zlashtirishi sekin',
+      new: 'Yangi o\'quvchi',
+      vacation: 'Ta\'tildan qaytgan',
+      other: 'Boshqa'
+    };
+
+    async function renderVideoPane() {
+      const pane = document.getElementById('rep-pane-video');
+      if (!REP.members.length) { pane.innerHTML = repNoMembers(); return; }
+
+      const { data } = await sb.from('reports_video')
+        .select('*').eq('group_id', REP.groupId).eq('quarter', REP.videoQuarter);
+      videoData = {};
+      (data || []).forEach(r => { videoData[r.member_id] = { id: r.id, taken: r.taken, reason: r.reason, reason_note: r.reason_note }; });
+
+      const rows = REP.members.map(m => {
+        const v = videoData[m.id] || {};
+        const taken = v.taken;
+        let statusCell;
+        if (taken) {
+          statusCell = `<span style="font-size:12px;color:var(--accent2);font-weight:600;">✓ Olindi</span>`;
+        } else if (v.reason) {
+          const label = VIDEO_REASONS[v.reason] || v.reason;
+          const txt = v.reason === 'other' && v.reason_note ? v.reason_note : label;
+          statusCell = `<span class="video-reason" onclick="videoPickReason('${m.id}')">⚠ ${esc(txt)}</span>`;
+        } else {
+          statusCell = `<span class="video-reason" onclick="videoPickReason('${m.id}')" style="color:var(--text3);">Sabab...</span>`;
+        }
+        return `<tr>
+          <td class="rep-name-col">${esc(m.student_name)}</td>
+          <td class="video-cell">
+            <span class="video-check${taken ? ' on' : ''}" onclick="videoToggle('${m.id}')">${taken ? '✓' : ''}</span>
+          </td>
+          <td style="padding:8px 10px;">${statusCell}</td>
+        </tr>`;
+      }).join('');
+
+      const takenCount = REP.members.filter(m => videoData[m.id]?.taken).length;
+
+      // Kvartal variantlari (joriy yil va o'tgan yil)
+      const y = new Date().getFullYear();
+      const quarters = [];
+      for (const yr of [y, y - 1]) for (const q of [4, 3, 2, 1]) quarters.push(`${yr}-Q${q}`);
+      const qOptions = quarters.map(q => `<option value="${q}"${q === REP.videoQuarter ? ' selected' : ''}>${q}</option>`).join('');
+
+      pane.innerHTML = `
+        <div class="rep-period">
+          <span style="font-size:13px;font-weight:600;color:var(--text2);">📅 Kvartal:</span>
+          <select id="video-quarter" onchange="videoChangeQuarter(this.value)">${qOptions}</select>
+          <span class="rep-saving" id="video-save-status"></span>
+        </div>
+        <div style="font-size:12px;color:var(--text3);margin-bottom:10px;">
+          Video olingan bo'lsa belgilang. Olinmasa — sababini tanlang.
+          Olingan: <b style="color:var(--text);">${takenCount}/${REP.members.length}</b>
+        </div>
+        <div class="rep-table-wrap">
+          <table class="rep-table">
+            <thead><tr><th class="rep-name-col">O'quvchi</th><th>Video</th><th>Holat / Sabab</th></tr></thead>
+            <tbody>${rows}</tbody>
+          </table>
+        </div>
+        <div style="display:flex;gap:8px;margin-top:12px;">
+          <button class="btn btn-sm btn-secondary" onclick="exportVideo()">📊 Excel eksport</button>
+        </div>`;
+    }
+
+    function videoChangeQuarter(val) {
+      REP.videoQuarter = val;
+      renderVideoPane();
+    }
+
+    async function videoToggle(memberId) {
+      const cur = videoData[memberId]?.taken || false;
+      const next = !cur;
+      videoData[memberId] = { ...(videoData[memberId] || {}), taken: next };
+      // Olingan bo'lsa sabab tozalanadi
+      if (next) { videoData[memberId].reason = null; videoData[memberId].reason_note = null; }
+      await videoSave(memberId);
+      renderVideoPane();
+    }
+
+    // Sabab tanlash modali
+    let videoReasonMember = null;
+    function videoPickReason(memberId) {
+      videoReasonMember = memberId;
+      const m = REP.members.find(x => x.id === memberId);
+      document.getElementById('video-reason-name').textContent = m?.student_name || '';
+      const cur = videoData[memberId]?.reason;
+      const box = document.getElementById('video-reason-options');
+      box.innerHTML = Object.entries(VIDEO_REASONS).map(([k, v]) =>
+        `<button class="pill${cur === k ? ' selected' : ''}" onclick="videoSetReason('${k}')" style="width:100%;text-align:left;margin-bottom:8px;">${v}</button>`
+      ).join('');
+      const noteWrap = document.getElementById('video-reason-note-wrap');
+      noteWrap.style.display = cur === 'other' ? '' : 'none';
+      document.getElementById('video-reason-note').value = videoData[memberId]?.reason_note || '';
+      openModal('modal-video-reason');
+    }
+    function videoSetReason(reason) {
+      const noteWrap = document.getElementById('video-reason-note-wrap');
+      noteWrap.style.display = reason === 'other' ? '' : 'none';
+      // Vizual tanlov
+      document.querySelectorAll('#video-reason-options .pill').forEach((p, i) => {
+        p.classList.toggle('selected', Object.keys(VIDEO_REASONS)[i] === reason);
+      });
+      videoReasonMember && (videoData[videoReasonMember] = { ...(videoData[videoReasonMember] || {}), taken: false, reason });
+    }
+    async function videoSaveReason() {
+      if (!videoReasonMember) return;
+      const selected = document.querySelector('#video-reason-options .pill.selected');
+      if (!selected) { showToast('Sabab tanlang!'); return; }
+      const idx = [...document.querySelectorAll('#video-reason-options .pill')].indexOf(selected);
+      const reason = Object.keys(VIDEO_REASONS)[idx];
+      const note = reason === 'other' ? document.getElementById('video-reason-note').value.trim() : null;
+      videoData[videoReasonMember] = { ...(videoData[videoReasonMember] || {}), taken: false, reason, reason_note: note };
+      await videoSave(videoReasonMember);
+      closeModal('modal-video-reason');
+      renderVideoPane();
+    }
+
+    async function videoSave(memberId) {
+      const status = document.getElementById('video-save-status');
+      if (status) { status.textContent = '⏳ saqlanmoqda...'; status.classList.remove('ok'); }
+      const v = videoData[memberId] || {};
+      try {
+        const { data, error } = await sb.from('reports_video').upsert({
+          group_id: REP.groupId, member_id: memberId,
+          teacher_id: (REP.groups.find(g => g.id === REP.groupId)?.teacher_id) || null,
+          quarter: REP.videoQuarter,
+          taken: !!v.taken, reason: v.taken ? null : (v.reason || null),
+          reason_note: v.taken ? null : (v.reason_note || null)
+        }, { onConflict: 'member_id,quarter' }).select().single();
+        if (error) throw error;
+        if (data) videoData[memberId] = { id: data.id, taken: data.taken, reason: data.reason, reason_note: data.reason_note };
+        if (status) { status.textContent = '✓ saqlandi'; status.classList.add('ok'); }
+      } catch (e) {
+        if (status) { status.textContent = '✗ xato'; status.classList.remove('ok'); }
+        showToast('Saqlanmadi: ' + (e.message || ''), 3000);
+      }
+    }
+
+    function exportVideo() {
+      const g = REP.groups.find(x => x.id === REP.groupId);
+      const rows = REP.members.map(m => {
+        const v = videoData[m.id] || {};
+        return {
+          'O\'quvchi': m.student_name,
+          'Video olindi': v.taken ? 'Ha' : 'Yo\'q',
+          'Sabab': v.taken ? '' : (v.reason === 'other' ? (v.reason_note || 'Boshqa') : (VIDEO_REASONS[v.reason] || '')),
+          'Kvartal': REP.videoQuarter
+        };
+      });
+      repExportXlsx(rows, `Video_${g?.name || ''}_${REP.videoQuarter}`, 'Video');
+    }
+    // ================================================================
+    // STATISTIKA MODULI (coin / test / video kesimida)
+    // ================================================================
+    async function renderStatsPane() {
+      const pane = document.getElementById('rep-pane-stats');
+      if (!REP.members.length) { pane.innerHTML = repNoMembers(); return; }
+      pane.innerHTML = `<div class="empty"><div class="empty-icon">⏳</div><p style="font-size:13px;">Statistika hisoblanmoqda...</p></div>`;
+
+      const memberIds = REP.members.map(m => m.id);
+      const nameById = {}; REP.members.forEach(m => nameById[m.id] = m.student_name);
+
+      // Barcha ma'lumotni parallel yuklash
+      const [coinRes, testRes, videoRes] = await Promise.all([
+        sb.from('reports_coin').select('member_id, coins, lesson_date').eq('group_id', REP.groupId),
+        sb.from('reports_test').select('member_id, score, month').eq('group_id', REP.groupId),
+        sb.from('reports_video').select('member_id, taken, reason, quarter').eq('group_id', REP.groupId)
+      ]);
+      const coins = coinRes.data || [];
+      const tests = testRes.data || [];
+      const videos = videoRes.data || [];
+
+      // --- COIN statistikasi ---
+      const now = new Date();
+      const todayStr = repToday();
+      const weekAgo = new Date(now.getTime() - 7 * 864e5).toISOString().slice(0, 10);
+      const monthStr = repThisMonth();
+      let coinToday = 0, coinWeek = 0, coinMonth = 0, coinTotal = 0;
+      const coinByMember = {};
+      coins.forEach(c => {
+        const v = c.coins || 0;
+        coinTotal += v;
+        if (c.lesson_date === todayStr) coinToday += v;
+        if (c.lesson_date >= weekAgo) coinWeek += v;
+        if ((c.lesson_date || '').slice(0, 7) === monthStr) coinMonth += v;
+        coinByMember[c.member_id] = (coinByMember[c.member_id] || 0) + v;
+      });
+      // Reyting (top)
+      const ranking = memberIds.map(id => ({ id, name: nameById[id], total: coinByMember[id] || 0 }))
+        .sort((a, b) => b.total - a.total);
+      const medals = ['🥇', '🥈', '🥉'];
+      const rankRows = ranking.slice(0, 10).map((r, i) =>
+        `<div class="rank-row">
+          <span class="rank-medal">${medals[i] || (i + 1)}</span>
+          <span style="flex:1;font-size:14px;font-weight:${i < 3 ? 600 : 500};">${esc(r.name)}</span>
+          <span style="font-weight:700;font-family:'Sora',sans-serif;color:${r.total > 0 ? 'var(--accent2)' : 'var(--text3)'};">${r.total}</span>
+        </div>`).join('');
+
+      // --- TEST statistikasi ---
+      const testByMonth = {};
+      tests.forEach(t => {
+        if (t.score) {
+          if (!testByMonth[t.month]) testByMonth[t.month] = [];
+          testByMonth[t.month].push(t.score);
+        }
+      });
+      const months = Object.keys(testByMonth).sort();
+      const monthAvgs = months.map(mo => ({
+        month: mo,
+        avg: (testByMonth[mo].reduce((a, b) => a + b, 0) / testByMonth[mo].length)
+      }));
+      const allScores = tests.map(t => t.score).filter(Boolean);
+      const testAvg = allScores.length ? (allScores.reduce((a, b) => a + b, 0) / allScores.length).toFixed(1) : '–';
+      // Oylar bo'yicha mini-bar
+      const monthBars = monthAvgs.map(m => {
+        const pct = (m.avg / 5) * 100;
+        const color = m.avg >= 4 ? 'var(--accent)' : m.avg >= 3 ? 'var(--yellow)' : 'var(--red)';
+        return `<div style="display:flex;align-items:center;gap:8px;margin-bottom:6px;">
+          <span style="font-size:11px;color:var(--text2);width:60px;">${m.month}</span>
+          <div style="flex:1;height:8px;background:var(--bg3);border-radius:4px;overflow:hidden;">
+            <div style="width:${pct}%;height:100%;background:${color};border-radius:4px;"></div>
+          </div>
+          <span style="font-size:12px;font-weight:700;width:28px;text-align:right;">${m.avg.toFixed(1)}</span>
+        </div>`;
+      }).join('') || '<span style="font-size:12px;color:var(--text3);">Ma\'lumot yo\'q</span>';
+
+      // --- VIDEO statistikasi ---
+      // Eng oxirgi kvartal bo'yicha
+      const quarters = [...new Set(videos.map(v => v.quarter))].sort().reverse();
+      const lastQ = quarters[0];
+      const lastQVideos = videos.filter(v => v.quarter === lastQ);
+      const takenCount = lastQVideos.filter(v => v.taken).length;
+      const notTaken = lastQVideos.filter(v => !v.taken && v.reason);
+      const reasonCounts = {};
+      notTaken.forEach(v => { reasonCounts[v.reason] = (reasonCounts[v.reason] || 0) + 1; });
+      const reasonRows = Object.entries(reasonCounts).map(([k, cnt]) =>
+        `<div style="display:flex;justify-content:space-between;font-size:13px;padding:5px 0;border-bottom:1px solid var(--line);">
+          <span style="color:var(--text2);">${VIDEO_REASONS[k] || k}</span>
+          <span style="font-weight:700;">${cnt}</span>
+        </div>`).join('') || '<span style="font-size:12px;color:var(--text3);">Sabablar yo\'q</span>';
+
+      pane.innerHTML = `
+        <!-- COIN -->
+        <div style="font-size:14px;font-weight:700;margin:4px 0 10px;">💰 Coin statistikasi</div>
+        <div class="stat-grid" style="margin-bottom:14px;">
+          <div class="rep-stat" style="text-align:center;"><div class="rep-stat-big">${coinToday}</div><div style="font-size:11px;color:var(--text2);">Bugun</div></div>
+          <div class="rep-stat" style="text-align:center;"><div class="rep-stat-big">${coinWeek}</div><div style="font-size:11px;color:var(--text2);">Hafta</div></div>
+          <div class="rep-stat" style="text-align:center;"><div class="rep-stat-big">${coinMonth}</div><div style="font-size:11px;color:var(--text2);">Oy</div></div>
+          <div class="rep-stat" style="text-align:center;"><div class="rep-stat-big">${coinTotal}</div><div style="font-size:11px;color:var(--text2);">Jami</div></div>
+        </div>
+        <div class="rep-stat">
+          <div style="font-size:13px;font-weight:700;margin-bottom:10px;">🏆 Reyting (eng ko'p coin)</div>
+          ${rankRows || '<span style="font-size:12px;color:var(--text3);">Ma\'lumot yo\'q</span>'}
+        </div>
+
+        <!-- TEST -->
+        <div style="font-size:14px;font-weight:700;margin:16px 0 10px;">📝 Test statistikasi</div>
+        <div class="rep-stat">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
+            <span style="font-size:13px;color:var(--text2);">Umumiy o'rtacha daraja</span>
+            <span class="rep-stat-big" style="font-size:22px;">${testAvg}</span>
+          </div>
+          <div style="font-size:12px;font-weight:600;color:var(--text2);margin-bottom:8px;">Oylar bo'yicha o'zgarish:</div>
+          ${monthBars}
+        </div>
+
+        <!-- VIDEO -->
+        <div style="font-size:14px;font-weight:700;margin:16px 0 10px;">🎥 Video statistikasi ${lastQ ? '(' + lastQ + ')' : ''}</div>
+        <div class="rep-stat">
+          <div style="display:flex;justify-content:space-between;margin-bottom:10px;">
+            <span style="font-size:13px;color:var(--text2);">Olingan videolar</span>
+            <span style="font-weight:700;">${takenCount}/${lastQVideos.length || REP.members.length}</span>
+          </div>
+          <div style="font-size:12px;font-weight:600;color:var(--text2);margin-bottom:6px;">Olinmaganlar sabablari:</div>
+          ${reasonRows}
+        </div>
+
+        <div style="display:flex;gap:8px;margin-top:14px;">
+          <button class="btn btn-sm btn-secondary" onclick="exportStats()">📊 To'liq Excel eksport</button>
+        </div>`;
+
+      // Eksport uchun keshlab qo'yamiz
+      REP._statsCache = { coins, tests, videos, ranking, nameById };
+    }
+
+    // To'liq statistika eksporti (bir necha varaq)
+    function exportStats() {
+      const g = REP.groups.find(x => x.id === REP.groupId);
+      const c = REP._statsCache;
+      if (!c) { showToast('Avval statistika yuklansin'); return; }
+      try {
+        const wb = XLSX.utils.book_new();
+        // Reyting varag'i
+        const rankRows = c.ranking.map((r, i) => ({ 'O\'rin': i + 1, 'O\'quvchi': r.name, 'Jami coin': r.total }));
+        XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(rankRows), 'Coin reyting');
+        // Test varag'i
+        const testRows = c.tests.map(t => ({ 'O\'quvchi': c.nameById[t.member_id] || '', 'Oy': t.month, 'Daraja': t.score }));
+        if (testRows.length) XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(testRows), 'Test');
+        // Video varag'i
+        const videoRows = c.videos.map(v => ({ 'O\'quvchi': c.nameById[v.member_id] || '', 'Kvartal': v.quarter, 'Olindi': v.taken ? 'Ha' : 'Yo\'q', 'Sabab': v.taken ? '' : (VIDEO_REASONS[v.reason] || '') }));
+        if (videoRows.length) XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(videoRows), 'Video');
+        XLSX.writeFile(wb, `Statistika_${(g?.name || '').replace(/[^\w]/g, '_')}.xlsx`);
+        showToast('Excel yuklandi', 1500, 'ok');
+      } catch (e) { showToast('Eksport xatosi: ' + (e.message || ''), 3000); }
+    }
+
+    // ---- Umumiy yordamchilar ----
+    function repNoMembers() {
+      return `<div class="empty"><div class="empty-icon">👥</div><h3>O'quvchi yo'q</h3><p style="font-size:13px;">"O'quvchilar" tugmasi orqali guruhga o'quvchi qo'shing.</p></div>`;
+    }
+    function repComingSoon(title, sub) {
+      return `<div class="empty"><div class="empty-icon">🔜</div><h3>${title}</h3><p style="font-size:13px;">${sub}</p></div>`;
+    }
+    function repExportXlsx(rows, filename, sheetName) {
+      try {
+        const ws = XLSX.utils.json_to_sheet(rows);
+        const wb = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(wb, ws, sheetName || 'Sheet1');
+        XLSX.writeFile(wb, filename.replace(/[^\w\-]/g, '_') + '.xlsx');
+        showToast('Excel yuklandi', 1500, 'ok');
+      } catch (e) { showToast('Eksport xatosi: ' + (e.message || ''), 3000); }
     }
   </script>
 </body>
