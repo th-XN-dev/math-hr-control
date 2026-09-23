@@ -1253,6 +1253,22 @@
 
     .dark .test-3 { color: #1a1500; }
 
+    /* Ota-onalar suhbati */
+    .ps-chip, .ps-pick { display: inline-block; padding: 4px 10px; border-radius: 8px; font-size: 12px; font-weight: 700; white-space: nowrap; }
+    .ps-talked { background: #3f7d4a; color: #fff; }
+    .ps-noans  { background: #b3261e; color: #fff; }
+    .ps-wrong  { background: #2f5fb3; color: #fff; }
+    .ps-busy   { background: #f3e2a0; color: #5b4a00; }
+    .ps-pick { border: 2px solid transparent; cursor: pointer; font-family: 'Manrope', sans-serif; font-size: 13px; padding: 8px 12px; opacity: .55; }
+    .ps-pick.on { opacity: 1; border-color: var(--text); box-shadow: 0 0 0 2px var(--bg) inset; }
+    .pp { font-size: 12px; font-weight: 800; white-space: nowrap; }
+    .pp-ok { color: var(--accent2); } .pp-part { color: var(--yellow); } .pp-none { color: var(--red); }
+    .pc-last { padding: 6px 8px !important; text-align: left !important; cursor: pointer; min-width: 150px; white-space: normal !important; }
+    .pc-note { font-size: 12px; margin-top: 3px; max-width: 220px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .pc-time { font-size: 11px; color: var(--text3); margin-top: 2px; }
+    .ph-link { color: var(--text); text-decoration: none; font-weight: 600; white-space: nowrap; }
+    .ph-edit { border: none; background: none; cursor: pointer; font-size: 12px; opacity: .6; padding: 2px 4px; }
+
     /* Kechikishlar (xodim — Vazifalar bo'limi) */
     .late-box {
       border: 1px solid color-mix(in srgb, var(--yellow) 40%, transparent);
@@ -2107,8 +2123,8 @@
         </div>
         <!-- TAGS (super admin only) -->
         <div id="adm-tags" class="hidden">
-          <p style="font-size:13px;color:var(--text2);margin-bottom:14px;">Darajalar, kechikish va talaba holatlari
-            uchun sabab teglarini boshqaring.</p>
+          <p style="font-size:13px;color:var(--text2);margin-bottom:14px;">Ota-ona suhbati izohlari, kechikish sabablari
+            va boshqa teglarni boshqaring.</p>
           <div id="tags-groups"></div>
         </div>
       </div>
@@ -2147,6 +2163,7 @@
             <div class="tab active" id="rep-tab-coin" onclick="switchRepTab('coin')">💰 Coin</div>
             <div class="tab" id="rep-tab-test" onclick="switchRepTab('test')">📝 Test</div>
             <div class="tab" id="rep-tab-video" onclick="switchRepTab('video')">🎥 Video</div>
+            <div class="tab" id="rep-tab-parent" onclick="switchRepTab('parent')">📞 Ota-onalar</div>
             <div class="tab" id="rep-tab-stats" onclick="switchRepTab('stats')">📈 Statistika</div>
           </div>
 
@@ -2162,6 +2179,8 @@
           <div id="rep-pane-test" class="rep-pane" style="display:none;"></div>
           <!-- VIDEO moduli -->
           <div id="rep-pane-video" class="rep-pane" style="display:none;"></div>
+          <!-- OTA-ONALAR SUHBATI moduli -->
+          <div id="rep-pane-parent" class="rep-pane" style="display:none;"></div>
           <!-- STATISTIKA moduli -->
           <div id="rep-pane-stats" class="rep-pane" style="display:none;"></div>
         </div>
@@ -2607,6 +2626,67 @@
     </div>
   </div>
 
+  <!-- HISOBOT: Ota-ona bilan suhbat natijasi -->
+  <div class="modal-overlay" id="modal-parent-call">
+    <div class="modal">
+      <div class="modal-handle"></div>
+      <div class="modal-title">📞 Suhbat natijasi</div>
+      <div style="font-size:14px;font-weight:700;margin:-6px 0 14px;" id="pc-name"></div>
+      <div class="inp-group">
+        <label>Ota-onasining telefon raqami *</label>
+        <input type="tel" id="pc-phone" inputmode="tel" placeholder="99 123 45 67" maxlength="20" autocomplete="off">
+      </div>
+      <div class="inp-group">
+        <label>Holati *</label>
+        <div class="pill-row" id="pc-status"></div>
+      </div>
+      <div class="inp-group">
+        <label>Izoh</label>
+        <div class="pill-row" id="pc-notes"></div>
+      </div>
+      <div class="inp-group" id="pc-other-wrap" style="display:none;">
+        <textarea id="pc-other" rows="3" maxlength="300" placeholder="Suhbat mazmunini qisqacha yozing..."
+          style="width:100%;padding:10px 12px;border-radius:12px;border:1px solid var(--line);background:var(--bg);color:var(--text);font-family:'Manrope',sans-serif;font-size:14px;resize:vertical;"></textarea>
+      </div>
+      <div style="font-size:11px;color:var(--text3);margin-bottom:10px;">🕒 Sana va vaqt avtomatik yoziladi.</div>
+      <div style="display:flex;gap:10px;">
+        <button class="btn btn-secondary" onclick="closeModal('modal-parent-call')" style="flex:1">Bekor</button>
+        <button class="btn btn-primary" onclick="saveParentCall()" style="flex:1">Saqlash</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- HISOBOT: Ota-ona qo'ng'iroqlari tarixi -->
+  <div class="modal-overlay" id="modal-parent-history">
+    <div class="modal">
+      <div class="modal-handle"></div>
+      <div class="modal-title">🕒 Qo'ng'iroqlar tarixi</div>
+      <div style="font-size:14px;font-weight:700;margin:-6px 0 10px;" id="ph-title"></div>
+      <div id="ph-list" style="max-height:55vh;overflow-y:auto;"></div>
+      <button class="btn btn-secondary btn-full" onclick="closeModal('modal-parent-history')" style="margin-top:14px;">Yopish</button>
+    </div>
+  </div>
+
+  <!-- HISOBOT: Oylik suhbat rejasi (admin) -->
+  <div class="modal-overlay" id="modal-parent-target">
+    <div class="modal">
+      <div class="modal-handle"></div>
+      <div class="modal-title">🎯 Oylik suhbat rejasi</div>
+      <div style="font-size:13px;color:var(--text2);margin:-6px 0 14px;">Guruh: <b id="pt-group"></b></div>
+      <div class="inp-group">
+        <label>Har bir o'quvchi ota-onasi bilan oyiga necha marta gaplashilsin? (1–10)</label>
+        <input type="number" id="pt-value" inputmode="numeric" min="1" max="10">
+      </div>
+      <label style="display:flex;align-items:center;gap:8px;font-size:14px;margin-bottom:14px;">
+        <input type="checkbox" id="pt-all"> Barcha guruhlarga qo'llash
+      </label>
+      <div style="display:flex;gap:10px;">
+        <button class="btn btn-secondary" onclick="closeModal('modal-parent-target')" style="flex:1">Bekor</button>
+        <button class="btn btn-primary" onclick="saveParentTarget()" style="flex:1">Saqlash</button>
+      </div>
+    </div>
+  </div>
+
   <!-- HISOBOT: Video olinmagan sabab -->
   <div class="modal-overlay" id="modal-video-reason">
     <div class="modal">
@@ -2636,7 +2716,7 @@
     // ============================================================
     // STATE
     // ============================================================
-    const APP_VERSION = 'upg 19';
+    const APP_VERSION = 'upg 20';
     let currentUser = null;
     let teachers = [], groups = [], staffList = [], branches = [], tasks = [], attendances = [], admins = [];
     let selectedCIType = 'checkin', selectedTaskType = 'task';
@@ -4739,6 +4819,7 @@
     // TAGS (Sabab teglari — Super Admin)
     // ============================================================
     const TAG_KINDS = [
+      { kind: 'parent_note', label: '📞 Ota-ona suhbati izohlari' },
       { kind: 'level', label: '🎓 Talaba darajalari' },
       { kind: 'late', label: '⏰ Kechikish sabablari' },
       { kind: 'frozen', label: '❄️ Muzlatish sabablari' },
@@ -4753,7 +4834,7 @@
       box.innerHTML = TAG_KINDS.map(k => {
         const list = tagsByKind(k.kind);
         const chips = list.length
-          ? list.map(tg => `<span class="branch-chip" style="cursor:default;">${tg.label}
+          ? list.map(tg => `<span class="branch-chip" style="cursor:default;">${esc(tg.label)}
           <button onclick="deleteTag('${tg.id}')" style="background:none;border:none;color:var(--red);cursor:pointer;font-weight:700;margin-left:2px;">✕</button>
         </span>`).join('')
           : `<span style="font-size:12px;color:var(--text3);">Hali teg yo'q</span>`;
@@ -5326,7 +5407,8 @@
       videoQuarter: null,// video: joriy kvartal 'YYYY-QN'
       period: {          // davr filtrlari (Kunlik/Haftalik/Oylik)
         test: { mode: 'month', anchor: null },
-        stats: { mode: 'week', anchor: null }
+        stats: { mode: 'week', anchor: null },
+        parent: { mode: 'month', anchor: null }
       },
       testView: 'list',  // test: 'list' | 'detail' | 'legacy'
       currentTestId: null,
@@ -5410,9 +5492,11 @@
       else if (what === 'anchor' && repIsDate(val)) st.anchor = val > today ? today : val;
       else if (what === 'shift') {
         const nx = repPeriodShift(st.mode, st.anchor, Number(val) < 0 ? -1 : 1);
-        st.anchor = nx > today ? today : nx;
+        // Joriy oyga qaytilganda — bugungi sana (keyin "Kunlik"ga o'tsa, 1-sana emas, bugun ochilsin)
+        st.anchor = (nx > today || (st.mode === 'month' && nx.slice(0, 7) === today.slice(0, 7))) ? today : nx;
       }
       if (key === 'test') { await testFlushPending(); REP.testView = 'list'; renderTestPane(); }
+      else if (key === 'parent') renderParentPane();
       else renderStatsPane();
     }
 
@@ -5423,6 +5507,7 @@
       if (!REP.videoQuarter) REP.videoQuarter = repThisQuarter();
       if (!REP.period.test.anchor) REP.period.test.anchor = repToday();
       if (!REP.period.stats.anchor) REP.period.stats.anchor = repToday();
+      if (!REP.period.parent.anchor) REP.period.parent.anchor = repToday();
       // Admin uchun o'qituvchi filtri ko'rsatiladi
       document.getElementById('rep-teacher-filter').style.display = repIsAdmin() ? '' : 'none';
       await loadRepGroups();
@@ -5498,7 +5583,7 @@
     function switchRepTab(tab) {
       coinFlushPending(); testFlushPending();
       REP.tab = tab;
-      ['coin', 'test', 'video', 'stats'].forEach(t => {
+      ['coin', 'test', 'video', 'parent', 'stats'].forEach(t => {
         document.getElementById('rep-tab-' + t).classList.toggle('active', t === tab);
         document.getElementById('rep-pane-' + t).style.display = (t === tab) ? '' : 'none';
       });
@@ -5510,6 +5595,7 @@
       if (REP.tab === 'coin') renderCoinPane();
       else if (REP.tab === 'test') renderTestPane();
       else if (REP.tab === 'video') renderVideoPane();
+      else if (REP.tab === 'parent') renderParentPane();
       else if (REP.tab === 'stats') renderStatsPane();
     }
 
@@ -6397,6 +6483,315 @@
       repExportXlsx(rows, `Video_${g?.name || ''}_${REP.videoQuarter}`, 'Video');
     }
     // ================================================================
+    // OTA-ONALAR BILAN SUHBAT — har bir qo'ng'iroq alohida yoziladi,
+    // vaqti SERVERDA avtomatik qo'yiladi (called_at = now()).
+    // Admin har guruh uchun oylik reja belgilaydi: har bir o'quvchi ota-onasi
+    // bilan oyiga N marta "Gaplashildi". Bajarilmasa — "Qilinmadi".
+    // ================================================================
+    const PARENT_STATUS = {
+      talked:       { label: 'Gaplashildi',    cls: 'ps-talked' },
+      no_answer:    { label: 'Ko\'tarmadi',    cls: 'ps-noans' },
+      wrong_number: { label: 'Noto\'g\'ri raqam', cls: 'ps-wrong' },
+      busy:         { label: 'Band',           cls: 'ps-busy' }
+    };
+    const PARENT_NOTE_MAX = 300;
+    const PARENT_DELETE_HOURS = 24; // o'qituvchi o'z yozuvini shu soat ichida o'chira oladi
+    let parentCalls = [];           // yuklangan davrdagi qo'ng'iroqlar
+    let parentMissing = false;
+
+    // Telefon: 9 xonali mahalliy raqam sifatida saqlanadi (997595593)
+    function phoneNorm(s) {
+      const d = String(s || '').replace(/\D/g, '');
+      if (d.length === 9) return d;
+      if (d.length === 12 && d.startsWith('998')) return d.slice(3);
+      return null;
+    }
+    function phoneFmt(d) { return d && d.length === 9 ? `${d.slice(0, 2)} ${d.slice(2, 5)} ${d.slice(5, 7)} ${d.slice(7)}` : (d || ''); }
+    function parentTarget() {
+      const g = REP.groups.find(x => x.id === REP.groupId);
+      const n = Number(g?.parent_calls_target);
+      return Number.isInteger(n) && n >= 1 ? n : 1;
+    }
+    function parentChip(status) {
+      const s = PARENT_STATUS[status];
+      return s ? `<span class="ps-chip ${s.cls}">${s.label}</span>` : '';
+    }
+    function tashDate(iso) { return uzParts(new Date(iso)).dateStr; }
+
+    // [from..to] (Toshkent sanalari) oralig'idagi qo'ng'iroqlar
+    async function parentLoadCalls(groupId, from, to) {
+      return repFetchAll(() => sb.from('reports_parent_calls')
+        .select('id, member_id, status, note, phone, created_by, called_at')
+        .eq('group_id', groupId)
+        .gte('called_at', new Date(`${from}T00:00:00+05:00`).toISOString())
+        .lt('called_at', new Date(`${repDateAdd(to, 1)}T00:00:00+05:00`).toISOString())
+        .order('id'));
+    }
+
+    // Oylik reja holati: "Gaplashildi" soni rejaga nisbatan
+    function parentProgress(memberId, calls, month) {
+      const talked = calls.filter(c => c.member_id === memberId && c.status === 'talked' && tashDate(c.called_at).slice(0, 7) === month).length;
+      return { talked, done: talked >= parentTarget() };
+    }
+    function parentProgressHtml(p) {
+      const target = parentTarget();
+      if (p.done) return `<span class="pp pp-ok">✅ ${p.talked}/${target}</span>`;
+      if (p.talked > 0) return `<span class="pp pp-part">🟡 ${p.talked}/${target}</span>`;
+      return `<span class="pp pp-none">❌ Qilinmadi</span>`;
+    }
+
+    async function renderParentPane() {
+      const pane = document.getElementById('rep-pane-parent');
+      if (!REP.members.length) { pane.innerHTML = repNoMembers(); return; }
+      const groupId = REP.groupId;
+      const st = REP.period.parent;
+      const r = repPeriodRange(st.mode, st.anchor);
+      const mr = repPeriodRange('month', st.anchor);         // reja shu oy bo'yicha tekshiriladi
+      const from = r.from < mr.from ? r.from : mr.from, to = r.to > mr.to ? r.to : mr.to;
+      const reqKey = `${groupId}|${from}|${to}`;
+      REP._parentReq = reqKey;
+      pane.innerHTML = repPeriodBar('parent') + '<p style="font-size:13px;color:var(--text3);text-align:center;padding:20px;">Yuklanmoqda...</p>';
+
+      let calls;
+      try { calls = await parentLoadCalls(groupId, from, to); parentMissing = false; }
+      catch (e) {
+        if (REP._parentReq !== reqKey) return;
+        parentMissing = repIsMissingTable(e);
+        pane.innerHTML = repPeriodBar('parent') + (parentMissing ? repMigrationNote('Ota-onalar suhbati') : repErrorBox('Ma\'lumot yuklanmadi', e));
+        return;
+      }
+      if (REP._parentReq !== reqKey) return;
+      parentCalls = calls;
+
+      const month = mr.from.slice(0, 7);
+      const inPeriod = calls.filter(c => { const d = tashDate(c.called_at); return d >= r.from && d <= r.to; });
+      const count = s => inPeriod.filter(c => c.status === s).length;
+      const target = parentTarget();
+      const admin = repIsAdmin();
+
+      let doneCnt = 0;
+      const rows = REP.members.map((m, i) => {
+        const p = parentProgress(m.id, calls, month);
+        if (p.done) doneCnt++;
+        const mine = inPeriod.filter(c => c.member_id === m.id);
+        const last = mine[mine.length - 1];
+        const phone = m.phone ? `<a class="ph-link" href="tel:+998${esc(m.phone)}" onclick="event.stopPropagation()">📞 ${esc(phoneFmt(m.phone))}</a>` : '<span style="color:var(--text3);">—</span>';
+        return `<tr>
+          <td style="padding:10px 6px;color:var(--text3);font-size:12px;">${i + 1}</td>
+          <td class="rep-name-col" style="cursor:pointer;" onclick="openParentHistory('${m.id}')" title="Qo'ng'iroqlar tarixi">${esc(m.student_name)}</td>
+          <td style="padding:6px 8px;">${phone}
+            <button class="ph-edit" onclick="parentEditPhone('${m.id}')" title="Raqamni o'zgartirish" aria-label="Raqamni o'zgartirish">✏️</button></td>
+          <td style="padding:6px 8px;">${parentProgressHtml(p)}</td>
+          <td class="pc-last" onclick="openParentHistory('${m.id}')">
+            ${last ? `${parentChip(last.status)}
+              <div class="pc-note">${last.note ? esc(last.note) : ''}</div>
+              <div class="pc-time">${repFmtDateTime(last.called_at)}${mine.length > 1 ? ` • jami ${mine.length} ta` : ''}</div>`
+            : '<span style="color:var(--text3);font-size:12px;">Davrda qo\'ng\'iroq yo\'q</span>'}
+          </td>
+          <td style="padding:6px;"><button class="btn btn-sm btn-primary" onclick="openParentCall('${m.id}')" aria-label="Natija kiritish">+</button></td>
+        </tr>`;
+      }).join('');
+
+      const notDone = REP.members.length - doneCnt;
+      pane.innerHTML = `
+        ${repPeriodBar('parent')}
+        <div class="rep-note" style="background:var(--bg3);border-color:var(--line);display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
+          <span style="flex:1;">🎯 Reja: har bir o'quvchi ota-onasi bilan <b>oyiga ${target} marta</b> gaplashish.
+            <b>${esc(repPeriodRange('month', st.anchor).label)}</b>: bajarildi <b>${doneCnt}/${REP.members.length}</b>${notDone ? `, qilinmadi <b style="color:var(--red);">${notDone}</b>` : ' ✅'}.</span>
+          ${admin ? `<button class="btn btn-sm btn-secondary" onclick="openParentTarget()">⚙️ Rejani o'zgartirish</button>` : ''}
+        </div>
+        <div class="stat-grid" style="grid-template-columns:repeat(4,1fr);margin-bottom:12px;">
+          <div class="rep-stat" style="text-align:center;padding:10px 4px;"><div class="rep-stat-big" style="font-size:22px;color:var(--accent2);">${count('talked')}</div><div style="font-size:10px;color:var(--text2);">Gaplashildi</div></div>
+          <div class="rep-stat" style="text-align:center;padding:10px 4px;"><div class="rep-stat-big" style="font-size:22px;color:var(--red);">${count('no_answer')}</div><div style="font-size:10px;color:var(--text2);">Ko'tarmadi</div></div>
+          <div class="rep-stat" style="text-align:center;padding:10px 4px;"><div class="rep-stat-big" style="font-size:22px;color:#3b6fd4;">${count('wrong_number')}</div><div style="font-size:10px;color:var(--text2);">Noto'g'ri raqam</div></div>
+          <div class="rep-stat" style="text-align:center;padding:10px 4px;"><div class="rep-stat-big" style="font-size:22px;color:var(--yellow);">${count('busy')}</div><div style="font-size:10px;color:var(--text2);">Band</div></div>
+        </div>
+        <div class="rep-table-wrap">
+          <table class="rep-table">
+            <thead><tr><th>№</th><th class="rep-name-col">O'quvchi</th><th>Telefon</th><th>Oy rejasi</th><th>Oxirgi natija (davr)</th><th></th></tr></thead>
+            <tbody>${rows}</tbody>
+          </table>
+        </div>
+        <div style="font-size:11px;color:var(--text3);margin-top:6px;">Ismni yoki natijani bosing — qo'ng'iroqlar tarixi. Vaqt server tomonidan avtomatik yoziladi.</div>
+        <div style="display:flex;gap:8px;margin-top:12px;">
+          <button class="btn btn-sm btn-secondary" onclick="exportParent()">📊 Excel eksport</button>
+        </div>`;
+    }
+
+    // ---- Qo'ng'iroq natijasini kiritish ----
+    let parentCallMember = null, parentCallStatus = null, parentCallNote = null;
+    function openParentCall(memberId) {
+      const m = REP.members.find(x => x.id === memberId);
+      if (!m) return;
+      parentCallMember = memberId; parentCallStatus = null; parentCallNote = null;
+      document.getElementById('pc-name').textContent = m.student_name;
+      document.getElementById('pc-phone').value = m.phone ? phoneFmt(m.phone) : '';
+      document.getElementById('pc-status').innerHTML = Object.entries(PARENT_STATUS).map(([k, s]) =>
+        `<button class="ps-pick ${s.cls}" data-k="${k}" onclick="parentPickStatus('${k}')">${s.label}</button>`).join('');
+      const notes = tagsByKind('parent_note');
+      document.getElementById('pc-notes').innerHTML = notes.map((tg, i) =>
+        `<button class="pill" data-i="${i}" onclick="parentPickNote(${i})">${esc(tg.label)}</button>`).join('') +
+        `<button class="pill" data-i="other" onclick="parentPickNote('other')">✍️ Boshqa</button>`;
+      document.getElementById('pc-other-wrap').style.display = 'none';
+      document.getElementById('pc-other').value = '';
+      openModal('modal-parent-call');
+    }
+    function parentPickStatus(k) {
+      parentCallStatus = k;
+      document.querySelectorAll('#pc-status .ps-pick').forEach(b => b.classList.toggle('on', b.dataset.k === k));
+    }
+    function parentPickNote(i) {
+      parentCallNote = parentCallNote === i ? null : i; // qayta bosilsa — bekor
+      document.querySelectorAll('#pc-notes .pill').forEach(b => b.classList.toggle('selected', String(b.dataset.i) === String(parentCallNote)));
+      const other = parentCallNote === 'other';
+      document.getElementById('pc-other-wrap').style.display = other ? '' : 'none';
+      if (other) setTimeout(() => document.getElementById('pc-other').focus(), 50);
+    }
+
+    async function saveParentCall() {
+      const m = REP.members.find(x => x.id === parentCallMember);
+      if (!m) return;
+      const phone = phoneNorm(document.getElementById('pc-phone').value);
+      if (!phone) { showToast('Telefon raqamini to\'g\'ri kiriting: 9 raqam (99 123 45 67)', 3500); return; }
+      if (!parentCallStatus || !PARENT_STATUS[parentCallStatus]) { showToast('Holatini tanlang', 2500); return; }
+      let note = null;
+      if (parentCallNote === 'other') {
+        note = document.getElementById('pc-other').value.trim();
+        if (!note) { showToast('Izohni yozing yoki boshqa variantni tanlang', 3000); return; }
+        if (note.length > PARENT_NOTE_MAX) { showToast(`Izoh ${PARENT_NOTE_MAX} belgidan oshmasin`, 3000); return; }
+      } else if (parentCallNote !== null) {
+        note = tagsByKind('parent_note')[parentCallNote]?.label || null;
+      }
+      const g = REP.groups.find(x => x.id === REP.groupId);
+      let ok = false;
+      await withLoader(t('save') + '...', async () => {
+        // Raqam yangi yoki o'zgargan bo'lsa — o'quvchi kartasiga ham saqlanadi
+        if (m.phone !== phone) {
+          const { error: pe } = await sb.from('reports_members').update({ phone }).eq('id', m.id);
+          if (pe) throw pe;
+          m.phone = phone;
+        }
+        // called_at yuborilmaydi — serverda now() bilan qo'yiladi (telefon soatiga bog'liq emas)
+        const { error } = await sb.from('reports_parent_calls').insert([{
+          group_id: REP.groupId, member_id: m.id, teacher_id: g?.teacher_id || null,
+          status: parentCallStatus, note, phone, created_by: currentUser?.name || null
+        }]);
+        if (error) throw error;
+        ok = true;
+      }).catch(e => showToast((repIsMissingTable(e) ? 'Bazada yangi jadval yo\'q — migratsiyani ishga tushiring. ' : 'Saqlanmadi: ') + (e.message || ''), 4500));
+      if (!ok) return;
+      closeModal('modal-parent-call');
+      showToast('✓ Natija saqlandi', 1500, 'ok');
+      renderParentPane();
+    }
+
+    async function parentEditPhone(memberId) {
+      const m = REP.members.find(x => x.id === memberId);
+      if (!m) return;
+      const val = prompt(`${m.student_name} — ota-onasining telefon raqami:`, m.phone ? phoneFmt(m.phone) : '');
+      if (val === null) return;
+      const phone = val.trim() === '' ? null : phoneNorm(val);
+      if (val.trim() !== '' && !phone) { showToast('Noto\'g\'ri raqam: 9 raqam bo\'lishi kerak (99 123 45 67)', 3500); return; }
+      const { error } = await sb.from('reports_members').update({ phone }).eq('id', memberId);
+      if (error) { showToast((repIsMissingTable(error) || /phone/.test(error.message || '') ? 'Bazada telefon ustuni yo\'q — migratsiyani ishga tushiring. ' : 'Saqlanmadi: ') + (error.message || ''), 4500); return; }
+      m.phone = phone;
+      showToast(t('saved'), 1200, 'ok');
+      renderParentPane();
+    }
+
+    // ---- Qo'ng'iroqlar tarixi (o'quvchi bo'yicha, barcha vaqt) ----
+    async function openParentHistory(memberId) {
+      const m = REP.members.find(x => x.id === memberId);
+      if (!m) return;
+      document.getElementById('ph-title').textContent = m.student_name;
+      const box = document.getElementById('ph-list');
+      box.innerHTML = '<p style="font-size:13px;color:var(--text3);text-align:center;padding:16px;">Yuklanmoqda...</p>';
+      openModal('modal-parent-history');
+      try {
+        const rows = await repFetchAll(() => sb.from('reports_parent_calls')
+          .select('id, status, note, phone, created_by, called_at').eq('member_id', memberId).order('id'));
+        rows.sort((a, b) => (b.called_at || '').localeCompare(a.called_at || ''));
+        const now = Date.now();
+        box.innerHTML = rows.length ? rows.map(c => {
+          const canDel = repIsAdmin() || (c.created_by === currentUser?.name && now - new Date(c.called_at).getTime() < PARENT_DELETE_HOURS * 3600e3);
+          return `<div class="ex-row">
+            <div style="flex:1;min-width:0;">
+              <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">${parentChip(c.status)}
+                <span style="font-size:12px;color:var(--text2);">${repFmtDateTime(c.called_at)}</span></div>
+              ${c.note ? `<div style="font-size:13px;margin-top:4px;">${esc(c.note)}</div>` : ''}
+              <div style="font-size:11px;color:var(--text3);margin-top:2px;">${c.phone ? '📞 ' + esc(phoneFmt(c.phone)) : ''}${c.created_by ? ' • ' + esc(c.created_by) : ''}</div>
+            </div>
+            ${canDel ? `<button class="btn btn-sm btn-secondary" onclick="deleteParentCall('${c.id}','${memberId}')" title="O'chirish">🗑</button>` : ''}
+          </div>`;
+        }).join('') : '<p style="font-size:13px;color:var(--text3);text-align:center;padding:16px;">Hali qo\'ng\'iroq qilinmagan.</p>';
+      } catch (e) { box.innerHTML = repErrorBox('Tarix yuklanmadi', e); }
+    }
+    async function deleteParentCall(id, memberId) {
+      if (!await confirmDialog('Yozuv o\'chirilsinmi?', 'Bu qo\'ng\'iroq natijasi hisobotdan olib tashlanadi.')) return;
+      const { error } = await sb.from('reports_parent_calls').delete().eq('id', id);
+      if (error) { showToast('O\'chirilmadi: ' + (error.message || ''), 3500); return; }
+      showToast(t('deleted'), 1200);
+      openParentHistory(memberId);
+      renderParentPane();
+    }
+
+    // ---- Admin: oylik reja ----
+    function openParentTarget() {
+      if (!repIsAdmin()) return;
+      const g = REP.groups.find(x => x.id === REP.groupId);
+      document.getElementById('pt-group').textContent = g?.name || '';
+      document.getElementById('pt-value').value = parentTarget();
+      document.getElementById('pt-all').checked = false;
+      openModal('modal-parent-target');
+    }
+    async function saveParentTarget() {
+      if (!repIsAdmin()) return;
+      const s = document.getElementById('pt-value').value.trim();
+      const n = Number(s);
+      if (!/^\d+$/.test(s) || n < 1 || n > 10) { showToast('1 dan 10 gacha son kiriting', 2500); return; }
+      const all = document.getElementById('pt-all').checked;
+      let ok = false;
+      await withLoader(t('save') + '...', async () => {
+        const q = sb.from('reports_groups').update({ parent_calls_target: n });
+        const { error } = all ? await q.eq('archived', false) : await q.eq('id', REP.groupId);
+        if (error) throw error;
+        ok = true;
+      }).catch(e => showToast((/parent_calls_target/.test(e.message || '') ? 'Bazada reja ustuni yo\'q — migratsiyani ishga tushiring. ' : 'Saqlanmadi: ') + (e.message || ''), 4500));
+      if (!ok) return;
+      REP.groups.forEach(g => { if (all || g.id === REP.groupId) g.parent_calls_target = n; });
+      closeModal('modal-parent-target');
+      showToast(all ? `Barcha guruhlarga: oyiga ${n} marta` : `Reja: oyiga ${n} marta`, 2000, 'ok');
+      renderParentPane();
+    }
+
+    function exportParent() {
+      const g = REP.groups.find(x => x.id === REP.groupId);
+      const st = REP.period.parent;
+      const r = repPeriodRange(st.mode, st.anchor);
+      const month = repPeriodRange('month', st.anchor).from.slice(0, 7);
+      const nameById = {}; REP.members.forEach(m => { nameById[m.id] = m.student_name; });
+      if (!window.XLSX || !XLSX.utils) { showToast('Excel kutubxonasi yuklanmagan (internetni tekshiring)', 3000); return; }
+      try {
+        const wb = XLSX.utils.book_new();
+        const summary = REP.members.map((m, i) => {
+          const p = parentProgress(m.id, parentCalls, month);
+          return { '№': i + 1, 'O\'quvchi': m.student_name, 'Telefon': m.phone ? phoneFmt(m.phone) : '',
+            'Reja (oyiga)': parentTarget(), 'Gaplashildi (oy)': p.talked, 'Holat': p.done ? 'Bajarildi' : 'Qilinmadi' };
+        });
+        XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(summary), 'Oy rejasi');
+        const calls = parentCalls.filter(c => { const d = tashDate(c.called_at); return d >= r.from && d <= r.to; })
+          .sort((a, b) => a.called_at.localeCompare(b.called_at))
+          .map(c => { const p = uzParts(new Date(c.called_at));
+            return { 'Sana': repFmtShort(p.dateStr), 'Vaqt': `${String(p.hour).padStart(2, '0')}:${String(p.minute).padStart(2, '0')}`,
+              'O\'quvchi': nameById[c.member_id] || '', 'Telefon': phoneFmt(c.phone || ''), 'Holati': PARENT_STATUS[c.status]?.label || c.status,
+              'Izoh': c.note || '', 'Kim kiritdi': c.created_by || '' }; });
+        if (calls.length) XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(calls), 'Qo\'ng\'iroqlar');
+        XLSX.writeFile(wb, repSafeName(`Ota-onalar_${g?.name || ''}_${r.from}_${r.to}`) + '.xlsx');
+        showToast('Excel yuklandi', 1500, 'ok');
+      } catch (e) { showToast('Eksport xatosi: ' + (e.message || ''), 3000); }
+    }
+
+    // ================================================================
     // STATISTIKA MODULI — tanlangan davr (kunlik / haftalik / oylik)
     // Barcha yozuvlar sahifalab yuklanadi (1000 qator chegarasi yo'q).
     // ================================================================
@@ -6409,16 +6804,20 @@
       REP._statsReq = reqKey;
       pane.innerHTML = repPeriodBar('stats') + `<div class="empty"><div class="empty-icon">⏳</div><p style="font-size:13px;">Statistika hisoblanmoqda...</p></div>`;
 
-      let totals, tests = [], results = [], videos, testsMissing = false;
+      let totals, tests = [], results = [], videos, testsMissing = false, pcalls = null; // pcalls=null — jadval yo'q
+      const smr = repPeriodRange('month', REP.period.stats.anchor);
+      const pFrom = r.from < smr.from ? r.from : smr.from, pTo = r.to > smr.to ? r.to : smr.to;
       try {
         await coinFlushPending(); await testFlushPending(); // saqlanmagan o'zgarishlar ham hisobga kirsin
         const testsP = repFetchAll(() => sb.from('reports_tests').select('id, title, test_date, total_questions')
           .eq('group_id', groupId).gte('test_date', r.from).lte('test_date', r.to).order('id'))
           .catch(e => { if (repIsMissingTable(e)) { testsMissing = true; return []; } throw e; });
-        [totals, tests, videos] = await Promise.all([
+        const parentP = parentLoadCalls(groupId, pFrom, pTo).catch(e => { if (repIsMissingTable(e)) return null; throw e; });
+        [totals, tests, videos, pcalls] = await Promise.all([
           repLoadCoinTotals(groupId),
           testsP,
-          repFetchAll(() => sb.from('reports_video').select('member_id, taken, reason, quarter').eq('group_id', groupId).order('id'))
+          repFetchAll(() => sb.from('reports_video').select('member_id, taken, reason, quarter').eq('group_id', groupId).order('id')),
+          parentP
         ]);
         results = tests.length ? await testLoadResults(tests.map(t => t.id)) : [];
       } catch (e) {
@@ -6484,6 +6883,28 @@
         </div>`;
       }).join('');
 
+      // --- Ota-onalar suhbati: davrdagi qo'ng'iroqlar + oylik reja ---
+      let parentHtml, parentRows = [];
+      if (pcalls === null) parentHtml = repMigrationNote('Ota-onalar suhbati');
+      else {
+        const pPeriod = pcalls.filter(c => { const d = tashDate(c.called_at); return d >= r.from && d <= r.to && nameById[c.member_id] !== undefined; });
+        const pm = smr.from.slice(0, 7);
+        const notDone = REP.members.filter(m => !parentProgress(m.id, pcalls, pm).done);
+        parentRows = pPeriod;
+        const cnt = st => pPeriod.filter(c => c.status === st).length;
+        parentHtml = `
+          <div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:8px;">
+            <span style="color:var(--text2);">Davrda qo'ng'iroqlar</span><b>${pPeriod.length}</b></div>
+          <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px;">
+            ${Object.keys(PARENT_STATUS).map(k => `${parentChip(k)}<b style="font-size:13px;margin-right:8px;">${cnt(k)}</b>`).join('')}
+          </div>
+          <div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:6px;">
+            <span style="color:var(--text2);">${esc(smr.label)} rejasi (oyiga ${parentTarget()} marta)</span>
+            <b>${REP.members.length - notDone.length}/${REP.members.length} bajarildi</b></div>
+          ${notDone.length ? `<div style="font-size:12px;color:var(--red);">❌ Qilinmadi: ${notDone.map(m => esc(m.student_name)).join(', ')}</div>`
+            : '<div style="font-size:12px;color:var(--accent2);">✅ Barcha ota-onalar bilan gaplashilgan</div>'}`;
+      }
+
       // --- Video (kvartal bo'yicha yuritiladi — davr filtri qo'llanmaydi) ---
       const quarters = [...new Set(videos.map(v => v.quarter))].sort().reverse();
       const lastQ = quarters[0];
@@ -6517,6 +6938,9 @@
         <div style="font-size:14px;font-weight:700;margin:4px 0 10px;">📝 Davrdagi testlar</div>
         <div class="rep-stat">${testsMissing ? repMigrationNote('Test hisoboti') : (testRows || '<span style="font-size:12px;color:var(--text3);">Bu davrda test yo\'q</span>')}</div>
 
+        <div style="font-size:14px;font-weight:700;margin:16px 0 10px;">📞 Ota-onalar suhbati</div>
+        <div class="rep-stat">${parentHtml}</div>
+
         <div style="font-size:14px;font-weight:700;margin:16px 0 10px;">🎥 Video ${lastQ ? '(' + esc(lastQ) + ')' : ''}</div>
         <div class="rep-stat">
           <div style="font-size:11px;color:var(--text3);margin-bottom:8px;">Video kvartal bo'yicha yuritiladi — oxirgi kvartal ko'rsatilgan.</div>
@@ -6529,14 +6953,14 @@
         </div>
 
         <div class="stats-check">
-          ✔ Hisob asosi: ${periodCoinRows.length} ta coin yozuvi, ${periodResults.length} ta test natijasi, ${periodEx.length} ta almashtirish
+          ✔ Hisob asosi: ${periodCoinRows.length} ta coin yozuvi, ${periodResults.length} ta test natijasi, ${periodEx.length} ta almashtirish, ${parentRows.length} ta ota-ona qo'ng'irog'i
           (${repFmtShort(r.from)} – ${repFmtShort(r.to)}). Tekshiruv: o'quvchilar bo'yicha coin yig'indisi = ${ranking.reduce((s, x) => s + x.coins, 0)}.
         </div>
         <div style="display:flex;gap:8px;margin-top:12px;">
           <button class="btn btn-sm btn-secondary" onclick="exportStats()">📊 Davr bo'yicha Excel eksport</button>
         </div>`;
 
-      REP._statsCache = { range: r, ranking, periodCoinRows, periodResults, periodEx, testById, nameById, lastQVideos, lastQ };
+      REP._statsCache = { range: r, ranking, periodCoinRows, periodResults, periodEx, testById, nameById, lastQVideos, lastQ, parentRows };
     }
 
     async function statsOpenTest(id) {
@@ -6564,6 +6988,9 @@
           return { 'Sana': t.test_date, 'Test': t.title, 'O\'quvchi': c.nameById[x.member_id] || '', 'Savollar soni': t.total_questions, 'To\'g\'ri': x.correct, 'Foiz (%)': testPct(x.correct, t.total_questions) };
         }).sort((a, b) => a['Sana'].localeCompare(b['Sana'])), 'Testlar');
         add(c.periodEx.map(x => ({ 'Sana': repFmtDateTime(x.exchanged_at), 'O\'quvchi': c.nameById[x.member_id] || '', 'Coin': x.amount, 'Kim': x.exchanged_by || '' })), 'Almashtirish');
+        add(c.parentRows.slice().sort((a, b) => a.called_at.localeCompare(b.called_at)).map(x => ({
+          'Sana va vaqt': repFmtDateTime(x.called_at), 'O\'quvchi': c.nameById[x.member_id] || '', 'Telefon': phoneFmt(x.phone || ''),
+          'Holati': PARENT_STATUS[x.status]?.label || x.status, 'Izoh': x.note || '', 'Kim': x.created_by || '' })), 'Ota-onalar');
         add(c.lastQVideos.map(v => ({ 'O\'quvchi': c.nameById[v.member_id] || '', 'Kvartal': v.quarter, 'Olindi': v.taken ? 'Ha' : 'Yo\'q', 'Sabab': v.taken ? '' : (VIDEO_REASONS[v.reason] || '') })), 'Video');
         XLSX.writeFile(wb, repSafeName(`Statistika_${g?.name || ''}_${c.range.from}_${c.range.to}`) + '.xlsx');
         showToast('Excel yuklandi', 1500, 'ok');
