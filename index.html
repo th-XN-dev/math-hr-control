@@ -494,25 +494,6 @@
       letter-spacing: 0.2px;
     }
 
-    /* STUDENT CARD */
-    .student-card {
-      background: var(--card);
-      border: 1px solid var(--line);
-      border-radius: var(--radius);
-      padding: 14px;
-      margin-bottom: 10px;
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      cursor: pointer;
-      transition: border-color 0.16s, background 0.16s, transform 0.1s;
-    }
-
-    .student-card:active {
-      transform: scale(0.99);
-      background: var(--bg3);
-    }
-
     .student-avatar {
       width: 44px;
       height: 44px;
@@ -523,25 +504,6 @@
       font-weight: 700;
       font-size: 15px;
       flex-shrink: 0;
-    }
-
-    .student-info {
-      flex: 1;
-      min-width: 0;
-    }
-
-    .student-name {
-      font-size: 14px;
-      font-weight: 600;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-
-    .student-sub {
-      font-size: 12px;
-      color: var(--text2);
-      margin-top: 2px;
     }
 
     .status-badge {
@@ -1012,24 +974,6 @@
       margin: 14px 0;
     }
 
-    /* FREEZE COUNTDOWN */
-    .freeze-days {
-      font-size: 22px;
-      font-weight: 800;
-    }
-
-    .freeze-days.green {
-      color: var(--green);
-    }
-
-    .freeze-days.yellow {
-      color: var(--yellow);
-    }
-
-    .freeze-days.red {
-      color: var(--red);
-    }
-
     /* EMPTY STATE */
     .empty {
       text-align: center;
@@ -1308,6 +1252,74 @@
     .test-empty { color: var(--text3); }
 
     .dark .test-3 { color: #1a1500; }
+
+    /* Kechikishlar (xodim — Vazifalar bo'limi) */
+    .late-box {
+      border: 1px solid color-mix(in srgb, var(--yellow) 40%, transparent);
+      background: color-mix(in srgb, var(--yellow) 8%, var(--card));
+      border-radius: var(--radius); padding: 14px; margin-bottom: 14px;
+    }
+    .late-box.strict {
+      border-color: color-mix(in srgb, var(--red) 45%, transparent);
+      background: color-mix(in srgb, var(--red) 7%, var(--card));
+    }
+    .late-row { display: flex; align-items: center; gap: 10px; padding: 9px 0; border-top: 1px solid var(--line); }
+    .late-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--red); flex-shrink: 0; }
+    .late-notice-card {
+      text-align: left; border-radius: 12px; padding: 12px 14px;
+      background: color-mix(in srgb, var(--yellow) 12%, transparent);
+      border: 1px solid color-mix(in srgb, var(--yellow) 35%, transparent);
+    }
+    .late-notice-card.strict {
+      background: color-mix(in srgb, var(--red) 10%, transparent);
+      border-color: color-mix(in srgb, var(--red) 40%, transparent);
+    }
+
+    /* Coin balans ustuni + almashtirish tugmasi */
+    .coin-bal-cell { padding: 6px 8px; white-space: nowrap; }
+    .coin-bal { display: inline-block; min-width: 32px; font-weight: 700; font-family: 'Sora', sans-serif; font-size: 14px; vertical-align: middle; }
+    .coin-bal.neg { color: var(--red); }
+    .coin-ex-btn {
+      margin-left: 6px; width: 28px; height: 28px; border-radius: 8px;
+      border: 1px solid var(--line); background: var(--bg); color: var(--text2);
+      cursor: pointer; font-size: 14px; vertical-align: middle;
+    }
+    .coin-ex-btn:active { transform: scale(0.94); }
+    .ex-row { display: flex; align-items: center; gap: 10px; padding: 10px 0; border-bottom: 1px solid var(--line); }
+
+    /* Davr paneli: Kunlik / Haftalik / Oylik */
+    .rep-pbar { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin-bottom: 14px; }
+    .rep-seg { display: inline-flex; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; }
+    .rep-seg button {
+      border: none; background: var(--card); color: var(--text2); padding: 8px 12px;
+      font-family: 'Manrope', sans-serif; font-size: 13px; font-weight: 600; cursor: pointer;
+    }
+    .rep-seg button + button { border-left: 1px solid var(--line); }
+    .rep-seg button.on { background: var(--accent-soft); color: var(--accent2); }
+    .rep-pnav { display: flex; align-items: center; gap: 6px; flex: 1; min-width: 220px; }
+    .rep-pnav .btn[disabled] { opacity: 0.4; pointer-events: none; }
+    .rep-plabel {
+      position: relative; flex: 1; text-align: center; font-size: 13px; font-weight: 700;
+      padding: 8px 10px; border: 1px solid var(--line); border-radius: 10px; cursor: pointer; white-space: nowrap;
+    }
+    .rep-plabel input { position: absolute; inset: 0; opacity: 0; width: 100%; height: 100%; cursor: pointer; }
+
+    /* Test ro'yxati va natijalar */
+    .test-card { display: flex; align-items: center; gap: 12px; cursor: pointer; }
+    .test-avg { min-width: 58px; text-align: center; padding: 6px 8px; border-radius: 9px; font-weight: 800; font-size: 13px; }
+    .test-avg.test-empty { background: var(--bg3); }
+    .test-inp {
+      width: 64px; padding: 8px 6px; border-radius: 8px; border: 1px solid var(--line);
+      background: var(--bg); color: var(--text); text-align: center; font-weight: 700; font-size: 14px;
+      font-family: 'Manrope', sans-serif;
+    }
+    .test-inp.bad { border-color: var(--red); background: color-mix(in srgb, var(--red) 10%, transparent); }
+    .test-pct { padding: 10px 8px; font-weight: 800; min-width: 64px; }
+    .rep-note {
+      font-size: 12px; padding: 10px 12px; border-radius: 10px; margin-bottom: 12px; line-height: 1.5;
+      background: color-mix(in srgb, var(--yellow) 12%, transparent); border: 1px solid color-mix(in srgb, var(--yellow) 35%, transparent);
+    }
+    .stats-check { font-size: 11px; color: var(--text3); margin-top: 14px; line-height: 1.5; }
 
     /* Video checkbox katak */
     .video-cell {
@@ -1683,48 +1695,12 @@
         padding: 44px 36px;
       }
 
-      /* Students: multi-column grid on wide screens */
-      #students-list {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 12px;
-      }
-
-      #students-list .student-card {
-        margin-bottom: 0;
-        min-width: 0;
-      }
-
-      #students-list .student-card .student-info {
-        min-width: 0;
-        overflow: hidden;
-      }
-
-      #students-list .student-card .student-name,
-      #students-list .student-card .student-sub {
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-      }
-
-      #students-list .empty {
-        grid-column: 1 / -1;
-      }
-
       /* Stats in a single row */
       .stat-grid {
         grid-template-columns: repeat(4, 1fr);
       }
 
       /* Hover affordances */
-      .student-card {
-        transition: border-color 0.16s, transform 0.15s;
-      }
-
-      .student-card:hover {
-        border-color: var(--line-strong);
-      }
-
       .stat-card:hover {
         border-color: var(--line-strong);
       }
@@ -1761,16 +1737,6 @@
       /* My-attendance buttons side by side */
       #page-myattend .page-content {
         max-width: 520px;
-      }
-    }
-
-    @media (min-width: 1280px) {
-      #students-list {
-        grid-template-columns: 1fr 1fr 1fr;
-      }
-
-      #page-students .page-content {
-        max-width: 1120px;
       }
     }
 
@@ -1855,6 +1821,22 @@
     </div>
   </div>
 
+  <!-- KECHIKISH TANBEHI (xodim kech kelganda darhol ko'rsatiladi) -->
+  <div class="modal-overlay" id="modal-late-notice">
+    <div class="modal" style="max-width:400px;text-align:center;">
+      <div class="modal-handle"></div>
+      <div style="font-size:46px;margin-bottom:6px;">⏰</div>
+      <div class="modal-title" id="late-notice-title" style="text-align:center;color:var(--red);">Kech qoldingiz</div>
+      <div style="font-size:13px;color:var(--text2);margin-bottom:12px;" id="late-notice-times"></div>
+      <div class="late-notice-card" id="late-notice-card">
+        <div style="font-size:12px;font-weight:700;margin-bottom:6px;" id="late-notice-month"></div>
+        <p id="late-notice-text" style="font-size:14px;line-height:1.5;margin:0;"></p>
+      </div>
+      <div style="font-size:12px;color:var(--text3);margin:12px 0 16px;">Barcha kechikishlaringiz "Vazifalar" bo'limida ko'rinadi.</div>
+      <button class="btn btn-primary btn-full" onclick="closeModal('modal-late-notice')">Tushundim</button>
+    </div>
+  </div>
+
   <!-- LATE REASON MODAL (xodim kech kelganda) -->
   <div class="modal-overlay" id="modal-late-reason">
     <div class="modal" style="max-width:420px;">
@@ -1934,54 +1916,6 @@
     </div>
 
     <!-- PAGES -->
-
-    <!-- STUDENTS PAGE -->
-    <div class="page" id="page-students">
-      <div class="page-content">
-        <div class="stat-grid" style="grid-template-columns:1fr 1fr;">
-          <div class="stat-card" onclick="filterStatus('trial')" id="stat-trial">
-            <div class="stat-num" style="color:var(--text)" id="cnt-trial">0</div>
-            <div class="stat-label" id="sl-trial">Sinov</div>
-          </div>
-          <div class="stat-card" onclick="filterStatus('contract')" id="stat-contract">
-            <div class="stat-num" style="color:var(--accent2)" id="cnt-contract">0</div>
-            <div class="stat-label" id="sl-contract">Shartnoma</div>
-          </div>
-          <div class="stat-card" onclick="filterStatus('frozen')" id="stat-frozen">
-            <div class="stat-num" style="color:#b8801f" id="cnt-frozen">0</div>
-            <div class="stat-label" id="sl-frozen">Muzlatilgan</div>
-          </div>
-          <div class="stat-card" onclick="filterStatus('returned')" id="stat-returned">
-            <div class="stat-num" style="color:#39b167" id="cnt-returned">0</div>
-            <div class="stat-label" id="sl-returned">Qaytgan</div>
-          </div>
-          <div class="stat-card" onclick="filterStatus('left')" id="stat-left" style="grid-column:1 / -1;">
-            <div class="stat-num" style="color:#cc4d3f" id="cnt-left">0</div>
-            <div class="stat-label" id="sl-left">Ketgan</div>
-          </div>
-        </div>
-        <div class="search-box">
-          <span class="search-icon">🔍</span>
-          <input type="text" id="student-search" placeholder="Qidirish..." oninput="renderStudents()">
-          <button class="btn btn-sm btn-secondary" onclick="clearFilter()" id="filter-clear"
-            style="display:none">✕</button>
-        </div>
-        <div style="display:flex;gap:8px;align-items:center;margin-bottom:14px;flex-wrap:wrap;">
-          <span style="font-size:12px;color:var(--text2);font-weight:600;">📅 Sana:</span>
-          <input type="date" id="student-from" onchange="renderStudents()"
-            style="flex:1;min-width:130px;padding:9px 12px;border-radius:12px;border:1px solid var(--line);background:var(--bg);color:var(--text);font-family:'Manrope',sans-serif;font-size:13px;">
-          <input type="date" id="student-to" onchange="renderStudents()"
-            style="flex:1;min-width:130px;padding:9px 12px;border-radius:12px;border:1px solid var(--line);background:var(--bg);color:var(--text);font-family:'Manrope',sans-serif;font-size:13px;">
-          <button class="btn btn-sm btn-secondary" onclick="clearDateFilter()">✕</button>
-        </div>
-        <div id="level-filter-row" class="pill-row" style="margin-bottom:14px;"></div>
-        <div class="section-header">
-          <span class="section-title" id="students-count">Talabalar</span>
-          <button class="btn btn-sm btn-primary" onclick="openAddStudent()" id="btn-add-student">+ Qo'shish</button>
-        </div>
-        <div id="students-list"></div>
-      </div>
-    </div>
 
     <!-- MY ATTENDANCE PAGE (staff only) -->
     <div class="page" id="page-myattend">
@@ -2115,6 +2049,7 @@
           <button class="btn btn-sm btn-primary" onclick="openAddTask()" id="btn-add-task" style="display:none">+
             Vazifa</button>
         </div>
+        <div id="my-lates" style="display:none;"></div>
         <div id="tasks-list"></div>
       </div>
     </div>
@@ -2317,15 +2252,6 @@
         </svg>
         <span id="nav-lbl-myattend">Davomat</span>
       </div>
-      <div class="nav-item" onclick="showPage('students')" id="nav-students">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
-          <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
-          <circle cx="9" cy="7" r="4" />
-          <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
-          <path d="M16 3.13a4 4 0 0 1 0 7.75" />
-        </svg>
-        <span id="nav-lbl-students">Talabalar</span>
-      </div>
       <div class="nav-item" onclick="showPage('attendance')" id="nav-attendance">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
           <rect x="3" y="4" width="18" height="18" rx="2" />
@@ -2371,90 +2297,6 @@
   </div>
 
   <!-- MODALS -->
-
-  <!-- ADD STUDENT MODAL -->
-  <div class="modal-overlay" id="modal-student">
-    <div class="modal">
-      <div class="modal-handle"></div>
-      <div class="modal-title" id="modal-student-title">Talaba qo'shish</div>
-      <div class="inp-group">
-        <label>Ism *</label>
-        <input type="text" id="s-name" placeholder="To'liq ism" autofocus>
-      </div>
-      <div class="inp-group">
-        <label>O'qituvchi</label>
-        <div class="pill-row" id="teacher-pills"></div>
-      </div>
-      <div class="inp-group">
-        <label>Guruh</label>
-        <div class="pill-row" id="group-pills"></div>
-      </div>
-      <div class="inp-group">
-        <label>Daraja</label>
-        <div class="pill-row" id="level-pills"></div>
-      </div>
-      <div class="inp-group">
-        <label>Holat *</label>
-        <div class="pill-row">
-          <button class="pill trial" onclick="selectStatus('trial')">Sinov</button>
-          <button class="pill contract" onclick="selectStatus('contract')">Shartnoma</button>
-          <button class="pill frozen" onclick="selectStatus('frozen')">Muzlatilgan</button>
-          <button class="pill returned" onclick="selectStatus('returned')">Qaytgan</button>
-          <button class="pill left" onclick="selectStatus('left')">Ketgan</button>
-        </div>
-      </div>
-      <div id="reason-extra" style="display:none">
-        <div class="inp-group">
-          <label>Sabab</label>
-          <div class="pill-row" id="student-reason-pills"></div>
-        </div>
-      </div>
-      <div id="freeze-extra" style="display:none">
-        <div class="inp-group">
-          <label>Qaytish sanasi</label>
-          <input type="date" id="s-return-date">
-        </div>
-      </div>
-      <div style="display:flex;gap:10px;margin-top:8px;">
-        <button class="btn btn-secondary" onclick="closeModal('modal-student')" style="flex:1">Bekor</button>
-        <button class="btn btn-primary" onclick="saveStudent(false)" style="flex:1">Saqlash</button>
-        <button class="btn btn-secondary" onclick="saveStudent(true)">+ Yana</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- STUDENT DETAIL MODAL -->
-  <div class="modal-overlay" id="modal-student-detail">
-    <div class="modal">
-      <div class="modal-handle"></div>
-      <div style="display:flex;align-items:center;gap:12px;margin-bottom:20px;">
-        <div class="student-avatar" id="detail-avatar" style="width:54px;height:54px;font-size:20px;"></div>
-        <div>
-          <div style="font-size:18px;font-weight:700;" id="detail-name">-</div>
-          <div style="font-size:13px;color:var(--text2);" id="detail-sub">-</div>
-        </div>
-      </div>
-      <div id="detail-freeze-info"
-        style="display:none;background:color-mix(in srgb, var(--yellow) 10%, transparent);border:1px solid color-mix(in srgb, var(--yellow) 30%, transparent);border-radius:12px;padding:12px;margin-bottom:16px;">
-        <div style="font-size:12px;color:var(--text2);margin-bottom:4px;">Qaytish sanasi</div>
-        <div style="font-size:16px;font-weight:700;color:var(--yellow);" id="detail-return">-</div>
-        <div class="freeze-days" id="detail-days">-</div>
-      </div>
-      <div style="font-size:13px;color:var(--text2);margin-bottom:10px;">Tezkor status o'zgartirish:</div>
-      <div class="pill-row" style="margin-bottom:20px;">
-        <button class="pill trial" onclick="quickStatus('trial')">Sinov</button>
-        <button class="pill contract" onclick="quickStatus('contract')">Shartnoma</button>
-        <button class="pill frozen" onclick="quickStatus('frozen')">Muzlatilgan</button>
-        <button class="pill returned" onclick="quickStatus('returned')">Qaytgan</button>
-        <button class="pill left" onclick="quickStatus('left')">Ketgan</button>
-      </div>
-      <div style="display:flex;gap:10px;">
-        <button class="btn btn-secondary" onclick="closeModal('modal-student-detail')" style="flex:1">Yopish</button>
-        <button class="btn btn-primary" onclick="editCurrentStudent()" style="flex:1">Tahrirlash</button>
-        <button class="btn btn-danger btn-icon" onclick="deleteCurrentStudent()">🗑</button>
-      </div>
-    </div>
-  </div>
 
   <!-- CHECK IN MODAL -->
   <div class="modal-overlay" id="modal-checkin">
@@ -2639,8 +2481,6 @@
               checked> Vazifa belgilash</label>
           <label style="display:flex;align-items:center;gap:8px;font-size:14px;"><input type="checkbox"
               id="perm-reports" checked> Hisobot olish</label>
-          <label style="display:flex;align-items:center;gap:8px;font-size:14px;"><input type="checkbox"
-              id="perm-students" checked> Talabalar boshqarish</label>
         </div>
       </div>
       <div style="display:flex;gap:10px;margin-top:8px;">
@@ -2716,17 +2556,54 @@
       <div class="modal-handle"></div>
       <div class="modal-title">Guruh o'quvchilari</div>
       <div style="display:flex;gap:8px;margin-bottom:16px;">
-        <input type="text" id="member-name-input" list="member-student-list" placeholder="O'quvchi ismi..."
+        <input type="text" id="member-name-input" placeholder="O'quvchi ismi..."
           style="flex:1;padding:12px 14px;border-radius:12px;border:1px solid var(--line);background:var(--bg);color:var(--text);font-family:'Manrope',sans-serif;font-size:14px;"
           onkeydown="if(event.key==='Enter')addMember()">
-        <datalist id="member-student-list"></datalist>
         <button class="btn btn-primary" onclick="addMember()">Qo'shish</button>
       </div>
       <div style="font-size:12px;color:var(--text3);margin-bottom:8px;">
-        Asosiy talabalar ro'yxatidan tanlang yoki yangi ism yozing.
+        O'quvchi ismini yozing va "Qo'shish" tugmasini bosing.
       </div>
       <div id="members-list" style="max-height:50vh;overflow-y:auto;"></div>
       <button class="btn btn-secondary btn-full" onclick="closeModal('modal-members')" style="margin-top:14px;">Yopish</button>
+    </div>
+  </div>
+
+  <!-- HISOBOT: Test yaratish / tahrirlash -->
+  <div class="modal-overlay" id="modal-test">
+    <div class="modal">
+      <div class="modal-handle"></div>
+      <div class="modal-title" id="modal-test-title">Yangi test</div>
+      <div class="inp-group">
+        <label>Test nomi *</label>
+        <input type="text" id="test-name" maxlength="120" placeholder="Masalan: Kasrlar — 2-bo'lim">
+      </div>
+      <div style="display:flex;gap:10px;">
+        <div class="inp-group" style="flex:1;">
+          <label>Sana *</label>
+          <input type="date" id="test-date">
+        </div>
+        <div class="inp-group" style="flex:1;">
+          <label>Savollar soni *</label>
+          <input type="number" id="test-total" inputmode="numeric" min="1" max="500" placeholder="20"
+            onkeydown="if(event.key==='Enter')saveTest()">
+        </div>
+      </div>
+      <div style="display:flex;gap:10px;margin-top:8px;">
+        <button class="btn btn-secondary" onclick="closeModal('modal-test')" style="flex:1">Bekor</button>
+        <button class="btn btn-primary" onclick="saveTest()" style="flex:1">Saqlash</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- HISOBOT: Coin almashtirish tarixi (admin) -->
+  <div class="modal-overlay" id="modal-coin-ex">
+    <div class="modal">
+      <div class="modal-handle"></div>
+      <div class="modal-title">🧾 Almashtirish tarixi</div>
+      <div style="font-size:12px;color:var(--text3);margin-bottom:8px;">↶ — xato kiritilgan almashtirishni bekor qilish (coinlar balansga qaytadi).</div>
+      <div id="coin-ex-list" style="max-height:55vh;overflow-y:auto;"></div>
+      <button class="btn btn-secondary btn-full" onclick="closeModal('modal-coin-ex')" style="margin-top:14px;">Yopish</button>
     </div>
   </div>
 
@@ -2759,12 +2636,11 @@
     // ============================================================
     // STATE
     // ============================================================
-    const APP_VERSION = 'upg 15';
+    const APP_VERSION = 'upg 19';
     let currentUser = null;
-    let students = [], teachers = [], groups = [], staffList = [], branches = [], tasks = [], attendances = [], admins = [];
-    let selectedStatus = null, selectedReason = null, selectedTeacher = null, selectedGroup = null, selectedLevel = null;
+    let teachers = [], groups = [], staffList = [], branches = [], tasks = [], attendances = [], admins = [];
     let selectedCIType = 'checkin', selectedTaskType = 'task';
-    let currentStudentId = null, currentTaskId = null, currentEditStaffId = null, editingTaskId = null;
+    let currentTaskId = null, currentEditStaffId = null, editingTaskId = null;
 
     // XSS himoyasi: HTML maxsus belgilarini xavfsizlash
     function esc(s) {
@@ -2796,8 +2672,6 @@
         openModal('modal-confirm');
       });
     }
-    let filterStatusActive = null;
-    let filterLevel = null;
     let reportPeriod = 'daily';
     let notifEnabled = true;
     let lang = localStorage.getItem('lang') || 'uz';
@@ -2805,7 +2679,7 @@
     // TRANSLATIONS
     const T = {
       uz: {
-        students: 'Talabalar', attend: 'Davomat', tasks: 'Vazifalar', reports: 'Hisobot', mgmt: 'Boshqaruv', settings: 'Sozlamalar',
+        attend: 'Davomat', tasks: 'Vazifalar', reports: 'Hisobot', mgmt: 'Boshqaruv', settings: 'Sozlamalar',
         trial: 'Sinov', contract: 'Shartnoma', frozen: 'Muzlatilgan', left: 'Ketgan', returned: 'Qaytgan',
         add: 'Qo\'shish', save: 'Saqlash', cancel: 'Bekor', close: 'Yopish', edit: 'Tahrirlash', del: 'O\'chirish',
         login: 'Login', pass: 'Parol', enter: 'Kirish', logout: 'Chiqish',
@@ -2820,7 +2694,7 @@
         auth_sub: 'O\'quv markazi boshqaruv tizimi', wrong_creds: 'Login yoki parol noto\'g\'ri'
       },
       ru: {
-        students: 'Ученики', attend: 'Посещаемость', tasks: 'Задачи', reports: 'Отчёты', mgmt: 'Управление', settings: 'Настройки',
+        attend: 'Посещаемость', tasks: 'Задачи', reports: 'Отчёты', mgmt: 'Управление', settings: 'Настройки',
         trial: 'Пробный', contract: 'Договор', frozen: 'Заморожен', left: 'Ушёл', returned: 'Вернулся',
         add: 'Добавить', save: 'Сохранить', cancel: 'Отмена', close: 'Закрыть', edit: 'Изменить', del: 'Удалить',
         login: 'Логин', pass: 'Пароль', enter: 'Войти', logout: 'Выйти',
@@ -2835,7 +2709,7 @@
         auth_sub: 'Система управления учебным центром', wrong_creds: 'Неверный логин или пароль'
       },
       en: {
-        students: 'Students', attend: 'Attendance', tasks: 'Tasks', reports: 'Reports', mgmt: 'Management', settings: 'Settings',
+        attend: 'Attendance', tasks: 'Tasks', reports: 'Reports', mgmt: 'Management', settings: 'Settings',
         trial: 'Trial', contract: 'Contract', frozen: 'Frozen', left: 'Left', returned: 'Returned',
         add: 'Add', save: 'Save', cancel: 'Cancel', close: 'Close', edit: 'Edit', del: 'Delete',
         login: 'Login', pass: 'Password', enter: 'Enter', logout: 'Logout',
@@ -2867,7 +2741,6 @@
       document.getElementById('lbl-login').textContent = t('login');
       document.getElementById('lbl-pass').textContent = t('pass');
       document.getElementById('lbl-enter').textContent = t('enter');
-      document.getElementById('nav-lbl-students').textContent = t('students');
       const myAttLbl = document.getElementById('nav-lbl-myattend');
       if (myAttLbl) myAttLbl.textContent = t('attend');
       document.getElementById('nav-lbl-attend').textContent = t('attend');
@@ -2875,10 +2748,6 @@
       document.getElementById('nav-lbl-admin').textContent = t('mgmt');
       const repLbl = document.getElementById('nav-lbl-reports'); if (repLbl) repLbl.textContent = t('reports');
       document.getElementById('nav-lbl-settings').textContent = t('settings');
-      document.getElementById('sl-trial').textContent = t('trial');
-      document.getElementById('sl-contract').textContent = t('contract');
-      document.getElementById('sl-frozen').textContent = t('frozen');
-      document.getElementById('sl-left').textContent = t('left');
       document.getElementById('lbl-theme').textContent = t('theme');
       document.getElementById('lbl-notif').textContent = t('notif');
       document.getElementById('lbl-fullname').textContent = t('fullname');
@@ -2887,7 +2756,7 @@
       document.getElementById('lbl-logout').textContent = t('logout');
       if (currentUser) {
         document.getElementById('lbl-enter') && null;
-        renderStudents(); renderTasks(); renderTodayAttendance();
+        renderTasks(); renderTodayAttendance();
       }
     }
 
@@ -2987,7 +2856,7 @@
       try {
         // Try super admin hardcoded (demo)
         if (login === 'superadmin' && pass === 'super123') {
-          currentUser = { id: 'superadmin', name: 'Super Admin', role: 'superadmin', login: 'superadmin', permissions: { add_staff: true, tasks: true, reports: true, students: true } };
+          currentUser = { id: 'superadmin', name: 'Super Admin', role: 'superadmin', login: 'superadmin', permissions: { add_staff: true, tasks: true, reports: true } };
           afterLogin();
           return;
         }
@@ -3026,8 +2895,7 @@
         const active = document.querySelector('.page.active');
         const pid = active ? active.id.replace('page-', '') : null;
         if (pid === 'myattend') refreshMyAttendance();
-        else if (pid === 'students') { updateStats(); renderStudents(); }
-        else if (pid === 'tasks') { renderTasks(); markTasksSeen(); }
+        else if (pid === 'tasks') { renderTasks(); renderMyLates(); markTasksSeen(); }
         else if (pid === 'attendance') { loadAttendance(); loadLate(); }
         else if (pid === 'admin') { renderStaff(); renderBranches(); renderAdmins(); }
         showToast('Yangilandi', 1200, 'ok');
@@ -3134,7 +3002,6 @@
       if (isStaff) {
         // Xodim (o'qituvchi) faqat: Davomatim + Vazifalar + Hisobot + Sozlamalar
         document.getElementById('nav-myattend').style.display = '';
-        document.getElementById('nav-students').style.display = 'none';
         document.getElementById('nav-attendance').style.display = 'none';
         document.getElementById('nav-admin').style.display = 'none';
         document.getElementById('nav-tasks').style.display = '';
@@ -3145,16 +3012,13 @@
       } else {
         // Admin / Super admin — to'liq panel
         document.getElementById('nav-myattend').style.display = 'none';
-        document.getElementById('nav-students').style.display = '';
         document.getElementById('nav-attendance').style.display = '';
         document.getElementById('nav-admin').style.display = '';
         document.getElementById('nav-reports').style.display = '';
         document.getElementById('btn-add-task').style.display = '';
-        // Admin uchun talabalar ruxsati (super admin doim ko'radi)
+        // Admin uchun hisobot ruxsati (super admin doim ko'radi)
         if (currentUser.role === 'admin') {
           const perm = currentUser.permissions || {};
-          document.getElementById('nav-students').style.display = perm.students !== false ? '' : 'none';
-          document.getElementById('btn-add-student').style.display = perm.students !== false ? '' : 'none';
           document.getElementById('nav-reports').style.display = perm.reports !== false ? '' : 'none';
         }
         if (currentUser.role === 'superadmin') {
@@ -3180,7 +3044,7 @@
           showPage('myattend');
         }
       } else {
-        showPage('students');
+        showPage('attendance');
       }
     }
 
@@ -3194,12 +3058,12 @@
       const navEl = document.getElementById('nav-' + page);
       if (pageEl) pageEl.classList.add('active');
       if (navEl) navEl.classList.add('active');
-      const titles = { myattend: t('attend'), students: t('students'), attendance: t('attend'), tasks: t('tasks'), reports: t('reports'), admin: t('mgmt'), settings: t('settings') };
+      const titles = { myattend: t('attend'), attendance: t('attend'), tasks: t('tasks'), reports: t('reports'), admin: t('mgmt'), settings: t('settings') };
       const titleEl = document.getElementById('page-title');
       if (titleEl) titleEl.textContent = titles[page] || '';
       if (page === 'myattend') refreshMyAttendance();
       if (page === 'attendance') { loadAttendance(); loadLate(); }
-      if (page === 'tasks') { renderTasks(); markTasksSeen(); }
+      if (page === 'tasks') { renderTasks(); renderMyLates(); markTasksSeen(); }
       if (page === 'reports') { initReports(); }
       if (page === 'admin') { renderStaff(); renderBranches(); renderAdmins(); }
     }
@@ -3208,7 +3072,7 @@
     // LOAD DATA
     // ============================================================
     async function loadAll() {
-      await Promise.all([loadStudents(), loadTeachers(), loadGroups(), loadStaff(), loadBranches(), loadTasks(), loadAdmins(), loadTags()]);
+      await Promise.all([loadTeachers(), loadGroups(), loadStaff(), loadBranches(), loadTasks(), loadAdmins(), loadTags()]);
     }
 
     let appTags = [];
@@ -3217,13 +3081,6 @@
       appTags = data || [];
     }
     function tagsByKind(kind) { return appTags.filter(t => t.kind === kind); }
-
-    async function loadStudents() {
-      const { data } = await sb.from('students').select('*').order('created_at', { ascending: false });
-      students = data || [];
-      renderStudents();
-      updateStats();
-    }
 
     async function loadTeachers() {
       const { data } = await sb.from('teachers').select('*').order('name');
@@ -3236,9 +3093,16 @@
     }
 
     async function loadStaff() {
-      const { data } = await sb.from('staff').select('*').order('name');
+      const { data, error } = await sb.from('staff').select('*').order('name');
+      if (error) { console.warn('loadStaff:', error); return; } // tarmoq xatosida ro'yxatni bo'shatmaymiz
       staffList = data || [];
       populateStaffSelects();
+      // Xodim bazadan o'chirilgan bo'lsa — qurilmadagi sessiyani yopamiz
+      if (currentUser && currentUser.role !== 'admin' && currentUser.role !== 'superadmin'
+          && !staffList.some(x => x.id === currentUser.id)) {
+        showToast('Hisobingiz o\'chirilgan. Administrator bilan bog\'laning.', 4000);
+        setTimeout(doLogout, 2500);
+      }
     }
 
     async function loadBranches() {
@@ -3263,6 +3127,7 @@
       }
       renderTasks();
       updateTasksBadge();
+      loadMyLates(); // xodim bo'lsa — joriy oy kechikishlari (fonda)
     }
 
     // Ko'rilgan vazifalar (localStorage)
@@ -3272,11 +3137,14 @@
     }
     function markTasksSeen() {
       localStorage.setItem('seenTasks_' + currentUser.id, JSON.stringify(tasks.map(t => t.id)));
+      markLatesSeen();
       updateTasksBadge();
     }
     function updateTasksBadge() {
       const seen = seenTaskIds();
-      const unseen = tasks.filter(t => !seen.includes(t.id)).length;
+      const seenL = isStaffUser() ? seenLateIds() : [];
+      const unseen = tasks.filter(t => !seen.includes(t.id)).length
+        + (isStaffUser() ? myLatesCurrent.filter(a => !seenL.includes(a.id)).length : 0);
       const badge = document.getElementById('tasks-badge');
       if (!badge) return;
       if (unseen > 0) {
@@ -3321,260 +3189,6 @@
     async function loadLate() {
       const { data } = await sb.from('attendance').select('*').eq('type', 'checkin').order('time', { ascending: false }).limit(100);
       renderLate(data || []);
-    }
-
-    // ============================================================
-    // STUDENTS
-    // ============================================================
-    function filterStatus(s) {
-      if (filterStatusActive === s) { filterStatusActive = null; }
-      else { filterStatusActive = s; }
-      document.querySelectorAll('.stat-card').forEach(c => c.classList.remove('active'));
-      if (filterStatusActive) {
-        const map = { trial: 'stat-trial', contract: 'stat-contract', frozen: 'stat-frozen', left: 'stat-left', returned: 'stat-returned' };
-        document.getElementById(map[s])?.classList.add('active');
-      }
-      document.getElementById('filter-clear').style.display = filterStatusActive ? '' : 'none';
-      renderStudents();
-    }
-
-    function clearFilter() { filterStatusActive = null; filterLevel = null; document.querySelectorAll('.stat-card').forEach(c => c.classList.remove('active')); document.getElementById('filter-clear').style.display = 'none'; renderStudents(); }
-    function clearDateFilter() { document.getElementById('student-from').value = ''; document.getElementById('student-to').value = ''; renderStudents(); }
-
-    function updateStats() {
-      const counts = { trial: 0, contract: 0, frozen: 0, left: 0, returned: 0 };
-      students.forEach(s => { if (counts[s.status] !== undefined) counts[s.status]++; });
-      document.getElementById('cnt-trial').textContent = counts.trial;
-      document.getElementById('cnt-contract').textContent = counts.contract;
-      document.getElementById('cnt-frozen').textContent = counts.frozen;
-      document.getElementById('cnt-left').textContent = counts.left;
-      const rt = document.getElementById('cnt-returned');
-      if (rt) rt.textContent = counts.returned;
-    }
-
-    function buildLevelFilter() {
-      const row = document.getElementById('level-filter-row');
-      if (!row) return;
-      const levels = tagsByKind('level');
-      if (!levels.length) { row.innerHTML = ''; row.style.display = 'none'; return; }
-      row.style.display = 'flex';
-      row.innerHTML = `<button class="pill${!filterLevel ? ' selected' : ''}" onclick="toggleLevelFilter(null)">Barchasi</button>` +
-        levels.map(l => `<button class="pill${filterLevel === l.label ? ' selected' : ''}" onclick="toggleLevelFilter('${l.label.replace(/'/g, "\\'")}')">${esc(l.label)}</button>`).join('');
-    }
-    function toggleLevelFilter(label) {
-      filterLevel = (filterLevel === label) ? null : label;
-      renderStudents();
-    }
-
-    function renderStudents() {
-      buildLevelFilter();
-      const search = document.getElementById('student-search')?.value.toLowerCase() || '';
-      const fromV = document.getElementById('student-from')?.value || '';
-      const toV = document.getElementById('student-to')?.value || '';
-      const fromTs = fromV ? new Date(fromV + 'T00:00:00').getTime() : null;
-      const toTs = toV ? new Date(toV + 'T23:59:59').getTime() : null;
-      let filtered = students.filter(s => {
-        const matchSearch = !search || s.name.toLowerCase().includes(search) || (s.group_name || '').toLowerCase().includes(search) || (s.teacher || '').toLowerCase().includes(search);
-        const matchStatus = !filterStatusActive || s.status === filterStatusActive;
-        const matchLevel = !filterLevel || s.level === filterLevel;
-        let matchDate = true;
-        if (fromTs || toTs) {
-          const ct = s.created_at ? new Date(s.created_at).getTime() : 0;
-          if (fromTs && ct < fromTs) matchDate = false;
-          if (toTs && ct > toTs) matchDate = false;
-        }
-        return matchSearch && matchStatus && matchLevel && matchDate;
-      });
-      document.getElementById('students-count').textContent = `${t('students')} (${filtered.length})`;
-      const list = document.getElementById('students-list');
-      if (!filtered.length) { list.innerHTML = `<div class="empty"><div class="empty-icon">👥</div><h3>${t('no_data')}</h3></div>`; return; }
-      list.innerHTML = filtered.map(s => {
-        const initials = s.name.split(' ').map(w => w[0]).join('').toUpperCase().slice(0, 2);
-        const colors = { trial: 'var(--bg3)', contract: 'var(--accent-soft)', frozen: 'color-mix(in srgb, var(--yellow) 15%, transparent)', left: 'color-mix(in srgb, var(--red) 15%, transparent)', returned: 'var(--accent-soft)' };
-        const textColors = { trial: 'var(--text2)', contract: 'var(--accent2)', frozen: '#b8801f', left: '#cc4d3f', returned: 'var(--accent2)' };
-        let freezeInfo = '';
-        if (s.status === 'frozen' && s.return_date) {
-          const days = Math.ceil((new Date(s.return_date) - new Date()) / 86400000);
-          const cls = days > 7 ? 'green' : days > 2 ? 'yellow' : 'red';
-          freezeInfo = `<span class="freeze-days ${cls}" style="font-size:13px;">${days > 0 ? days + ' kun' : 'Tugadi'}</span>`;
-        }
-        const addedDate = s.created_at ? new Date(s.created_at).toLocaleDateString('uz-UZ', { day: 'numeric', month: 'short', year: 'numeric' }) + ', ' + new Date(s.created_at).toLocaleTimeString('uz-UZ', { hour: '2-digit', minute: '2-digit' }) : '';
-        const reasonTag = s.freeze_reason ? `<span style="font-size:10px;color:var(--text3);">• ${s.freeze_reason}</span>` : '';
-        const levelTag = s.level ? `<span style="font-size:10px;font-weight:600;color:var(--accent2);border:1px solid color-mix(in srgb, var(--accent) 35%, transparent);padding:1px 7px;border-radius:5px;margin-left:6px;">${esc(s.level)}</span>` : '';
-        return `<div class="student-card" onclick="openStudentDetail('${s.id}')">
-      <div class="student-avatar" style="background:${colors[s.status]};color:${textColors[s.status]};flex-shrink:0;">${initials}</div>
-      <div class="student-info">
-        <div class="student-name">${esc(s.name)}${levelTag}</div>
-        <div class="student-sub">${esc(s.teacher || '')} ${s.group_name ? '• ' + esc(s.group_name) : ''}</div>
-        <div style="font-size:11px;color:var(--text3);margin-top:2px;">📅 ${addedDate} ${reasonTag}</div>
-      </div>
-      <div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px;flex-shrink:0;">
-        <span class="status-badge s-${s.status}">${t(s.status)}</span>
-        ${freezeInfo}
-      </div>
-    </div>`;
-      }).join('');
-    }
-
-    function openAddStudent() {
-      selectedStatus = null; selectedReason = null; selectedLevel = null;
-      // Oxirgi tanlangan o'qituvchi/guruhni eslab qolish (tez kiritish uchun)
-      selectedTeacher = teachers.some(x => x.id === localStorage.getItem('lastTeacher')) ? localStorage.getItem('lastTeacher') : null;
-      selectedGroup = groups.some(x => x.id === localStorage.getItem('lastGroup')) ? localStorage.getItem('lastGroup') : null;
-      currentStudentId = null;
-      document.getElementById('s-name').value = '';
-      document.getElementById('s-return-date').value = '';
-      document.getElementById('freeze-extra').style.display = 'none';
-      const re = document.getElementById('reason-extra'); if (re) re.style.display = 'none';
-      document.getElementById('modal-student-title').textContent = 'Talaba qo\'shish';
-      buildTeacherPills(); buildGroupPills(); buildLevelPills();
-      document.querySelectorAll('#modal-student .pill').forEach(p => p.classList.remove('selected'));
-      openModal('modal-student');
-      setTimeout(() => document.getElementById('s-name').focus(), 300);
-    }
-
-    const emptyPillHint = (txt) => `<span style="font-size:12px;color:var(--text3);padding:6px 2px;">${txt}</span>`;
-
-    function buildTeacherPills() {
-      const c = document.getElementById('teacher-pills');
-      c.innerHTML = teachers.length
-        ? teachers.map(t => `<button class="pill pill-entity${selectedTeacher === t.id ? ' selected' : ''}" onclick="selectTeacher('${t.id}')">${t.name}</button>`).join('')
-        : emptyPillHint("Yo'q — Boshqaruv → O'qituvchilar'dan qo'shing");
-    }
-    function buildGroupPills() {
-      const c = document.getElementById('group-pills');
-      c.innerHTML = groups.length
-        ? groups.map(g => `<button class="pill pill-entity${selectedGroup === g.id ? ' selected' : ''}" onclick="selectGroup('${g.id}')">${g.name}</button>`).join('')
-        : emptyPillHint("Yo'q — Boshqaruv → Guruhlar'dan qo'shing");
-    }
-    function buildLevelPills() {
-      const c = document.getElementById('level-pills');
-      if (!c) return;
-      const levels = tagsByKind('level');
-      c.innerHTML = levels.length
-        ? levels.map(l => `<button class="pill pill-entity${selectedLevel === l.label ? ' selected' : ''}" onclick="selectLevel('${l.label.replace(/'/g, "\\'")}')">${l.label}</button>`).join('')
-        : emptyPillHint("Yo'q — Boshqaruv → Darajalar'dan qo'shing");
-    }
-
-    function selectTeacher(id) { selectedTeacher = (selectedTeacher === id ? null : id); buildTeacherPills(); if (selectedTeacher) localStorage.setItem('lastTeacher', id); }
-    function selectGroup(id) { selectedGroup = (selectedGroup === id ? null : id); buildGroupPills(); if (selectedGroup) localStorage.setItem('lastGroup', id); }
-    function selectLevel(label) { selectedLevel = (selectedLevel === label ? null : label); buildLevelPills(); }
-    function selectStatus(s) {
-      selectedStatus = s;
-      selectedReason = null;
-      document.querySelectorAll('#modal-student .pill:not(.pill-entity)').forEach(p => p.classList.remove('selected'));
-      event.target.classList.add('selected');
-      // Sabab teglari (frozen, left, returned, trial, contract uchun)
-      const reasonTags = tagsByKind(s);
-      const reasonBox = document.getElementById('reason-extra');
-      const pills = document.getElementById('student-reason-pills');
-      if (reasonTags.length) {
-        reasonBox.style.display = '';
-        pills.innerHTML = reasonTags.map(tg => `<button class="pill pill-entity" onclick="selectReason('${tg.label.replace(/'/g, "\\'")}')">${tg.label}</button>`).join('');
-      } else {
-        reasonBox.style.display = 'none';
-        pills.innerHTML = '';
-      }
-      // Qaytish sanasi faqat muzlatilgan uchun
-      document.getElementById('freeze-extra').style.display = s === 'frozen' ? '' : 'none';
-    }
-    function selectReason(r) { selectedReason = r; document.querySelectorAll('#student-reason-pills .pill').forEach(p => p.classList.remove('selected')); event.target.classList.add('selected'); }
-
-    async function saveStudent(keepOpen) {
-      const name = document.getElementById('s-name').value.trim();
-      if (!name || !selectedStatus) { showToast('Ism va holat kerak!'); return; }
-      const teacher = teachers.find(t => t.id === selectedTeacher);
-      const group = groups.find(g => g.id === selectedGroup);
-      const obj = {
-        name, status: selectedStatus,
-        teacher: teacher?.name || null,
-        group_name: group?.name || null,
-        level: selectedLevel || null,
-        freeze_reason: selectedReason || null,
-        return_date: document.getElementById('s-return-date').value || null
-      };
-      await withLoader(t('save') + '...', async () => {
-        if (currentStudentId) {
-          await sb.from('students').update(obj).eq('id', currentStudentId);
-        } else {
-          await sb.from('students').insert([obj]);
-        }
-        await loadStudents();
-      });
-      showToast(t('saved'));
-      if (!keepOpen) closeModal('modal-student');
-      else { document.getElementById('s-name').value = ''; selectedStatus = null; selectedLevel = null; document.querySelectorAll('#modal-student .pill').forEach(p => p.classList.remove('selected')); buildLevelPills(); document.getElementById('freeze-extra').style.display = 'none'; document.getElementById('s-name').focus(); }
-    }
-
-    function openStudentDetail(id) {
-      const s = students.find(x => x.id === id);
-      if (!s) return;
-      currentStudentId = id;
-      const initials = s.name.split(' ').map(w => w[0]).join('').toUpperCase().slice(0, 2);
-      const colors = { trial: 'var(--bg3)', contract: 'var(--accent-soft)', frozen: 'color-mix(in srgb, var(--yellow) 15%, transparent)', left: 'color-mix(in srgb, var(--red) 15%, transparent)', returned: 'var(--accent-soft)' };
-      const textColors = { trial: 'var(--text2)', contract: 'var(--accent2)', frozen: '#b8801f', left: '#cc4d3f', returned: 'var(--accent2)' };
-      document.getElementById('detail-avatar').style.background = colors[s.status];
-      document.getElementById('detail-avatar').style.color = textColors[s.status];
-      document.getElementById('detail-avatar').textContent = initials;
-      document.getElementById('detail-name').textContent = s.name;
-      const added = s.created_at ? new Date(s.created_at).toLocaleDateString('uz-UZ', { day: 'numeric', month: 'long', year: 'numeric' }) + ', ' + new Date(s.created_at).toLocaleTimeString('uz-UZ', { hour: '2-digit', minute: '2-digit' }) : '';
-      const parts = [];
-      if (s.teacher) parts.push(s.teacher);
-      if (s.group_name) parts.push(s.group_name);
-      if (s.level) parts.push('🎓 ' + s.level);
-      if (s.freeze_reason) parts.push('Sabab: ' + s.freeze_reason);
-      document.getElementById('detail-sub').innerHTML = parts.join(' • ') + (added ? `<div style="font-size:11px;color:var(--text3);margin-top:4px;">📅 Qo'shilgan: ${added}</div>` : '');
-      const fi = document.getElementById('detail-freeze-info');
-      if (s.status === 'frozen' && s.return_date) {
-        fi.style.display = '';
-        document.getElementById('detail-return').textContent = s.return_date;
-        const days = Math.ceil((new Date(s.return_date) - new Date()) / 86400000);
-        const el = document.getElementById('detail-days');
-        el.textContent = days > 0 ? days + ' kun qoldi' : 'Muddati tugagan';
-        el.className = 'freeze-days ' + (days > 7 ? 'green' : days > 2 ? 'yellow' : 'red');
-      } else { fi.style.display = 'none'; }
-      openModal('modal-student-detail');
-    }
-
-    async function quickStatus(s) {
-      if (!currentStudentId) return;
-      await withLoader(t('save') + '...', async () => {
-        await sb.from('students').update({ status: s }).eq('id', currentStudentId);
-        await loadStudents();
-      });
-      showToast(t('saved'));
-      closeModal('modal-student-detail');
-    }
-
-    function editCurrentStudent() {
-      const s = students.find(x => x.id === currentStudentId);
-      if (!s) return;
-      closeModal('modal-student-detail');
-      selectedStatus = s.status;
-      selectedTeacher = teachers.find(t => t.name === s.teacher)?.id || null;
-      selectedGroup = groups.find(g => g.name === s.group_name)?.id || null;
-      selectedLevel = s.level || null;
-      selectedReason = s.freeze_reason;
-      document.getElementById('s-name').value = s.name;
-      document.getElementById('s-return-date').value = s.return_date || '';
-      document.getElementById('modal-student-title').textContent = 'Tahrirlash';
-      buildTeacherPills(); buildGroupPills(); buildLevelPills();
-      document.querySelectorAll('#modal-student .pill').forEach(p => {
-        if (p.classList.contains(s.status) && !p.classList.contains('pill-entity')) p.classList.add('selected');
-      });
-      document.getElementById('freeze-extra').style.display = s.status === 'frozen' ? '' : 'none';
-      openModal('modal-student');
-    }
-
-    async function deleteCurrentStudent() {
-      if (!currentStudentId) return;
-      if (!await confirmDialog('O\'chirilsinmi?', 'Bu amalni qaytarib bo\'lmaydi.')) return;
-      await withLoader(t('del') + '...', async () => {
-        await sb.from('students').delete().eq('id', currentStudentId);
-        await loadStudents();
-      });
-      showToast(t('deleted'));
-      closeModal('modal-student-detail');
     }
 
     // ============================================================
@@ -3692,7 +3306,7 @@
         const box = document.getElementById('branch-pick-list');
         box.innerHTML = matches.map(m =>
           `<button class="btn btn-secondary btn-full" style="margin-bottom:10px;justify-content:space-between;" data-bid="${m.branch.id}">
-        <span>🏢 ${m.branch.name}</span>
+        <span>🏢 ${esc(m.branch.name)}</span>
         <span style="font-size:12px;color:var(--text2);">~${m.dist}m</span>
       </button>`
         ).join('');
@@ -3764,6 +3378,165 @@
         msg = yakun[Math.floor(Math.random() * yakun.length)];
       }
       showToast(msg, dur, kind);
+    }
+
+    // ============================================================
+    // KECHIKISH: xodimga tanbeh + "Vazifalar"dagi kechikishlar ro'yxati
+    // Ma'lumot manbai — attendance jadvali (checkin, late_minutes > 0).
+    // Alohida jadval yo'q: ro'yxat har doim davomat bilan bir xil bo'ladi.
+    // ============================================================
+    const LATE_STRICT_COUNT = 3;   // oyda shu marta va undan ko'p — jiddiy ogohlantirish
+    const LATE_LONG_MIN = 30;      // shu daqiqadan ko'p kechikish — alohida eslatma
+    const UZ_WEEKDAYS = ['Yakshanba', 'Dushanba', 'Seshanba', 'Chorshanba', 'Payshanba', 'Juma', 'Shanba'];
+    let myLatesCurrent = [];       // joriy oy kechikishlari (nishon/badge uchun)
+    let myLatesView = [];          // ko'rilayotgan oy
+    let myLatesMonth = null;       // 'YYYY-MM' — "Vazifalar"da ko'rilayotgan oy
+
+    function isStaffUser() { return currentUser && currentUser.role !== 'admin' && currentUser.role !== 'superadmin'; }
+
+    // Toshkent oyining UTC chegaralari
+    function monthRangeUtc(ym) {
+      const [y, m] = ym.split('-').map(Number);
+      const from = new Date(`${ym}-01T00:00:00+05:00`);
+      const next = `${m === 12 ? y + 1 : y}-${String(m === 12 ? 1 : m + 1).padStart(2, '0')}`;
+      return { from: from.toISOString(), to: new Date(`${next}-01T00:00:00+05:00`).toISOString() };
+    }
+    function shiftYm(ym, dir) {
+      const [y, m] = ym.split('-').map(Number);
+      const d = new Date(Date.UTC(y, m - 1 + dir, 1));
+      return d.toISOString().slice(0, 7);
+    }
+    function ymLabel(ym) {
+      const [y, m] = ym.split('-').map(Number);
+      const mn = REP_MONTHS[m - 1];
+      return `${mn[0].toUpperCase() + mn.slice(1)} ${y}`;
+    }
+
+    async function fetchMyLates(ym) {
+      const r = monthRangeUtc(ym);
+      const { data, error } = await sb.from('attendance')
+        .select('id, time, late_minutes, branch_name, late_reason, late_comment')
+        .eq('staff_id', currentUser.id).eq('type', 'checkin').gt('late_minutes', 0)
+        .gte('time', r.from).lt('time', r.to)
+        .order('time', { ascending: false });
+      if (error) throw error;
+      return data || [];
+    }
+
+    // Joriy oy kechikishlarini yangilash (loadTasks bilan birga — har 30 soniyada)
+    async function loadMyLates() {
+      if (!isStaffUser()) return;
+      try {
+        const cur = uzNow().dateStr.slice(0, 7);
+        myLatesCurrent = await fetchMyLates(cur);
+        if (!myLatesMonth || myLatesMonth === cur) { myLatesMonth = cur; myLatesView = myLatesCurrent; }
+      } catch (e) { console.warn('loadMyLates:', e); }
+      renderMyLates();
+      updateTasksBadge();
+    }
+
+    async function myLatesChangeMonth(dir) {
+      const cur = uzNow().dateStr.slice(0, 7);
+      const next = shiftYm(myLatesMonth || cur, dir);
+      if (next > cur) return;
+      myLatesMonth = next;
+      const box = document.getElementById('my-lates');
+      if (box) box.style.opacity = '0.5';
+      try { myLatesView = next === cur ? myLatesCurrent : await fetchMyLates(next); }
+      catch (e) { showToast('Kechikishlar yuklanmadi: ' + (e.message || ''), 3000); }
+      finally { if (box) box.style.opacity = ''; }
+      renderMyLates();
+    }
+
+    function renderMyLates() {
+      const box = document.getElementById('my-lates');
+      if (!box) return;
+      if (!isStaffUser()) { box.style.display = 'none'; box.innerHTML = ''; return; }
+      box.style.display = '';
+      const cur = uzNow().dateStr.slice(0, 7);
+      const ym = myLatesMonth || cur;
+      const list = myLatesView;
+      const totalMin = list.reduce((s, a) => s + (a.late_minutes || 0), 0);
+      const seen = seenLateIds();
+      const rows = list.map(a => {
+        const p = uzParts(new Date(a.time));
+        const arrive = p.hour * 60 + p.minute;
+        const start = arrive - (a.late_minutes || 0);     // smena boshlanishi = kelgan vaqt − kechikish
+        const isNew = !seen.includes(a.id);
+        return `<div class="late-row">
+          <div style="flex:1;min-width:0;">
+            <div style="font-weight:700;font-size:14px;display:flex;align-items:center;gap:6px;">
+              ${isNew ? '<span class="late-dot"></span>' : ''}${repFmtDate(p.dateStr)}, ${UZ_WEEKDAYS[p.dow]}
+            </div>
+            <div style="font-size:12px;color:var(--text2);margin-top:2px;">
+              Smena ${minToHHMM(((start % 1440) + 1440) % 1440)} → keldingiz ${minToHHMM(arrive)}${a.branch_name ? ' • ' + esc(a.branch_name) : ''}
+            </div>
+          </div>
+          <span class="late-badge">+${fmtDuration(a.late_minutes)}</span>
+        </div>`;
+      }).join('');
+
+      box.innerHTML = `
+        <div class="late-box ${list.length >= LATE_STRICT_COUNT ? 'strict' : ''}">
+          <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px;">
+            <span style="font-size:15px;font-weight:800;flex:1;">⏰ Kechikishlarim</span>
+            <button class="btn btn-sm btn-secondary" onclick="myLatesChangeMonth(-1)" aria-label="Oldingi oy">‹</button>
+            <span style="font-size:13px;font-weight:700;min-width:96px;text-align:center;">${ymLabel(ym)}</span>
+            <button class="btn btn-sm btn-secondary" onclick="myLatesChangeMonth(1)" ${ym >= cur ? 'disabled style="opacity:.4"' : ''} aria-label="Keyingi oy">›</button>
+          </div>
+          ${list.length ? `
+            <div style="font-size:13px;margin-bottom:6px;">
+              <b>${list.length}</b> marta kech qolgansiz, jami <b>${fmtDuration(totalMin)}</b>.
+              ${list.length >= LATE_STRICT_COUNT ? '<div style="color:var(--red);font-weight:600;margin-top:4px;">⚠️ Bu ko\'rsatkich rahbariyat hisobotida ko\'rinadi. Iltimos, ish vaqtiga rioya qiling.</div>' : ''}
+            </div>
+            ${rows}`
+          : `<div style="font-size:13px;color:var(--text2);">✅ ${ym === cur ? 'Bu oyda' : 'Bu oyda ham'} kechikish yo'q — barakalla!</div>`}
+        </div>`;
+    }
+
+    // Kechikishlar "Vazifalar" nishoniga (badge) ham qo'shiladi — xodim ko'rmaguncha
+    function seenLateIds() {
+      try { return JSON.parse(localStorage.getItem('seenLates_' + currentUser.id) || '[]'); }
+      catch { return []; }
+    }
+    function markLatesSeen() {
+      if (!isStaffUser()) return;
+      const ids = [...new Set([...seenLateIds(), ...myLatesCurrent.map(a => a.id)])].slice(-200);
+      localStorage.setItem('seenLates_' + currentUser.id, JSON.stringify(ids));
+    }
+
+    // Kech kelgan zahoti ko'rsatiladigan tanbeh oynasi
+    async function showLateNotice(lateMin, shiftStart, when) {
+      const cur = uzNow().dateStr.slice(0, 7);
+      let monthList = [];
+      try { monthList = await fetchMyLates(cur); myLatesCurrent = monthList; if (!myLatesMonth || myLatesMonth === cur) { myLatesMonth = cur; myLatesView = monthList; } }
+      catch (e) { console.warn('late count:', e); }
+      const count = Math.max(1, monthList.length);
+      const totalMin = monthList.reduce((s, a) => s + (a.late_minutes || 0), 0) || lateMin;
+      const p = uzParts(when);
+
+      let tanbeh;
+      if (count >= LATE_STRICT_COUNT) {
+        tanbeh = `Kechikishlaringiz rahbariyat hisobotida ko'rinadi. Iltimos, bundan keyin ish vaqtiga qat'iy rioya qiling.`;
+      } else if (count === 2) {
+        tanbeh = `Bu ikkinchi kechikishingiz. Iltimos, takrorlanmasligiga harakat qiling.`;
+      } else {
+        tanbeh = `Iltimos, ish vaqtiga rioya qiling. Kechikish davomat hisobotida qayd etildi.`;
+      }
+      if (lateMin >= LATE_LONG_MIN) tanbeh += ` Kechikish ${fmtDuration(lateMin)} — bu dars jadvaliga jiddiy ta'sir qiladi.`;
+
+      document.getElementById('late-notice-title').textContent = `Siz ${fmtDuration(lateMin)} kech qoldingiz`;
+      document.getElementById('late-notice-times').textContent =
+        `Smena: ${shiftStart || '—'}  •  Keldingiz: ${String(p.hour).padStart(2, '0')}:${String(p.minute).padStart(2, '0')}`;
+      document.getElementById('late-notice-month').textContent =
+        `Bu oyda: ${count} marta, jami ${fmtDuration(totalMin)}`;
+      const tb = document.getElementById('late-notice-text');
+      tb.textContent = tanbeh;
+      document.getElementById('late-notice-card').classList.toggle('strict', count >= LATE_STRICT_COUNT);
+      openModal('modal-late-notice');
+      renderMyLates();
+      updateTasksBadge();
+      if ('vibrate' in navigator) { try { navigator.vibrate([120, 60, 120]); } catch (_) { } }
     }
 
     // Admin: filial qo'shishda hozirgi joyni olish
@@ -4147,7 +3920,7 @@
         const local = uzNow();
         const hm = local.hour * 60 + local.minute;
         const dow = local.dow; // 0=Yakshanba ... 6=Shanba
-        let lateMin = 0, earlyMin = 0;
+        let lateMin = 0, earlyMin = 0, lateShiftStart = null;
 
         if (type === 'checkin') {
           const shifts = todayShiftsFor(dow);
@@ -4160,7 +3933,7 @@
               if (Math.abs(hm - sh.startMin) < Math.abs(hm - chosen.startMin)) chosen = sh;
             });
             const diff = hm - chosen.startMin; // + kech, - erta
-            if (diff > 0) lateMin = diff;
+            if (diff > 0) { lateMin = diff; lateShiftStart = chosen.start; }
             else if (diff < 0) earlyMin = -diff;
           }
         }
@@ -4186,8 +3959,13 @@
           if (error) throw error;
         });
 
-        // 5. Motivatsion xabar
-        motivationalMessage(type, lateMin, earlyMin);
+        // 5. Kech qolgan bo'lsa — tanbeh oynasi, aks holda motivatsion xabar
+        if (type === 'checkin' && lateMin > 0) {
+          try { await showLateNotice(lateMin, lateShiftStart, nowUtc); }
+          catch (e) { console.warn('lateNotice:', e); showToast(`⏰ Siz ${fmtDuration(lateMin)} kech qoldingiz`, 4000, 'warn'); }
+        } else {
+          motivationalMessage(type, lateMin, earlyMin);
+        }
         await refreshMyAttendance();
       } catch (e) {
         hideLoader();
@@ -4473,14 +4251,14 @@
         return `<div class="shift-card">
       <div class="shift-row">
         <div>
-          <div style="font-weight:700;font-size:14px;">${a.staff_name}</div>
-          <div style="font-size:12px;color:var(--text2);">${a.branch_name || ''} • ${d.toLocaleDateString('uz')} ${d.toLocaleTimeString('uz', { hour: '2-digit', minute: '2-digit' })}</div>
+          <div style="font-weight:700;font-size:14px;">${esc(a.staff_name)}</div>
+          <div style="font-size:12px;color:var(--text2);">${esc(a.branch_name || '')} • ${d.toLocaleDateString('uz')} ${d.toLocaleTimeString('uz', { hour: '2-digit', minute: '2-digit' })}</div>
         </div>
         <span class="late-badge">+${fmtDuration(a.late_minutes)}</span>
       </div>
       ${(a.late_reason || a.late_comment) ? `<div style="margin-top:8px;padding-top:8px;border-top:1px solid var(--glass-border);">
-        ${a.late_reason ? `<span class="tag tag-yellow">${a.late_reason}</span>` : ''}
-        ${a.late_comment ? `<div style="font-size:12px;color:var(--text2);margin-top:4px;">💬 ${a.late_comment}</div>` : ''}
+        ${a.late_reason ? `<span class="tag tag-yellow">${esc(a.late_reason)}</span>` : ''}
+        ${a.late_comment ? `<div style="font-size:12px;color:var(--text2);margin-top:4px;">💬 ${esc(a.late_comment)}</div>` : ''}
       </div>` : ''}
     </div>`;
       }).join('');
@@ -4671,7 +4449,8 @@
       // Xodim bo'yicha, vaqt bo'yicha o'sish tartibida
       const byStaff = {};
       data.slice().sort((a, b) => new Date(a.time) - new Date(b.time)).forEach(r => {
-        (byStaff[r.staff_id] = byStaff[r.staff_id] || []).push(r);
+        const key = r.staff_id || ('deleted:' + (r.staff_name || '?')); // o'chirilgan xodim — ismi bo'yicha
+        (byStaff[key] = byStaff[key] || []).push(r);
       });
       const sessions = [];
       Object.values(byStaff).forEach(recs => {
@@ -5000,7 +4779,6 @@
       });
       showToast(t('saved'), 1500, 'ok');
       renderTags();
-      if (kind === 'level') buildLevelPills();
     }
 
     async function deleteTag(id) {
@@ -5012,7 +4790,6 @@
       });
       showToast(t('deleted'), 1500);
       renderTags();
-      if (tg && tg.kind === 'level') buildLevelPills();
     }
 
     // ============================================================
@@ -5026,13 +4803,11 @@
         return;
       }
       el.innerHTML = teachers.map(tc => {
-        const count = students.filter(s => s.teacher === tc.name).length;
         const initials = tc.name.split(' ').map(w => w[0]).join('').toUpperCase().slice(0, 2);
         return `<div class="card" style="display:flex;align-items:center;gap:12px;">
           <div class="student-avatar" style="width:40px;height:40px;font-size:14px;background:${tc.color || 'var(--accent-soft)'};color:#fff;">${initials}</div>
           <div style="flex:1;min-width:0;">
             <div style="font-weight:600;font-size:14px;">${esc(tc.name)}</div>
-            <div style="font-size:12px;color:var(--text2);">${count} ta talaba</div>
           </div>
           <div style="display:flex;gap:6px;">
             <button class="btn btn-sm btn-secondary" onclick="openEditTeacher('${tc.id}')">✏️</button>
@@ -5050,12 +4825,10 @@
         return;
       }
       el.innerHTML = groups.map(g => {
-        const count = students.filter(s => s.group_name === g.name).length;
         return `<div class="card" style="display:flex;align-items:center;gap:12px;">
           <div style="width:12px;height:12px;border-radius:50%;background:${g.color || 'var(--accent)'};flex-shrink:0;"></div>
           <div style="flex:1;min-width:0;">
             <div style="font-weight:600;font-size:14px;">${esc(g.name)}</div>
-            <div style="font-size:12px;color:var(--text2);">${count} ta talaba</div>
           </div>
           <div style="display:flex;gap:6px;">
             <button class="btn btn-sm btn-secondary" onclick="openEditGroup('${g.id}')">✏️</button>
@@ -5111,31 +4884,24 @@
       let ok = false;
       await withLoader(t('save') + '...', async () => {
         if (currentEditTeacherId) {
-          const old = teachers.find(x => x.id === currentEditTeacherId);
           const { error } = await sb.from('teachers').update({ name, color: pickedEntityColor }).eq('id', currentEditTeacherId);
           if (error) throw error;
-          // Talabalardagi o'qituvchi nomini ham yangilash
-          if (old && old.name !== name) await sb.from('students').update({ teacher: name }).eq('teacher', old.name);
         } else {
           const { error } = await sb.from('teachers').insert([{ name, color: pickedEntityColor }]);
           if (error) throw error;
         }
-        await loadTeachers(); await loadStudents();
+        await loadTeachers();
         ok = true;
       }).catch(e => showToast('Xatolik: ' + (e.message || e.code || ''), 4000));
       if (ok) { showToast(t('saved'), 1500, 'ok'); closeModal('modal-teacher'); renderTeachersAdmin(); }
     }
     async function deleteTeacher(id) {
-      const tc = teachers.find(x => x.id === id);
-      const count = tc ? students.filter(s => s.teacher === tc.name).length : 0;
-      const msg = count ? `${count} ta talaba bu o'qituvchiga biriktirilgan. O'chirsangiz, ularning o'qituvchi maydoni bo'sh qoladi.` : 'Bu amalni qaytarib bo\'lmaydi.';
-      if (!await confirmDialog('O\'qituvchi o\'chirilsinmi?', msg)) return;
+      if (!await confirmDialog('O\'qituvchi o\'chirilsinmi?', 'Bu amalni qaytarib bo\'lmaydi.')) return;
       let ok = false;
       await withLoader(t('del') + '...', async () => {
-        if (tc && count) await sb.from('students').update({ teacher: null }).eq('teacher', tc.name);
         const { error } = await sb.from('teachers').delete().eq('id', id);
         if (error) throw error;
-        await loadTeachers(); await loadStudents();
+        await loadTeachers();
         ok = true;
       }).catch(e => showToast('O\'chirib bo\'lmadi: ' + (e.message || e.code || ''), 4000));
       if (ok) { showToast(t('deleted'), 1500); renderTeachersAdmin(); }
@@ -5166,30 +4932,24 @@
       let ok = false;
       await withLoader(t('save') + '...', async () => {
         if (currentEditGroupId) {
-          const old = groups.find(x => x.id === currentEditGroupId);
           const { error } = await sb.from('groups').update({ name, color: pickedEntityColor }).eq('id', currentEditGroupId);
           if (error) throw error;
-          if (old && old.name !== name) await sb.from('students').update({ group_name: name }).eq('group_name', old.name);
         } else {
           const { error } = await sb.from('groups').insert([{ name, color: pickedEntityColor }]);
           if (error) throw error;
         }
-        await loadGroups(); await loadStudents();
+        await loadGroups();
         ok = true;
       }).catch(e => showToast('Xatolik: ' + (e.message || e.code || ''), 4000));
       if (ok) { showToast(t('saved'), 1500, 'ok'); closeModal('modal-group'); renderGroupsAdmin(); }
     }
     async function deleteGroup(id) {
-      const g = groups.find(x => x.id === id);
-      const count = g ? students.filter(s => s.group_name === g.name).length : 0;
-      const msg = count ? `${count} ta talaba bu guruhda. O'chirsangiz, ularning guruh maydoni bo'sh qoladi.` : 'Bu amalni qaytarib bo\'lmaydi.';
-      if (!await confirmDialog('Guruh o\'chirilsinmi?', msg)) return;
+      if (!await confirmDialog('Guruh o\'chirilsinmi?', 'Bu amalni qaytarib bo\'lmaydi.')) return;
       let ok = false;
       await withLoader(t('del') + '...', async () => {
-        if (g && count) await sb.from('students').update({ group_name: null }).eq('group_name', g.name);
         const { error } = await sb.from('groups').delete().eq('id', id);
         if (error) throw error;
-        await loadGroups(); await loadStudents();
+        await loadGroups();
         ok = true;
       }).catch(e => showToast('O\'chirib bo\'lmadi: ' + (e.message || e.code || ''), 4000));
       if (ok) { showToast(t('deleted'), 1500); renderGroupsAdmin(); }
@@ -5288,15 +5048,29 @@
     }
 
     async function deleteStaff(id) {
-      if (!await confirmDialog('Xodim o\'chirilsinmi?', 'Bu amalni qaytarib bo\'lmaydi.')) return;
+      const st = staffList.find(x => x.id === id);
+      if (!await confirmDialog(`"${st?.name || 'Xodim'}" o'chirilsinmi?`,
+        'Xodim tizimga boshqa kira olmaydi. Uning davomat tarixi va vazifalari hisobotlarda ismi bilan saqlanib qoladi.')) return;
       let ok = false;
       await withLoader(t('del') + '...', async () => {
         const { error } = await sb.from('staff').delete().eq('id', id);
         if (error) throw error;
         await loadStaff();
         ok = true;
-      }).catch(e => { showToast('O\'chirib bo\'lmadi: ' + (e.message || e.code || 'xatolik'), 4000); });
+      }).catch(e => showToast(staffDeleteErrorText(e), 6000));
       if (ok) { showToast(t('deleted'), 1500); renderStaff(); }
+    }
+
+    // Postgres xatosini foydalanuvchiga tushunarli matnga aylantirish
+    function staffDeleteErrorText(e) {
+      const msg = `${e?.message || ''} ${e?.details || ''}`;
+      if (e?.code === '23503' || /foreign key constraint/i.test(msg)) {
+        const tbl = (msg.match(/on table "([^"]+)"/g) || []).pop()?.match(/"([^"]+)"/)?.[1];
+        const where = { tasks: 'vazifalar', attendance: 'davomat', reports_groups: 'hisobot guruhlari' }[tbl] || tbl || 'boshqa jadval';
+        return `O'chirib bo'lmadi: xodimga ${where} bog'langan. Supabase'da fix_staff_delete.sql ni ishga tushiring` +
+          (tbl === 'reports_groups' ? ' yoki avval uning hisobot guruhlarini boshqa o\'qituvchiga o\'tkazing.' : '.');
+      }
+      return 'O\'chirib bo\'lmadi: ' + (e?.message || e?.code || 'xatolik');
     }
 
     // ============================================================
@@ -5387,7 +5161,7 @@
       const login = document.getElementById('adm-login').value.trim();
       const pass = document.getElementById('adm-password').value.trim();
       if (!name || !login || !pass) { showToast('Barcha maydonlarni to\'ldiring!'); return; }
-      const perms = { add_staff: document.getElementById('perm-add-staff').checked, tasks: document.getElementById('perm-tasks').checked, reports: document.getElementById('perm-reports').checked, students: document.getElementById('perm-students').checked };
+      const perms = { add_staff: document.getElementById('perm-add-staff').checked, tasks: document.getElementById('perm-tasks').checked, reports: document.getElementById('perm-reports').checked };
       await withLoader(t('save') + '...', async () => {
         await sb.from('admins').insert([{ name, login, password: pass, permissions: perms }]);
         await loadAdmins();
@@ -5460,9 +5234,8 @@
       applyLang();
       // Enter key for login
       document.getElementById('pass-input').addEventListener('keydown', e => { if (e.key === 'Enter') doLogin(); });
-      // Remember last teacher/group
-      selectedTeacher = localStorage.getItem('lastTeacher');
-      selectedGroup = localStorage.getItem('lastGroup');
+      // Talabalar bo'limidan qolgan eski kalitlarni tozalash
+      try { localStorage.removeItem('lastTeacher'); localStorage.removeItem('lastGroup'); } catch (_) { }
 
       // Service worker ro'yxatdan o'tkazish (PWA install + push uchun shart)
       if ('serviceWorker' in navigator) {
@@ -5551,17 +5324,96 @@
       coinDate: null,    // coin: joriy dars sanasi
       testMonth: null,   // test: joriy oy 'YYYY-MM'
       videoQuarter: null,// video: joriy kvartal 'YYYY-QN'
+      period: {          // davr filtrlari (Kunlik/Haftalik/Oylik)
+        test: { mode: 'month', anchor: null },
+        stats: { mode: 'week', anchor: null }
+      },
+      testView: 'list',  // test: 'list' | 'detail' | 'legacy'
+      currentTestId: null,
+      currentTest: null,
+      tests: [],
+      exchangeMissing: false, // bazada reports_coin_exchange hali yaratilmagan bo'lsa
       loaded: false
     };
 
     function repIsAdmin() { return currentUser && (currentUser.role === 'admin' || currentUser.role === 'superadmin'); }
 
-    // Sana yordamchilari
-    function repToday() { return new Date().toISOString().slice(0, 10); }
-    function repThisMonth() { return new Date().toISOString().slice(0, 7); }
+    // ---- Sana yordamchilari (Toshkent vaqti bo'yicha; UTC emas) ----
+    function repToday() { return uzNow().dateStr; }
+    function repThisMonth() { return uzNow().dateStr.slice(0, 7); }
     function repThisQuarter() {
-      const d = new Date();
-      return d.getFullYear() + '-Q' + (Math.floor(d.getMonth() / 3) + 1);
+      const n = uzNow();
+      return n.year + '-Q' + (Math.floor((n.month - 1) / 3) + 1);
+    }
+    const REP_MONTHS = ['yanvar', 'fevral', 'mart', 'aprel', 'may', 'iyun', 'iyul', 'avgust', 'sentabr', 'oktabr', 'noyabr', 'dekabr'];
+    function repIsDate(s) { return typeof s === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(s); }
+    function repParse(ds) { const [y, m, d] = ds.split('-').map(Number); return { y, m, d }; }
+    // Sana arifmetikasi UTC-yarim tunda bajariladi — vaqt zonasi va DST ta'sir qilmaydi
+    function repDateAdd(ds, days) {
+      const { y, m, d } = repParse(ds);
+      return new Date(Date.UTC(y, m - 1, d + days)).toISOString().slice(0, 10);
+    }
+    function repFmtDate(ds) { const { y, m, d } = repParse(ds); return `${d}-${REP_MONTHS[m - 1]} ${y}`; }
+    function repFmtShort(ds) { const { y, m, d } = repParse(ds); return `${String(d).padStart(2, '0')}.${String(m).padStart(2, '0')}.${y}`; }
+    function repFmtDateTime(iso) {
+      const p = uzParts(new Date(iso));
+      return `${repFmtShort(p.dateStr)} ${String(p.hour).padStart(2, '0')}:${String(p.minute).padStart(2, '0')}`;
+    }
+
+    // Davr: 'day' | 'week' (Dushanba–Yakshanba) | 'month' → { from, to, label } (ikkala chegara kiradi)
+    function repPeriodRange(mode, anchor) {
+      const { y, m, d } = repParse(anchor);
+      if (mode === 'week') {
+        const dow = new Date(Date.UTC(y, m - 1, d)).getUTCDay();
+        const from = repDateAdd(anchor, -((dow + 6) % 7));
+        const to = repDateAdd(from, 6);
+        return { from, to, label: `${repFmtShort(from)} – ${repFmtShort(to)}` };
+      }
+      if (mode === 'month') {
+        const from = `${y}-${String(m).padStart(2, '0')}-01`;
+        const to = new Date(Date.UTC(y, m, 0)).toISOString().slice(0, 10);
+        const mn = REP_MONTHS[m - 1];
+        return { from, to, label: `${mn[0].toUpperCase() + mn.slice(1)} ${y}` };
+      }
+      return { from: anchor, to: anchor, label: repFmtDate(anchor) };
+    }
+    function repPeriodShift(mode, anchor, dir) {
+      if (mode === 'day') return repDateAdd(anchor, dir);
+      if (mode === 'week') return repDateAdd(anchor, dir * 7);
+      const { y, m } = repParse(anchor);
+      return new Date(Date.UTC(y, m - 1 + dir, 1)).toISOString().slice(0, 10);
+    }
+
+    // Davr tanlash paneli (Kunlik / Haftalik / Oylik + oldingi/keyingi + sana)
+    function repPeriodBar(key) {
+      const st = REP.period[key];
+      const r = repPeriodRange(st.mode, st.anchor);
+      const today = repToday();
+      const modes = [['day', 'Kunlik'], ['week', 'Haftalik'], ['month', 'Oylik']];
+      return `<div class="rep-pbar">
+        <div class="rep-seg" role="group" aria-label="Davr">
+          ${modes.map(([k, l]) => `<button class="${st.mode === k ? 'on' : ''}" onclick="repSetPeriod('${key}','mode','${k}')">${l}</button>`).join('')}
+        </div>
+        <div class="rep-pnav">
+          <button class="btn btn-sm btn-secondary" onclick="repSetPeriod('${key}','shift',-1)" aria-label="Oldingi davr">‹</button>
+          <label class="rep-plabel" title="Sanani tanlash">📅 ${esc(r.label)}
+            <input type="date" value="${st.anchor}" max="${today}" onchange="repSetPeriod('${key}','anchor',this.value)">
+          </label>
+          <button class="btn btn-sm btn-secondary" onclick="repSetPeriod('${key}','shift',1)" ${r.to >= today ? 'disabled' : ''} aria-label="Keyingi davr">›</button>
+        </div>
+      </div>`;
+    }
+    async function repSetPeriod(key, what, val) {
+      const st = REP.period[key];
+      const today = repToday();
+      if (what === 'mode' && ['day', 'week', 'month'].includes(val)) st.mode = val;
+      else if (what === 'anchor' && repIsDate(val)) st.anchor = val > today ? today : val;
+      else if (what === 'shift') {
+        const nx = repPeriodShift(st.mode, st.anchor, Number(val) < 0 ? -1 : 1);
+        st.anchor = nx > today ? today : nx;
+      }
+      if (key === 'test') { await testFlushPending(); REP.testView = 'list'; renderTestPane(); }
+      else renderStatsPane();
     }
 
     // ---- INIT: Hisobot sahifasi ochilganda ----
@@ -5569,6 +5421,8 @@
       if (!REP.coinDate) REP.coinDate = repToday();
       if (!REP.testMonth) REP.testMonth = repThisMonth();
       if (!REP.videoQuarter) REP.videoQuarter = repThisQuarter();
+      if (!REP.period.test.anchor) REP.period.test.anchor = repToday();
+      if (!REP.period.stats.anchor) REP.period.stats.anchor = repToday();
       // Admin uchun o'qituvchi filtri ko'rsatiladi
       document.getElementById('rep-teacher-filter').style.display = repIsAdmin() ? '' : 'none';
       await loadRepGroups();
@@ -5619,6 +5473,8 @@
     }
 
     async function onRepGroupChange() {
+      await coinFlushPending(); await testFlushPending(); // eski guruhdagi saqlanmagan o'zgarishlar
+      REP.testView = 'list'; REP.currentTestId = null; REP.currentTest = null;
       const sel = document.getElementById('rep-group-select');
       REP.groupId = sel.value || null;
       if (!REP.groupId) { showRepEmpty(); return; }
@@ -5640,6 +5496,7 @@
 
     // ---- TAB almashtirish ----
     function switchRepTab(tab) {
+      coinFlushPending(); testFlushPending();
       REP.tab = tab;
       ['coin', 'test', 'video', 'stats'].forEach(t => {
         document.getElementById('rep-tab-' + t).classList.toggle('active', t === tab);
@@ -5704,13 +5561,6 @@
     // ================================================================
     function openManageMembers() {
       renderMembersList();
-      // Asosiy talabalar ro'yxatidan tanlash uchun to'ldirish
-      const g = REP.groups.find(x => x.id === REP.groupId);
-      const dl = document.getElementById('member-student-list');
-      if (dl) {
-        // Shu o'qituvchining talabalari birinchi (nom bo'yicha), keyin qolganlar
-        dl.innerHTML = students.map(s => `<option value="${esc(s.name)}">`).join('');
-      }
       openModal('modal-members');
     }
     function renderMembersList() {
@@ -5729,14 +5579,11 @@
       const inp = document.getElementById('member-name-input');
       const name = inp.value.trim();
       if (!name) { showToast('Ism kiriting!'); return; }
-      // Asosiy students'da bor bo'lsa — bog'laymiz
-      const matched = students.find(s => s.name.toLowerCase() === name.toLowerCase());
       const maxSort = Math.max(0, ...REP.members.map(m => m.sort || 0));
       let ok = false;
       await withLoader('Qo\'shilmoqda...', async () => {
         const { error } = await sb.from('reports_members').insert([{
           group_id: REP.groupId,
-          student_id: matched?.id || null,
           student_name: name,
           sort: maxSort + 1
         }]);
@@ -5769,228 +5616,627 @@
     }
 
     // ================================================================
-    // COIN MODULI (dars bo'yicha +/- , auto-save, tarix)
+    // COIN MODULI — dars bo'yicha coin, balans va almashtirish (exchange)
+    // Balans = barcha darslardagi coinlar yig'indisi − almashtirilgan coinlar.
+    // "0 ga tenglashtirish" hech narsani o'chirmaydi: reports_coin_exchange
+    // jadvaliga yozuv qo'shadi, dars coinlari tarixi to'liq saqlanadi.
     // ================================================================
-    let coinData = {};   // { member_id: {id, coins} } — joriy sana uchun
-    let coinSaveTimers = {};
+    let coinData = {};        // { member_id: {id, coins} } — tanlangan dars sanasi uchun
+    let coinBase = {};        // { member_id: balans, tanlangan sanadagi coinlarsiz }
+    let coinSaveTimers = {};  // { member_id: {t, run} } — kutayotgan saqlashlar
+    const COIN_SOFT_MAX = 12;  // bir darsga tavsiya etilgan yuqori chegara (faqat ogohlantirish)
+    const COIN_HARD_MAX = 999; // bir darsga ruxsat etilgan maksimum
+
+    // Guruhning barcha coin va almashtirish yozuvlari (sahifalab — 1000 qator chegarasi yo'q)
+    async function repLoadCoinTotals(groupId) {
+      const coinsP = repFetchAll(() => sb.from('reports_coin')
+        .select('id, member_id, coins, lesson_date').eq('group_id', groupId).order('id'));
+      const exP = repFetchAll(() => sb.from('reports_coin_exchange')
+        .select('id, member_id, amount, note, exchanged_by, exchanged_at').eq('group_id', groupId).order('id'))
+        .then(rows => { REP.exchangeMissing = false; return rows; })
+        .catch(e => {
+          if (repIsMissingTable(e)) { REP.exchangeMissing = true; return []; }
+          throw e;
+        });
+      const [coins, ex] = await Promise.all([coinsP, exP]);
+      return { coins, ex };
+    }
+    function coinBalances(totals) {
+      const bal = {};
+      totals.coins.forEach(r => { bal[r.member_id] = (bal[r.member_id] || 0) + (r.coins || 0); });
+      totals.ex.forEach(x => { bal[x.member_id] = (bal[x.member_id] || 0) - (x.amount || 0); });
+      return bal;
+    }
 
     async function renderCoinPane() {
       const pane = document.getElementById('rep-pane-coin');
-      if (!REP.members.length) {
-        pane.innerHTML = repNoMembers();
-        return;
-      }
-      // Joriy sana coin yozuvlarini yuklash
-      const { data } = await sb.from('reports_coin')
-        .select('*').eq('group_id', REP.groupId).eq('lesson_date', REP.coinDate);
-      coinData = {};
-      (data || []).forEach(r => { coinData[r.member_id] = { id: r.id, coins: r.coins }; });
+      if (!REP.members.length) { pane.innerHTML = repNoMembers(); return; }
+      const groupId = REP.groupId, date = REP.coinDate;
+      let totals;
+      try { totals = await repLoadCoinTotals(groupId); }
+      catch (e) { pane.innerHTML = repErrorBox('Coin ma\'lumotlari yuklanmadi', e); return; }
+      if (groupId !== REP.groupId || date !== REP.coinDate) return; // bu orada guruh/sana almashgan
 
+      coinData = {}; coinBase = {};
+      REP.members.forEach(m => { coinBase[m.id] = 0; });
+      totals.coins.forEach(r => {
+        if (r.lesson_date === date) coinData[r.member_id] = { id: r.id, coins: r.coins || 0 };
+        else coinBase[r.member_id] = (coinBase[r.member_id] || 0) + (r.coins || 0);
+      });
+      totals.ex.forEach(x => { coinBase[x.member_id] = (coinBase[x.member_id] || 0) - (x.amount || 0); });
+
+      const admin = repIsAdmin();
+      const canExchange = admin && !REP.exchangeMissing;
       const rows = REP.members.map(m => {
         const c = coinData[m.id]?.coins || 0;
-        const over = c > 12;
+        const bal = (coinBase[m.id] || 0) + c;
         return `<tr>
           <td class="rep-name-col">${esc(m.student_name)}</td>
           <td>
             <div class="coin-cell">
-              <button class="coin-btn minus" onclick="coinAdjust('${m.id}',-1)">−</button>
-              <span class="coin-val${over ? ' over' : ''}" id="coin-v-${m.id}" onclick="coinManualInput('${m.id}')">${c}</span>
-              <button class="coin-btn plus" onclick="coinAdjust('${m.id}',1)">+</button>
+              <button class="coin-btn minus" onclick="coinAdjust('${m.id}',-1)" aria-label="Kamaytirish">−</button>
+              <span class="coin-val${c > COIN_SOFT_MAX ? ' over' : ''}" id="coin-v-${m.id}" onclick="coinManualInput('${m.id}')">${c}</span>
+              <button class="coin-btn plus" onclick="coinAdjust('${m.id}',1)" aria-label="Oshirish">+</button>
             </div>
+          </td>
+          <td class="coin-bal-cell">
+            <span class="coin-bal${bal < 0 ? ' neg' : ''}" id="coin-b-${m.id}">${bal}</span>
+            ${canExchange ? `<button class="coin-ex-btn" title="Balansni 0 ga tenglashtirish" onclick="coinExchange('${m.id}')">⇄</button>` : ''}
           </td>
         </tr>`;
       }).join('');
 
-      const total = Object.values(coinData).reduce((s, x) => s + (x.coins || 0), 0);
+      const dayTotal = Object.values(coinData).reduce((s, x) => s + (x.coins || 0), 0);
       pane.innerHTML = `
         <div class="rep-period">
           <span style="font-size:13px;font-weight:600;color:var(--text2);">📅 Dars sanasi:</span>
           <input type="date" id="coin-date" value="${REP.coinDate}" max="${repToday()}" onchange="coinChangeDate(this.value)">
           <span class="rep-saving" id="coin-save-status"></span>
         </div>
+        ${admin && REP.exchangeMissing ? repMigrationNote('Coin almashtirish') : ''}
         <div style="font-size:12px;color:var(--text3);margin-bottom:10px;">
-          Tavsiya: bir darsda 10–12 coin. Jami bugun: <b style="color:var(--text);">${total}</b>
+          Tavsiya: bir darsda 10–${COIN_SOFT_MAX} coin. Shu dars jami: <b style="color:var(--text);" id="coin-day-total">${dayTotal}</b>
+          &nbsp;•&nbsp; <b>Balans</b> — barcha darslar yig'indisi, almashtirilganlar ayrilgan.
         </div>
         <div class="rep-table-wrap">
           <table class="rep-table">
-            <thead><tr><th class="rep-name-col">O'quvchi</th><th>Coin</th></tr></thead>
+            <thead><tr><th class="rep-name-col">O'quvchi</th><th>Coin (shu dars)</th><th>Balans</th></tr></thead>
             <tbody>${rows}</tbody>
           </table>
         </div>
-        <div style="display:flex;gap:8px;margin-top:12px;">
+        <div style="display:flex;gap:8px;margin-top:12px;flex-wrap:wrap;">
           <button class="btn btn-sm btn-secondary" onclick="exportCoin()">📊 Excel eksport</button>
+          ${canExchange ? `
+            <button class="btn btn-sm btn-secondary" onclick="coinExchangeAll()">⇄ Hammasini 0 ga tenglashtirish</button>
+            <button class="btn btn-sm btn-secondary" onclick="openCoinExchangeHistory()">🧾 Almashtirish tarixi</button>` : ''}
         </div>`;
     }
 
-    function coinChangeDate(val) {
-      REP.coinDate = val || repToday();
+    // Bitta o'quvchi qatorini va kunlik jami summani yangilash (to'liq qayta chizmasdan)
+    function coinRefreshRow(memberId) {
+      const c = coinData[memberId]?.coins || 0;
+      const v = document.getElementById('coin-v-' + memberId);
+      if (v) { v.textContent = c; v.classList.toggle('over', c > COIN_SOFT_MAX); }
+      const b = document.getElementById('coin-b-' + memberId);
+      if (b) { const bal = (coinBase[memberId] || 0) + c; b.textContent = bal; b.classList.toggle('neg', bal < 0); }
+      const tot = document.getElementById('coin-day-total');
+      if (tot) tot.textContent = Object.values(coinData).reduce((s, x) => s + (x.coins || 0), 0);
+    }
+
+    async function coinChangeDate(val) {
+      await coinFlushPending();
+      REP.coinDate = repIsDate(val) && val <= repToday() ? val : repToday();
       renderCoinPane();
     }
 
-    async function coinAdjust(memberId, delta) {
-      const cur = coinData[memberId]?.coins || 0;
-      const next = cur + delta;
-      coinData[memberId] = { ...(coinData[memberId] || {}), coins: next };
-      const el = document.getElementById('coin-v-' + memberId);
-      if (el) { el.textContent = next; el.classList.toggle('over', next > 12); }
+    function coinSet(memberId, value) {
+      const n = Math.max(0, Math.min(COIN_HARD_MAX, Math.trunc(value)));
+      if ((coinData[memberId]?.coins || 0) === n) return;
+      coinData[memberId] = { ...(coinData[memberId] || {}), coins: n };
+      coinRefreshRow(memberId);
       coinAutoSave(memberId);
     }
-
+    function coinAdjust(memberId, delta) {
+      coinSet(memberId, (coinData[memberId]?.coins || 0) + delta);
+    }
     function coinManualInput(memberId) {
       const cur = coinData[memberId]?.coins || 0;
-      const val = prompt('Coin miqdorini kiriting:', cur);
+      const val = prompt(`Coin miqdorini kiriting (0–${COIN_HARD_MAX}):`, cur);
       if (val === null) return;
-      const n = parseInt(val, 10);
-      if (isNaN(n)) { showToast('Faqat son kiriting!'); return; }
-      coinData[memberId] = { ...(coinData[memberId] || {}), coins: n };
-      const el = document.getElementById('coin-v-' + memberId);
-      if (el) { el.textContent = n; el.classList.toggle('over', n > 12); }
-      coinAutoSave(memberId);
+      const s = String(val).trim();
+      if (!/^\d+$/.test(s) || Number(s) > COIN_HARD_MAX) { showToast(`Faqat 0 dan ${COIN_HARD_MAX} gacha butun son kiriting`); return; }
+      coinSet(memberId, Number(s));
     }
 
-    // Auto-save (debounce 600ms)
+    // Auto-save (debounce 600ms). Guruh/sana BOSILGAN paytda olinadi —
+    // taymer ishlaguncha sana yoki guruh almashtirilsa ham coin to'g'ri joyga yoziladi.
     function coinAutoSave(memberId) {
       const status = document.getElementById('coin-save-status');
       if (status) { status.textContent = '⏳ saqlanmoqda...'; status.classList.remove('ok'); }
-      clearTimeout(coinSaveTimers[memberId]);
-      coinSaveTimers[memberId] = setTimeout(async () => {
-        const coins = coinData[memberId]?.coins || 0;
-        try {
-          // upsert: bor bo'lsa yangilaydi, yo'q bo'lsa qo'shadi (member_id+lesson_date unique)
-          const { data, error } = await sb.from('reports_coin').upsert({
-            group_id: REP.groupId, member_id: memberId,
-            teacher_id: (REP.groups.find(g => g.id === REP.groupId)?.teacher_id) || null,
-            lesson_date: REP.coinDate, coins
-          }, { onConflict: 'member_id,lesson_date' }).select().single();
-          if (error) throw error;
-          if (data) coinData[memberId] = { id: data.id, coins: data.coins };
-          if (status) { status.textContent = '✓ saqlandi'; status.classList.add('ok'); }
-        } catch (e) {
-          if (status) { status.textContent = '✗ xato'; status.classList.remove('ok'); }
-          showToast('Saqlanmadi: ' + (e.message || ''), 3000);
-        }
-      }, 600);
+      const g = REP.groups.find(x => x.id === REP.groupId);
+      const ctx = { groupId: REP.groupId, date: REP.coinDate, teacherId: g?.teacher_id || null, coins: coinData[memberId]?.coins || 0 };
+      if (coinSaveTimers[memberId]) clearTimeout(coinSaveTimers[memberId].t);
+      const run = () => { delete coinSaveTimers[memberId]; return coinPersist(memberId, ctx); };
+      coinSaveTimers[memberId] = { t: setTimeout(run, 600), run };
+    }
+    async function coinPersist(memberId, ctx) {
+      const status = document.getElementById('coin-save-status');
+      try {
+        // upsert: (member_id, lesson_date) bo'yicha — bor bo'lsa yangilaydi
+        const { data, error } = await sb.from('reports_coin').upsert({
+          group_id: ctx.groupId, member_id: memberId, teacher_id: ctx.teacherId,
+          lesson_date: ctx.date, coins: ctx.coins
+        }, { onConflict: 'member_id,lesson_date' }).select().single();
+        if (error) throw error;
+        if (data && ctx.groupId === REP.groupId && ctx.date === REP.coinDate && coinData[memberId]) coinData[memberId].id = data.id;
+        if (status && !Object.keys(coinSaveTimers).length) { status.textContent = '✓ saqlandi'; status.classList.add('ok'); }
+      } catch (e) {
+        if (status) { status.textContent = '✗ xato'; status.classList.remove('ok'); }
+        showToast('Coin saqlanmadi: ' + (e.message || ''), 3500);
+      }
+    }
+    // Kutayotgan barcha saqlashlarni darhol bajarish (sana/guruh almashishidan, almashtirishdan oldin)
+    async function coinFlushPending() {
+      const pending = Object.values(coinSaveTimers);
+      pending.forEach(p => clearTimeout(p.t));
+      await Promise.all(pending.map(p => p.run()));
+    }
+
+    // ---- Almashtirish (faqat admin) ----
+    async function coinExchange(memberId) {
+      if (!repIsAdmin() || REP.exchangeMissing) return;
+      const m = REP.members.find(x => x.id === memberId);
+      if (!m) return;
+      await coinFlushPending();
+      let bal;
+      try { bal = coinBalances(await repLoadCoinTotals(REP.groupId))[memberId] || 0; } // serverdagi yangi qiymat
+      catch (e) { showToast('Balans tekshirilmadi: ' + (e.message || ''), 3500); return; }
+      if (bal <= 0) { showToast(bal < 0 ? `Balans manfiy (${bal}) — almashtirib bo'lmaydi` : 'Balans 0 — almashtirish uchun coin yo\'q', 3000); return; }
+      if (!await confirmDialog('Coin almashtirildimi?',
+        `${m.student_name}: ${bal} coin almashtirildi deb belgilanadi va balans 0 bo'ladi.\nDars coinlari tarixi o'chmaydi, xato bo'lsa "Almashtirish tarixi"dan bekor qilish mumkin.`)) return;
+      await coinInsertExchanges([{ member_id: memberId, amount: bal }]);
+    }
+
+    async function coinExchangeAll() {
+      if (!repIsAdmin() || REP.exchangeMissing) return;
+      await coinFlushPending();
+      let bals;
+      try { bals = coinBalances(await repLoadCoinTotals(REP.groupId)); }
+      catch (e) { showToast('Balans tekshirilmadi: ' + (e.message || ''), 3500); return; }
+      const list = REP.members.filter(m => (bals[m.id] || 0) > 0).map(m => ({ member_id: m.id, amount: bals[m.id] }));
+      if (!list.length) { showToast('Hech kimda musbat balans yo\'q', 2500); return; }
+      const sum = list.reduce((s, x) => s + x.amount, 0);
+      if (!await confirmDialog('Hammasini 0 ga tenglashtirish',
+        `${list.length} ta o'quvchining jami ${sum} coini almashtirildi deb belgilanadi va balanslari 0 bo'ladi.\nDars coinlari tarixi o'chmaydi.`)) return;
+      await coinInsertExchanges(list);
+    }
+
+    async function coinInsertExchanges(list) {
+      const groupId = REP.groupId;
+      let ok = false;
+      await withLoader('Saqlanmoqda...', async () => {
+        // Bitta so'rov = bitta tranzaksiya: yo hammasi yoziladi, yo hech biri
+        const { error } = await sb.from('reports_coin_exchange').insert(list.map(x => ({
+          group_id: groupId, member_id: x.member_id, amount: x.amount,
+          exchanged_by: currentUser?.name || null
+        })));
+        if (error) throw error;
+        ok = true;
+      }).catch(e => showToast('Almashtirish saqlanmadi: ' + (e.message || ''), 4000));
+      if (ok) { showToast('✓ Balans 0 ga tenglashtirildi', 1800, 'ok'); renderCoinPane(); }
+    }
+
+    async function openCoinExchangeHistory() {
+      if (!repIsAdmin()) return;
+      const box = document.getElementById('coin-ex-list');
+      box.innerHTML = '<p style="font-size:13px;color:var(--text3);text-align:center;padding:16px;">Yuklanmoqda...</p>';
+      openModal('modal-coin-ex');
+      try {
+        const rows = await repFetchAll(() => sb.from('reports_coin_exchange')
+          .select('id, member_id, amount, exchanged_by, exchanged_at').eq('group_id', REP.groupId).order('id'));
+        rows.sort((a, b) => (b.exchanged_at || '').localeCompare(a.exchanged_at || ''));
+        const nameById = {}; REP.members.forEach(m => { nameById[m.id] = m.student_name; });
+        box.innerHTML = rows.length ? rows.map(x => `
+          <div class="ex-row">
+            <div style="flex:1;min-width:0;">
+              <div style="font-weight:600;font-size:14px;">${esc(nameById[x.member_id] || 'O\'chirilgan o\'quvchi')} — ${x.amount} coin</div>
+              <div style="font-size:12px;color:var(--text2);">${repFmtDateTime(x.exchanged_at)}${x.exchanged_by ? ' • ' + esc(x.exchanged_by) : ''}</div>
+            </div>
+            <button class="btn btn-sm btn-secondary" onclick="coinUndoExchange('${x.id}')" title="Bekor qilish">↶</button>
+          </div>`).join('')
+          : '<p style="font-size:13px;color:var(--text3);text-align:center;padding:16px;">Hali almashtirish bo\'lmagan.</p>';
+      } catch (e) { box.innerHTML = repErrorBox('Tarix yuklanmadi', e); }
+    }
+    async function coinUndoExchange(id) {
+      if (!repIsAdmin()) return;
+      if (!await confirmDialog('Almashtirish bekor qilinsinmi?', 'O\'quvchining coinlari balansga qaytadi.')) return;
+      let ok = false;
+      await withLoader('Bekor qilinmoqda...', async () => {
+        const { error } = await sb.from('reports_coin_exchange').delete().eq('id', id);
+        if (error) throw error;
+        ok = true;
+      }).catch(e => showToast('Bekor qilinmadi: ' + (e.message || ''), 4000));
+      if (ok) { showToast('Bekor qilindi', 1500, 'ok'); openCoinExchangeHistory(); renderCoinPane(); }
     }
 
     function exportCoin() {
       const g = REP.groups.find(x => x.id === REP.groupId);
       const rows = REP.members.map(m => ({
         'O\'quvchi': m.student_name,
-        'Coin': coinData[m.id]?.coins || 0,
+        'Coin (shu dars)': coinData[m.id]?.coins || 0,
+        'Balans': (coinBase[m.id] || 0) + (coinData[m.id]?.coins || 0),
         'Sana': REP.coinDate
       }));
       repExportXlsx(rows, `Coin_${g?.name || ''}_${REP.coinDate}`, 'Coin');
     }
 
     // ================================================================
-    // TEST / VIDEO / STATS — 3-4-5 bosqichlarda to'ldiriladi
+    // TEST MODULI — har bir test: nom, sana, savollar soni;
+    // har bir o'quvchi: to'g'ri javoblar soni → foiz. PNG va Excel eksport.
+    // Eski oylik 1–5 baholar (reports_test) o'chirilmaydi — "Arxiv"da ko'rinadi.
     // ================================================================
-    // ================================================================
-    // TEST MODULI (oylik, 1-5 daraja, rang gradient, auto-save, tarix)
-    // ================================================================
-    let testData = {};   // { member_id: {id, score} } — joriy oy uchun
-    let testSaveTimers = {};
+    let testResults = {};     // { member_id: {id, correct} } — ochiq test uchun
+    let testSaveTimers = {};  // { member_id: {t, run} }
+    const TEST_MAX_QUESTIONS = 500;
+
+    function testPct(correct, total) {
+      if (correct == null || !total) return null;
+      return Math.round((correct / total) * 1000) / 10; // 1 xona aniqlik
+    }
+    function testPctLevel(p) { return p == null ? 0 : p >= 85 ? 5 : p >= 70 ? 4 : p >= 50 ? 3 : p >= 30 ? 2 : 1; }
+    function testPctHtml(p) {
+      return p == null ? '<span style="color:var(--text3);">—</span>' : `${p}%`;
+    }
 
     async function renderTestPane() {
       const pane = document.getElementById('rep-pane-test');
       if (!REP.members.length) { pane.innerHTML = repNoMembers(); return; }
-
-      const { data } = await sb.from('reports_test')
-        .select('*').eq('group_id', REP.groupId).eq('month', REP.testMonth);
-      testData = {};
-      (data || []).forEach(r => { testData[r.member_id] = { id: r.id, score: r.score }; });
-
-      const rows = REP.members.map(m => {
-        const sc = testData[m.id]?.score;
-        const cls = sc ? 'test-' + sc : 'test-empty';
-        return `<tr>
-          <td class="rep-name-col">${esc(m.student_name)}</td>
-          <td class="test-cell ${cls}" id="test-c-${m.id}" onclick="testCycle('${m.id}')">${sc || '–'}</td>
-        </tr>`;
-      }).join('');
-
-      const scores = REP.members.map(m => testData[m.id]?.score).filter(Boolean);
-      const avg = scores.length ? (scores.reduce((a, b) => a + b, 0) / scores.length).toFixed(1) : '–';
-      const filled = scores.length;
-
-      pane.innerHTML = `
-        <div class="rep-period">
-          <span style="font-size:13px;font-weight:600;color:var(--text2);">📅 Oy:</span>
-          <input type="month" id="test-month" value="${REP.testMonth}" max="${repThisMonth()}" onchange="testChangeMonth(this.value)">
-          <span class="rep-saving" id="test-save-status"></span>
-        </div>
-        <div style="font-size:12px;color:var(--text3);margin-bottom:10px;">
-          Katakni bosib daraja bering (1→5). To'ldirilgan: <b style="color:var(--text);">${filled}/${REP.members.length}</b>
-          &nbsp;•&nbsp; O'rtacha: <b style="color:var(--text);">${avg}</b>
-        </div>
-        <div class="rep-table-wrap">
-          <table class="rep-table">
-            <thead><tr><th class="rep-name-col">O'quvchi</th><th>Daraja (1–5)</th></tr></thead>
-            <tbody>${rows}</tbody>
-          </table>
-        </div>
-        <div style="display:flex;gap:6px;margin-top:10px;flex-wrap:wrap;align-items:center;">
-          <span style="font-size:11px;color:var(--text3);">Ranglar:</span>
-          <span class="tag test-1" style="border:none;">1</span>
-          <span class="tag test-2" style="border:none;">2</span>
-          <span class="tag test-3" style="border:none;">3</span>
-          <span class="tag test-4" style="border:none;">4</span>
-          <span class="tag test-5" style="border:none;">5</span>
-        </div>
-        <div style="display:flex;gap:8px;margin-top:12px;">
-          <button class="btn btn-sm btn-secondary" onclick="exportTest()">📊 Excel eksport</button>
-        </div>`;
+      if (REP.testView === 'legacy') return renderLegacyTestPane();
+      if (REP.testView === 'detail' && REP.currentTestId) return renderTestDetail();
+      return renderTestList();
     }
 
-    function testChangeMonth(val) {
-      REP.testMonth = val || repThisMonth();
+    // Testlar va ularning natijalari (test_id bo'yicha bo'laklab)
+    async function testLoadResults(testIds) {
+      const out = [];
+      for (let i = 0; i < testIds.length; i += 100) {
+        const chunk = testIds.slice(i, i + 100);
+        out.push(...await repFetchAll(() => sb.from('reports_test_results')
+          .select('id, test_id, member_id, correct').in('test_id', chunk).order('id')));
+      }
+      return out;
+    }
+
+    // ---- Tanlangan davrdagi testlar ro'yxati ----
+    async function renderTestList() {
+      const pane = document.getElementById('rep-pane-test');
+      const groupId = REP.groupId;
+      const r = repPeriodRange(REP.period.test.mode, REP.period.test.anchor);
+      const reqKey = `${groupId}|${r.from}|${r.to}`;
+      REP._testReq = reqKey;
+      pane.innerHTML = repPeriodBar('test') + '<p style="font-size:13px;color:var(--text3);text-align:center;padding:20px;">Yuklanmoqda...</p>';
+
+      let tests, results;
+      try {
+        tests = await repFetchAll(() => sb.from('reports_tests').select('*')
+          .eq('group_id', groupId).gte('test_date', r.from).lte('test_date', r.to).order('id'));
+        results = tests.length ? await testLoadResults(tests.map(t => t.id)) : [];
+      } catch (e) {
+        if (REP._testReq !== reqKey) return;
+        pane.innerHTML = repPeriodBar('test') + (repIsMissingTable(e) ? repMigrationNote('Test hisoboti') : repErrorBox('Testlar yuklanmadi', e));
+        return;
+      }
+      if (REP._testReq !== reqKey || REP.testView !== 'list') return;
+
+      const memberSet = new Set(REP.members.map(m => m.id));
+      tests.sort((a, b) => (b.test_date + b.created_at).localeCompare(a.test_date + a.created_at));
+      REP.tests = tests;
+      const cards = tests.map(t => {
+        const rs = results.filter(x => x.test_id === t.id && memberSet.has(x.member_id));
+        const sumC = rs.reduce((s, x) => s + (x.correct || 0), 0);
+        const avg = rs.length ? testPct(sumC, rs.length * t.total_questions) : null;
+        const lvl = testPctLevel(avg);
+        return `<div class="card test-card" onclick="openTestDetail('${t.id}')">
+          <div style="flex:1;min-width:0;">
+            <div style="font-weight:700;font-size:15px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${esc(t.title)}</div>
+            <div style="font-size:12px;color:var(--text2);margin-top:3px;">📅 ${repFmtDate(t.test_date)} • ${t.total_questions} ta savol • Qatnashdi ${rs.length}/${REP.members.length}</div>
+          </div>
+          <span class="test-avg ${lvl ? 'test-' + lvl : 'test-empty'}">${avg == null ? '—' : avg + '%'}</span>
+        </div>`;
+      }).join('');
+
+      pane.innerHTML = `
+        ${repPeriodBar('test')}
+        <div class="section-header" style="margin-bottom:10px;">
+          <span class="section-title">Testlar (${tests.length})</span>
+          <button class="btn btn-sm btn-primary" onclick="openAddTest()">+ Yangi test</button>
+        </div>
+        ${cards || `<div class="empty" style="padding:28px 16px;"><div class="empty-icon">📝</div><h3>Bu davrda test yo'q</h3><p style="font-size:13px;">"+ Yangi test" orqali qo'shing yoki boshqa davrni tanlang.</p></div>`}
+        <button class="btn btn-sm btn-secondary" style="margin-top:14px;" onclick="openLegacyTests()">📦 Arxiv: eski oylik baholar (1–5)</button>`;
+    }
+
+    // ---- Test yaratish / tahrirlash ----
+    let testEditId = null;
+    function openAddTest() {
+      testEditId = null;
+      document.getElementById('modal-test-title').textContent = 'Yangi test';
+      document.getElementById('test-name').value = '';
+      document.getElementById('test-date').value = repToday();
+      document.getElementById('test-date').max = repToday();
+      document.getElementById('test-total').value = '';
+      openModal('modal-test');
+      setTimeout(() => document.getElementById('test-name').focus(), 300);
+    }
+    function openEditTest() {
+      const t = REP.currentTest;
+      if (!t) return;
+      testEditId = t.id;
+      document.getElementById('modal-test-title').textContent = 'Testni tahrirlash';
+      document.getElementById('test-name').value = t.title;
+      document.getElementById('test-date').value = t.test_date;
+      document.getElementById('test-date').max = repToday();
+      document.getElementById('test-total').value = t.total_questions;
+      openModal('modal-test');
+    }
+    async function saveTest() {
+      const title = document.getElementById('test-name').value.trim();
+      const date = document.getElementById('test-date').value;
+      const totalStr = document.getElementById('test-total').value.trim();
+      const total = Number(totalStr);
+      if (!title || title.length > 120) { showToast('Test nomini kiriting (120 belgigacha)'); return; }
+      if (!repIsDate(date) || date > repToday()) { showToast('To\'g\'ri sana tanlang (kelajak sana mumkin emas)'); return; }
+      if (!/^\d+$/.test(totalStr) || total < 1 || total > TEST_MAX_QUESTIONS) { showToast(`Savollar soni 1 dan ${TEST_MAX_QUESTIONS} gacha bo'lsin`); return; }
+      if (testEditId) {
+        // Savollar soni kamaytirilsa — mavjud natijalardan kichik bo'lmasligi kerak
+        const maxCorrect = Math.max(0, ...Object.values(testResults).map(x => x.correct ?? 0));
+        if (total < maxCorrect) { showToast(`Savollar soni ${maxCorrect} dan kam bo'lolmaydi (kiritilgan eng katta natija)`, 3500); return; }
+      }
+      const g = REP.groups.find(x => x.id === REP.groupId);
+      let saved = null;
+      await withLoader(t('save') + '...', async () => {
+        const q = testEditId
+          ? sb.from('reports_tests').update({ title, test_date: date, total_questions: total }).eq('id', testEditId)
+          : sb.from('reports_tests').insert([{ group_id: REP.groupId, teacher_id: g?.teacher_id || null, title, test_date: date, total_questions: total, created_by: currentUser?.name || null }]);
+        const { data, error } = await q.select().single();
+        if (error) throw error;
+        saved = data;
+      }).catch(e => showToast((repIsMissingTable(e) ? 'Bazada test jadvallari yo\'q — migratsiyani ishga tushiring. ' : 'Saqlanmadi: ') + (e.message || ''), 4500));
+      if (!saved) return;
+      closeModal('modal-test');
+      showToast(t('saved'), 1500, 'ok');
+      openTestDetail(saved.id);
+    }
+
+    async function deleteCurrentTest() {
+      const tst = REP.currentTest;
+      if (!tst) return;
+      if (!await confirmDialog('Test o\'chirilsinmi?', `"${tst.title}" va unga kiritilgan barcha natijalar o'chadi. Bu amalni qaytarib bo'lmaydi.`)) return;
+      let ok = false;
+      await withLoader(t('del') + '...', async () => {
+        const { error } = await sb.from('reports_tests').delete().eq('id', tst.id);
+        if (error) throw error;
+        ok = true;
+      }).catch(e => showToast('O\'chirilmadi: ' + (e.message || ''), 4000));
+      if (ok) { showToast(t('deleted'), 1500); testBackToList(); }
+    }
+
+    async function openTestDetail(id) {
+      await testFlushPending();
+      REP.testView = 'detail';
+      REP.currentTestId = id;
+      renderTestPane();
+    }
+    async function testBackToList() {
+      await testFlushPending();
+      REP.testView = 'list'; REP.currentTestId = null; REP.currentTest = null;
       renderTestPane();
     }
 
-    // Katakni bosganda 1→2→3→4→5→(bo'sh)→1 aylanadi
-    function testCycle(memberId) {
-      const cur = testData[memberId]?.score || 0;
-      const next = cur >= 5 ? null : cur + 1;
-      testData[memberId] = { ...(testData[memberId] || {}), score: next };
-      const el = document.getElementById('test-c-' + memberId);
-      if (el) {
-        el.className = 'test-cell ' + (next ? 'test-' + next : 'test-empty');
-        el.textContent = next || '–';
+    // ---- Bitta test: natijalarni kiritish ----
+    async function renderTestDetail() {
+      const pane = document.getElementById('rep-pane-test');
+      const testId = REP.currentTestId, groupId = REP.groupId;
+      pane.innerHTML = '<p style="font-size:13px;color:var(--text3);text-align:center;padding:20px;">Yuklanmoqda...</p>';
+      let tst, res;
+      try {
+        const { data, error } = await sb.from('reports_tests').select('*').eq('id', testId).single();
+        if (error) throw error;
+        tst = data;
+        res = await testLoadResults([testId]);
+      } catch (e) {
+        pane.innerHTML = repErrorBox('Test yuklanmadi', e) + '<button class="btn btn-sm btn-secondary" onclick="testBackToList()">← Testlar</button>';
+        return;
       }
-      testAutoSave(memberId);
+      if (REP.currentTestId !== testId || REP.groupId !== groupId || tst.group_id !== groupId) return;
+      REP.currentTest = tst;
+      testResults = {};
+      res.forEach(x => { testResults[x.member_id] = { id: x.id, correct: x.correct }; });
+
+      const total = tst.total_questions;
+      const rows = REP.members.map((m, i) => {
+        const c = testResults[m.id]?.correct;
+        const p = testPct(c, total);
+        const lvl = testPctLevel(p);
+        return `<tr>
+          <td style="padding:10px 6px;color:var(--text3);font-size:12px;">${i + 1}</td>
+          <td class="rep-name-col">${esc(m.student_name)}</td>
+          <td style="padding:10px 8px;color:var(--text2);">${total}</td>
+          <td style="padding:4px 6px;">
+            <input class="test-inp" type="number" inputmode="numeric" min="0" max="${total}" step="1"
+              value="${c ?? ''}" placeholder="—" aria-label="${esc(m.student_name)} to'g'ri javoblar"
+              oninput="testResultInput('${m.id}', this)">
+          </td>
+          <td class="test-pct ${lvl ? 'test-' + lvl : 'test-empty'}" id="test-p-${m.id}">${testPctHtml(p)}</td>
+        </tr>`;
+      }).join('');
+
+      pane.innerHTML = `
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:12px;">
+          <button class="btn btn-sm btn-secondary" onclick="testBackToList()">← Testlar</button>
+          <span class="rep-saving" id="test-save-status" style="margin-left:auto;"></span>
+        </div>
+        <div class="rep-stat" style="display:flex;align-items:flex-start;gap:10px;">
+          <div style="flex:1;min-width:0;">
+            <div style="font-weight:700;font-size:16px;word-break:break-word;">${esc(tst.title)}</div>
+            <div style="font-size:12px;color:var(--text2);margin-top:4px;">📅 ${repFmtDate(tst.test_date)} • ${total} ta savol</div>
+            <div style="font-size:13px;margin-top:8px;" id="test-summary"></div>
+          </div>
+          <button class="btn btn-sm btn-secondary" onclick="openEditTest()" title="Tahrirlash">✏️</button>
+          <button class="btn btn-sm btn-danger" onclick="deleteCurrentTest()" title="O'chirish">🗑</button>
+        </div>
+        <div style="font-size:12px;color:var(--text3);margin-bottom:8px;">To'g'ri javoblar sonini kiriting (0–${total}). Bo'sh qoldirilsa — "qatnashmadi".</div>
+        <div class="rep-table-wrap">
+          <table class="rep-table">
+            <thead><tr><th>№</th><th class="rep-name-col">O'quvchi</th><th>Savollar</th><th>To'g'ri</th><th>Foiz</th></tr></thead>
+            <tbody>${rows}</tbody>
+          </table>
+        </div>
+        <div style="display:flex;gap:8px;margin-top:12px;flex-wrap:wrap;">
+          <button class="btn btn-sm btn-primary" onclick="testDownloadPng()">🖼 PNG yuklab olish</button>
+          <button class="btn btn-sm btn-secondary" onclick="exportTestResults()">📊 Excel eksport</button>
+        </div>`;
+      testRefreshSummary();
     }
 
-    function testAutoSave(memberId) {
+    function testRefreshSummary() {
+      const el = document.getElementById('test-summary');
+      const tst = REP.currentTest;
+      if (!el || !tst) return;
+      const taken = REP.members.filter(m => testResults[m.id]?.correct != null);
+      const sum = taken.reduce((s, m) => s + testResults[m.id].correct, 0);
+      const avg = taken.length ? testPct(sum, taken.length * tst.total_questions) : null;
+      el.innerHTML = `Qatnashdi: <b>${taken.length}/${REP.members.length}</b> &nbsp;•&nbsp; O'rtacha: <b>${avg == null ? '—' : avg + '%'}</b>`;
+    }
+
+    function testResultInput(memberId, el) {
+      const tst = REP.currentTest;
+      if (!tst) return;
+      const s = el.value.trim();
+      let correct = null;
+      if (s !== '') {
+        const n = Number(s);
+        if (!Number.isInteger(n) || n < 0 || n > tst.total_questions) {
+          el.classList.add('bad');
+          const st = document.getElementById('test-save-status');
+          if (st) { st.textContent = `✗ 0–${tst.total_questions} oralig'ida bo'lsin`; st.classList.remove('ok'); }
+          return; // noto'g'ri qiymat saqlanmaydi
+        }
+        correct = n;
+      }
+      el.classList.remove('bad');
+      testResults[memberId] = { ...(testResults[memberId] || {}), correct };
+      const p = testPct(correct, tst.total_questions);
+      const cell = document.getElementById('test-p-' + memberId);
+      if (cell) { const lvl = testPctLevel(p); cell.className = 'test-pct ' + (lvl ? 'test-' + lvl : 'test-empty'); cell.innerHTML = testPctHtml(p); }
+      testRefreshSummary();
+      testAutoSave(memberId, tst.id, correct);
+    }
+
+    function testAutoSave(memberId, testId, correct) {
       const status = document.getElementById('test-save-status');
       if (status) { status.textContent = '⏳ saqlanmoqda...'; status.classList.remove('ok'); }
-      clearTimeout(testSaveTimers[memberId]);
-      testSaveTimers[memberId] = setTimeout(async () => {
-        const score = testData[memberId]?.score || null;
-        try {
-          // upsert: bor bo'lsa yangilaydi, yo'q bo'lsa qo'shadi (member_id+month unique)
-          const { data, error } = await sb.from('reports_test').upsert({
-            group_id: REP.groupId, member_id: memberId,
-            teacher_id: (REP.groups.find(g => g.id === REP.groupId)?.teacher_id) || null,
-            month: REP.testMonth, score
-          }, { onConflict: 'member_id,month' }).select().single();
-          if (error) throw error;
-          if (data) testData[memberId] = { id: data.id, score: data.score };
-          if (status) { status.textContent = '✓ saqlandi'; status.classList.add('ok'); }
-        } catch (e) {
-          if (status) { status.textContent = '✗ xato'; status.classList.remove('ok'); }
-          showToast('Saqlanmadi: ' + (e.message || ''), 3000);
+      if (testSaveTimers[memberId]) clearTimeout(testSaveTimers[memberId].t);
+      const ctx = { testId, correct };
+      const run = () => { delete testSaveTimers[memberId]; return testPersist(memberId, ctx); };
+      testSaveTimers[memberId] = { t: setTimeout(run, 600), run };
+    }
+    async function testPersist(memberId, ctx) {
+      const status = document.getElementById('test-save-status');
+      try {
+        let res;
+        if (ctx.correct == null) {
+          res = await sb.from('reports_test_results').delete().eq('test_id', ctx.testId).eq('member_id', memberId);
+        } else {
+          res = await sb.from('reports_test_results').upsert({
+            test_id: ctx.testId, member_id: memberId, correct: ctx.correct, updated_at: new Date().toISOString()
+          }, { onConflict: 'test_id,member_id' });
         }
-      }, 500);
+        if (res.error) throw res.error;
+        if (status && !Object.keys(testSaveTimers).length) { status.textContent = '✓ saqlandi'; status.classList.add('ok'); }
+      } catch (e) {
+        if (status) { status.textContent = '✗ xato'; status.classList.remove('ok'); }
+        showToast('Natija saqlanmadi: ' + (e.message || ''), 3500);
+      }
+    }
+    async function testFlushPending() {
+      const pending = Object.values(testSaveTimers);
+      pending.forEach(p => clearTimeout(p.t));
+      await Promise.all(pending.map(p => p.run()));
     }
 
+    // Natijalar: foiz bo'yicha kamayish tartibida, qatnashmaganlar oxirida
+    function testSortedRows() {
+      const tst = REP.currentTest;
+      return REP.members.map(m => {
+        const c = testResults[m.id]?.correct ?? null;
+        return { name: m.student_name, correct: c, pct: testPct(c, tst.total_questions) };
+      }).sort((a, b) => (b.pct ?? -1) - (a.pct ?? -1) || a.name.localeCompare(b.name));
+    }
+
+    function exportTestResults() {
+      const tst = REP.currentTest;
+      if (!tst) return;
+      const g = REP.groups.find(x => x.id === REP.groupId);
+      const rows = testSortedRows().map((r, i) => ({
+        '№': i + 1,
+        'O\'quvchi': r.name,
+        'Savollar soni': tst.total_questions,
+        'To\'g\'ri javoblar': r.correct ?? 'Qatnashmadi',
+        'Foiz (%)': r.pct ?? ''
+      }));
+      repExportXlsx(rows, `Test_${g?.name || ''}_${tst.test_date}_${tst.title}`, 'Test');
+    }
+
+    async function testDownloadPng() {
+      const tst = REP.currentTest;
+      if (!tst) return;
+      await testFlushPending();
+      const g = REP.groups.find(x => x.id === REP.groupId);
+      try {
+        if (document.fonts && document.fonts.ready) await document.fonts.ready;
+        const blob = await repDrawTestPng({ groupName: g?.name || '', teacher: g?.teacher_name || '', test: tst, rows: testSortedRows() });
+        await repDeliverFile(blob, repSafeName(`Test_${g?.name || ''}_${tst.test_date}`) + '.png');
+      } catch (e) { showToast('PNG yaratilmadi: ' + (e.message || ''), 3500); }
+    }
+
+    // ---- ARXIV: eski oylik 1–5 baholar (faqat ko'rish, ma'lumot o'zgarmaydi) ----
+    let legacyTestData = {};
+    async function openLegacyTests() { REP.testView = 'legacy'; renderTestPane(); }
+    async function renderLegacyTestPane() {
+      const pane = document.getElementById('rep-pane-test');
+      const groupId = REP.groupId, month = REP.testMonth;
+      const { data, error } = await sb.from('reports_test').select('*').eq('group_id', groupId).eq('month', month);
+      if (REP.testView !== 'legacy' || groupId !== REP.groupId || month !== REP.testMonth) return;
+      if (error) { pane.innerHTML = repErrorBox('Arxiv yuklanmadi', error); return; }
+      legacyTestData = {};
+      (data || []).forEach(r => { legacyTestData[r.member_id] = r.score; });
+      const rows = REP.members.map(m => {
+        const sc = legacyTestData[m.id];
+        return `<tr><td class="rep-name-col">${esc(m.student_name)}</td><td class="test-cell ${sc ? 'test-' + sc : 'test-empty'}" style="cursor:default;">${sc || '–'}</td></tr>`;
+      }).join('');
+      pane.innerHTML = `
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:12px;">
+          <button class="btn btn-sm btn-secondary" onclick="testBackToList()">← Testlar</button>
+          <span style="font-size:13px;font-weight:700;">📦 Arxiv: oylik baholar (1–5)</span>
+        </div>
+        <div class="rep-period">
+          <span style="font-size:13px;font-weight:600;color:var(--text2);">📅 Oy:</span>
+          <input type="month" value="${month}" max="${repThisMonth()}" onchange="testChangeMonth(this.value)">
+        </div>
+        <div style="font-size:12px;color:var(--text3);margin-bottom:10px;">Eski tizimda kiritilgan baholar. Faqat ko'rish uchun — o'zgartirib bo'lmaydi.</div>
+        <div class="rep-table-wrap"><table class="rep-table">
+          <thead><tr><th class="rep-name-col">O'quvchi</th><th>Daraja (1–5)</th></tr></thead><tbody>${rows}</tbody>
+        </table></div>
+        <div style="display:flex;gap:8px;margin-top:12px;"><button class="btn btn-sm btn-secondary" onclick="exportTest()">📊 Excel eksport</button></div>`;
+    }
+    function testChangeMonth(val) {
+      REP.testMonth = /^\d{4}-\d{2}$/.test(val || '') ? val : repThisMonth();
+      renderTestPane();
+    }
     function exportTest() {
       const g = REP.groups.find(x => x.id === REP.groupId);
-      const rows = REP.members.map(m => ({
-        'O\'quvchi': m.student_name,
-        'Daraja': testData[m.id]?.score || '',
-        'Oy': REP.testMonth
-      }));
-      repExportXlsx(rows, `Test_${g?.name || ''}_${REP.testMonth}`, 'Test');
+      const rows = REP.members.map(m => ({ 'O\'quvchi': m.student_name, 'Daraja': legacyTestData[m.id] || '', 'Oy': REP.testMonth }));
+      repExportXlsx(rows, `Test_arxiv_${g?.name || ''}_${REP.testMonth}`, 'Test');
     }
     // ================================================================
     // VIDEO MODULI (kvartal, checkbox + sabab, tarix)
@@ -6151,176 +6397,320 @@
       repExportXlsx(rows, `Video_${g?.name || ''}_${REP.videoQuarter}`, 'Video');
     }
     // ================================================================
-    // STATISTIKA MODULI (coin / test / video kesimida)
+    // STATISTIKA MODULI — tanlangan davr (kunlik / haftalik / oylik)
+    // Barcha yozuvlar sahifalab yuklanadi (1000 qator chegarasi yo'q).
     // ================================================================
     async function renderStatsPane() {
       const pane = document.getElementById('rep-pane-stats');
       if (!REP.members.length) { pane.innerHTML = repNoMembers(); return; }
-      pane.innerHTML = `<div class="empty"><div class="empty-icon">⏳</div><p style="font-size:13px;">Statistika hisoblanmoqda...</p></div>`;
+      const groupId = REP.groupId;
+      const r = repPeriodRange(REP.period.stats.mode, REP.period.stats.anchor);
+      const reqKey = `${groupId}|${r.from}|${r.to}`;
+      REP._statsReq = reqKey;
+      pane.innerHTML = repPeriodBar('stats') + `<div class="empty"><div class="empty-icon">⏳</div><p style="font-size:13px;">Statistika hisoblanmoqda...</p></div>`;
 
-      const memberIds = REP.members.map(m => m.id);
-      const nameById = {}; REP.members.forEach(m => nameById[m.id] = m.student_name);
+      let totals, tests = [], results = [], videos, testsMissing = false;
+      try {
+        await coinFlushPending(); await testFlushPending(); // saqlanmagan o'zgarishlar ham hisobga kirsin
+        const testsP = repFetchAll(() => sb.from('reports_tests').select('id, title, test_date, total_questions')
+          .eq('group_id', groupId).gte('test_date', r.from).lte('test_date', r.to).order('id'))
+          .catch(e => { if (repIsMissingTable(e)) { testsMissing = true; return []; } throw e; });
+        [totals, tests, videos] = await Promise.all([
+          repLoadCoinTotals(groupId),
+          testsP,
+          repFetchAll(() => sb.from('reports_video').select('member_id, taken, reason, quarter').eq('group_id', groupId).order('id'))
+        ]);
+        results = tests.length ? await testLoadResults(tests.map(t => t.id)) : [];
+      } catch (e) {
+        if (REP._statsReq === reqKey) pane.innerHTML = repPeriodBar('stats') + repErrorBox('Statistika yuklanmadi', e);
+        return;
+      }
+      if (REP._statsReq !== reqKey) return;
 
-      // Barcha ma'lumotni parallel yuklash
-      const [coinRes, testRes, videoRes] = await Promise.all([
-        sb.from('reports_coin').select('member_id, coins, lesson_date').eq('group_id', REP.groupId),
-        sb.from('reports_test').select('member_id, score, month').eq('group_id', REP.groupId),
-        sb.from('reports_video').select('member_id, taken, reason, quarter').eq('group_id', REP.groupId)
-      ]);
-      const coins = coinRes.data || [];
-      const tests = testRes.data || [];
-      const videos = videoRes.data || [];
+      const nameById = {}; REP.members.forEach(m => { nameById[m.id] = m.student_name; });
+      const inRange = d => d && d >= r.from && d <= r.to;
 
-      // --- COIN statistikasi ---
-      const now = new Date();
-      const todayStr = repToday();
-      const weekAgo = new Date(now.getTime() - 7 * 864e5).toISOString().slice(0, 10);
-      const monthStr = repThisMonth();
-      let coinToday = 0, coinWeek = 0, coinMonth = 0, coinTotal = 0;
-      const coinByMember = {};
-      coins.forEach(c => {
-        const v = c.coins || 0;
-        coinTotal += v;
-        if (c.lesson_date === todayStr) coinToday += v;
-        if (c.lesson_date >= weekAgo) coinWeek += v;
-        if ((c.lesson_date || '').slice(0, 7) === monthStr) coinMonth += v;
-        coinByMember[c.member_id] = (coinByMember[c.member_id] || 0) + v;
+      // --- Coin: davrdagi coin, hozirgi balans, davrdagi almashtirish ---
+      const periodCoinRows = totals.coins.filter(c => inRange(c.lesson_date) && nameById[c.member_id] !== undefined);
+      const periodEx = totals.ex.filter(x => inRange(uzParts(new Date(x.exchanged_at)).dateStr) && nameById[x.member_id] !== undefined);
+      const bal = coinBalances(totals);
+      const per = {};
+      REP.members.forEach(m => { per[m.id] = { coins: 0, exchanged: 0, correct: 0, questions: 0, tests: 0 }; });
+      periodCoinRows.forEach(c => { per[c.member_id].coins += c.coins || 0; });
+      periodEx.forEach(x => { per[x.member_id].exchanged += x.amount || 0; });
+
+      // --- Test: o'quvchi bo'yicha umumiy foiz = to'g'ri javoblar / jami savollar ---
+      const testById = {}; tests.forEach(t => { testById[t.id] = t; });
+      const periodResults = results.filter(x => testById[x.test_id] && per[x.member_id]);
+      periodResults.forEach(x => {
+        const p = per[x.member_id];
+        p.correct += x.correct || 0; p.questions += testById[x.test_id].total_questions; p.tests += 1;
       });
-      // Reyting (top)
-      const ranking = memberIds.map(id => ({ id, name: nameById[id], total: coinByMember[id] || 0 }))
-        .sort((a, b) => b.total - a.total);
+
+      const coinSum = periodCoinRows.reduce((s, c) => s + (c.coins || 0), 0);
+      const exSum = periodEx.reduce((s, x) => s + (x.amount || 0), 0);
+      const allCorrect = periodResults.reduce((s, x) => s + (x.correct || 0), 0);
+      const allQuestions = periodResults.reduce((s, x) => s + testById[x.test_id].total_questions, 0);
+      const groupAvg = allQuestions ? testPct(allCorrect, allQuestions) : null;
+
+      const ranking = REP.members.map(m => ({
+        id: m.id, name: m.student_name, coins: per[m.id].coins, exchanged: per[m.id].exchanged, balance: bal[m.id] || 0,
+        pct: per[m.id].questions ? testPct(per[m.id].correct, per[m.id].questions) : null, tests: per[m.id].tests
+      })).sort((a, b) => b.coins - a.coins || (b.pct ?? -1) - (a.pct ?? -1) || a.name.localeCompare(b.name));
+
       const medals = ['🥇', '🥈', '🥉'];
-      const rankRows = ranking.slice(0, 10).map((r, i) =>
-        `<div class="rank-row">
-          <span class="rank-medal">${medals[i] || (i + 1)}</span>
-          <span style="flex:1;font-size:14px;font-weight:${i < 3 ? 600 : 500};">${esc(r.name)}</span>
-          <span style="font-weight:700;font-family:'Sora',sans-serif;color:${r.total > 0 ? 'var(--accent2)' : 'var(--text3)'};">${r.total}</span>
-        </div>`).join('');
+      const memberRows = ranking.map((x, i) => {
+        const lvl = testPctLevel(x.pct);
+        return `<tr>
+          <td style="padding:10px 6px;font-size:13px;">${x.coins > 0 && i < 3 ? medals[i] : i + 1}</td>
+          <td class="rep-name-col">${esc(x.name)}</td>
+          <td style="padding:10px 8px;font-weight:700;">${x.coins}</td>
+          <td style="padding:10px 8px;${x.balance < 0 ? 'color:var(--red);' : ''}">${x.balance}</td>
+          <td class="test-pct ${lvl ? 'test-' + lvl : 'test-empty'}">${testPctHtml(x.pct)}</td>
+          <td style="padding:10px 8px;color:var(--text2);">${x.tests}</td>
+        </tr>`;
+      }).join('');
 
-      // --- TEST statistikasi ---
-      const testByMonth = {};
-      tests.forEach(t => {
-        if (t.score) {
-          if (!testByMonth[t.month]) testByMonth[t.month] = [];
-          testByMonth[t.month].push(t.score);
-        }
-      });
-      const months = Object.keys(testByMonth).sort();
-      const monthAvgs = months.map(mo => ({
-        month: mo,
-        avg: (testByMonth[mo].reduce((a, b) => a + b, 0) / testByMonth[mo].length)
-      }));
-      const allScores = tests.map(t => t.score).filter(Boolean);
-      const testAvg = allScores.length ? (allScores.reduce((a, b) => a + b, 0) / allScores.length).toFixed(1) : '–';
-      // Oylar bo'yicha mini-bar
-      const monthBars = monthAvgs.map(m => {
-        const pct = (m.avg / 5) * 100;
-        const color = m.avg >= 4 ? 'var(--accent)' : m.avg >= 3 ? 'var(--yellow)' : 'var(--red)';
-        return `<div style="display:flex;align-items:center;gap:8px;margin-bottom:6px;">
-          <span style="font-size:11px;color:var(--text2);width:60px;">${m.month}</span>
-          <div style="flex:1;height:8px;background:var(--bg3);border-radius:4px;overflow:hidden;">
-            <div style="width:${pct}%;height:100%;background:${color};border-radius:4px;"></div>
+      const testRows = tests.slice().sort((a, b) => b.test_date.localeCompare(a.test_date)).map(t => {
+        const rs = periodResults.filter(x => x.test_id === t.id);
+        const avg = rs.length ? testPct(rs.reduce((s, x) => s + (x.correct || 0), 0), rs.length * t.total_questions) : null;
+        const lvl = testPctLevel(avg);
+        return `<div class="rank-row" style="cursor:pointer;" onclick="statsOpenTest('${t.id}')">
+          <div style="flex:1;min-width:0;">
+            <div style="font-size:14px;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${esc(t.title)}</div>
+            <div style="font-size:11px;color:var(--text2);">${repFmtShort(t.test_date)} • ${t.total_questions} savol • ${rs.length}/${REP.members.length} qatnashdi</div>
           </div>
-          <span style="font-size:12px;font-weight:700;width:28px;text-align:right;">${m.avg.toFixed(1)}</span>
+          <span class="test-avg ${lvl ? 'test-' + lvl : 'test-empty'}">${avg == null ? '—' : avg + '%'}</span>
         </div>`;
-      }).join('') || '<span style="font-size:12px;color:var(--text3);">Ma\'lumot yo\'q</span>';
+      }).join('');
 
-      // --- VIDEO statistikasi ---
-      // Eng oxirgi kvartal bo'yicha
+      // --- Video (kvartal bo'yicha yuritiladi — davr filtri qo'llanmaydi) ---
       const quarters = [...new Set(videos.map(v => v.quarter))].sort().reverse();
       const lastQ = quarters[0];
-      const lastQVideos = videos.filter(v => v.quarter === lastQ);
+      const lastQVideos = videos.filter(v => v.quarter === lastQ && nameById[v.member_id] !== undefined);
       const takenCount = lastQVideos.filter(v => v.taken).length;
-      const notTaken = lastQVideos.filter(v => !v.taken && v.reason);
       const reasonCounts = {};
-      notTaken.forEach(v => { reasonCounts[v.reason] = (reasonCounts[v.reason] || 0) + 1; });
+      lastQVideos.filter(v => !v.taken && v.reason).forEach(v => { reasonCounts[v.reason] = (reasonCounts[v.reason] || 0) + 1; });
       const reasonRows = Object.entries(reasonCounts).map(([k, cnt]) =>
         `<div style="display:flex;justify-content:space-between;font-size:13px;padding:5px 0;border-bottom:1px solid var(--line);">
-          <span style="color:var(--text2);">${VIDEO_REASONS[k] || k}</span>
-          <span style="font-weight:700;">${cnt}</span>
+          <span style="color:var(--text2);">${esc(VIDEO_REASONS[k] || k)}</span><span style="font-weight:700;">${cnt}</span>
         </div>`).join('') || '<span style="font-size:12px;color:var(--text3);">Sabablar yo\'q</span>';
 
       pane.innerHTML = `
-        <!-- COIN -->
-        <div style="font-size:14px;font-weight:700;margin:4px 0 10px;">💰 Coin statistikasi</div>
-        <div class="stat-grid" style="margin-bottom:14px;">
-          <div class="rep-stat" style="text-align:center;"><div class="rep-stat-big">${coinToday}</div><div style="font-size:11px;color:var(--text2);">Bugun</div></div>
-          <div class="rep-stat" style="text-align:center;"><div class="rep-stat-big">${coinWeek}</div><div style="font-size:11px;color:var(--text2);">Hafta</div></div>
-          <div class="rep-stat" style="text-align:center;"><div class="rep-stat-big">${coinMonth}</div><div style="font-size:11px;color:var(--text2);">Oy</div></div>
-          <div class="rep-stat" style="text-align:center;"><div class="rep-stat-big">${coinTotal}</div><div style="font-size:11px;color:var(--text2);">Jami</div></div>
-        </div>
-        <div class="rep-stat">
-          <div style="font-size:13px;font-weight:700;margin-bottom:10px;">🏆 Reyting (eng ko'p coin)</div>
-          ${rankRows || '<span style="font-size:12px;color:var(--text3);">Ma\'lumot yo\'q</span>'}
+        ${repPeriodBar('stats')}
+        <div class="stat-grid" style="margin-bottom:12px;">
+          <div class="rep-stat" style="text-align:center;"><div class="rep-stat-big">${coinSum}</div><div style="font-size:11px;color:var(--text2);">Coin berildi</div></div>
+          <div class="rep-stat" style="text-align:center;"><div class="rep-stat-big">${exSum}</div><div style="font-size:11px;color:var(--text2);">Almashtirildi</div></div>
+          <div class="rep-stat" style="text-align:center;"><div class="rep-stat-big">${tests.length}</div><div style="font-size:11px;color:var(--text2);">Testlar</div></div>
+          <div class="rep-stat" style="text-align:center;"><div class="rep-stat-big">${groupAvg == null ? '—' : groupAvg + '%'}</div><div style="font-size:11px;color:var(--text2);">Test o'rtacha</div></div>
         </div>
 
-        <!-- TEST -->
-        <div style="font-size:14px;font-weight:700;margin:16px 0 10px;">📝 Test statistikasi</div>
-        <div class="rep-stat">
-          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
-            <span style="font-size:13px;color:var(--text2);">Umumiy o'rtacha daraja</span>
-            <span class="rep-stat-big" style="font-size:22px;">${testAvg}</span>
-          </div>
-          <div style="font-size:12px;font-weight:600;color:var(--text2);margin-bottom:8px;">Oylar bo'yicha o'zgarish:</div>
-          ${monthBars}
+        <div style="font-size:14px;font-weight:700;margin:6px 0 10px;">🏆 O'quvchilar (${esc(repPeriodRange(REP.period.stats.mode, REP.period.stats.anchor).label)})</div>
+        <div class="rep-table-wrap">
+          <table class="rep-table">
+            <thead><tr><th>№</th><th class="rep-name-col">O'quvchi</th><th>Coin</th><th>Balans</th><th>Test %</th><th>Testlar</th></tr></thead>
+            <tbody>${memberRows}</tbody>
+          </table>
         </div>
+        <div style="font-size:11px;color:var(--text3);margin:6px 0 16px;">Coin va Test % — tanlangan davr bo'yicha. Balans — hozirgi holat (davrdan qat'i nazar).</div>
 
-        <!-- VIDEO -->
-        <div style="font-size:14px;font-weight:700;margin:16px 0 10px;">🎥 Video statistikasi ${lastQ ? '(' + lastQ + ')' : ''}</div>
+        <div style="font-size:14px;font-weight:700;margin:4px 0 10px;">📝 Davrdagi testlar</div>
+        <div class="rep-stat">${testsMissing ? repMigrationNote('Test hisoboti') : (testRows || '<span style="font-size:12px;color:var(--text3);">Bu davrda test yo\'q</span>')}</div>
+
+        <div style="font-size:14px;font-weight:700;margin:16px 0 10px;">🎥 Video ${lastQ ? '(' + esc(lastQ) + ')' : ''}</div>
         <div class="rep-stat">
+          <div style="font-size:11px;color:var(--text3);margin-bottom:8px;">Video kvartal bo'yicha yuritiladi — oxirgi kvartal ko'rsatilgan.</div>
           <div style="display:flex;justify-content:space-between;margin-bottom:10px;">
             <span style="font-size:13px;color:var(--text2);">Olingan videolar</span>
-            <span style="font-weight:700;">${takenCount}/${lastQVideos.length || REP.members.length}</span>
+            <span style="font-weight:700;">${takenCount}/${REP.members.length}</span>
           </div>
           <div style="font-size:12px;font-weight:600;color:var(--text2);margin-bottom:6px;">Olinmaganlar sabablari:</div>
           ${reasonRows}
         </div>
 
-        <div style="display:flex;gap:8px;margin-top:14px;">
-          <button class="btn btn-sm btn-secondary" onclick="exportStats()">📊 To'liq Excel eksport</button>
+        <div class="stats-check">
+          ✔ Hisob asosi: ${periodCoinRows.length} ta coin yozuvi, ${periodResults.length} ta test natijasi, ${periodEx.length} ta almashtirish
+          (${repFmtShort(r.from)} – ${repFmtShort(r.to)}). Tekshiruv: o'quvchilar bo'yicha coin yig'indisi = ${ranking.reduce((s, x) => s + x.coins, 0)}.
+        </div>
+        <div style="display:flex;gap:8px;margin-top:12px;">
+          <button class="btn btn-sm btn-secondary" onclick="exportStats()">📊 Davr bo'yicha Excel eksport</button>
         </div>`;
 
-      // Eksport uchun keshlab qo'yamiz
-      REP._statsCache = { coins, tests, videos, ranking, nameById };
+      REP._statsCache = { range: r, ranking, periodCoinRows, periodResults, periodEx, testById, nameById, lastQVideos, lastQ };
     }
 
-    // To'liq statistika eksporti (bir necha varaq)
+    async function statsOpenTest(id) {
+      switchRepTab('test');
+      await openTestDetail(id);
+    }
+
+    // Davr bo'yicha to'liq eksport (bir necha varaq)
     function exportStats() {
       const g = REP.groups.find(x => x.id === REP.groupId);
       const c = REP._statsCache;
       if (!c) { showToast('Avval statistika yuklansin'); return; }
+      if (!window.XLSX || !XLSX.utils) { showToast('Excel kutubxonasi yuklanmagan (internetni tekshiring)', 3000); return; }
       try {
         const wb = XLSX.utils.book_new();
-        // Reyting varag'i
-        const rankRows = c.ranking.map((r, i) => ({ 'O\'rin': i + 1, 'O\'quvchi': r.name, 'Jami coin': r.total }));
-        XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(rankRows), 'Coin reyting');
-        // Test varag'i
-        const testRows = c.tests.map(t => ({ 'O\'quvchi': c.nameById[t.member_id] || '', 'Oy': t.month, 'Daraja': t.score }));
-        if (testRows.length) XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(testRows), 'Test');
-        // Video varag'i
-        const videoRows = c.videos.map(v => ({ 'O\'quvchi': c.nameById[v.member_id] || '', 'Kvartal': v.quarter, 'Olindi': v.taken ? 'Ha' : 'Yo\'q', 'Sabab': v.taken ? '' : (VIDEO_REASONS[v.reason] || '') }));
-        if (videoRows.length) XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(videoRows), 'Video');
-        XLSX.writeFile(wb, `Statistika_${(g?.name || '').replace(/[^\w]/g, '_')}.xlsx`);
+        const add = (rows, name) => { if (rows.length) XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(rows), name); };
+        add(c.ranking.map((x, i) => ({
+          'O\'rin': i + 1, 'O\'quvchi': x.name, 'Coin (davr)': x.coins, 'Almashtirildi (davr)': x.exchanged,
+          'Balans (hozir)': x.balance, 'Test foizi (davr)': x.pct ?? '', 'Testlar soni': x.tests
+        })), 'Umumiy');
+        add(c.periodCoinRows.slice().sort((a, b) => a.lesson_date.localeCompare(b.lesson_date))
+          .map(x => ({ 'Sana': x.lesson_date, 'O\'quvchi': c.nameById[x.member_id] || '', 'Coin': x.coins })), 'Coin');
+        add(c.periodResults.map(x => {
+          const t = c.testById[x.test_id];
+          return { 'Sana': t.test_date, 'Test': t.title, 'O\'quvchi': c.nameById[x.member_id] || '', 'Savollar soni': t.total_questions, 'To\'g\'ri': x.correct, 'Foiz (%)': testPct(x.correct, t.total_questions) };
+        }).sort((a, b) => a['Sana'].localeCompare(b['Sana'])), 'Testlar');
+        add(c.periodEx.map(x => ({ 'Sana': repFmtDateTime(x.exchanged_at), 'O\'quvchi': c.nameById[x.member_id] || '', 'Coin': x.amount, 'Kim': x.exchanged_by || '' })), 'Almashtirish');
+        add(c.lastQVideos.map(v => ({ 'O\'quvchi': c.nameById[v.member_id] || '', 'Kvartal': v.quarter, 'Olindi': v.taken ? 'Ha' : 'Yo\'q', 'Sabab': v.taken ? '' : (VIDEO_REASONS[v.reason] || '') })), 'Video');
+        XLSX.writeFile(wb, repSafeName(`Statistika_${g?.name || ''}_${c.range.from}_${c.range.to}`) + '.xlsx');
         showToast('Excel yuklandi', 1500, 'ok');
       } catch (e) { showToast('Eksport xatosi: ' + (e.message || ''), 3000); }
     }
 
     // ---- Umumiy yordamchilar ----
+    // Supabase bitta so'rovda ko'pi bilan 1000 qator qaytaradi — shuning uchun sahifalab olamiz.
+    // makeQuery har chaqiruvda YANGI so'rov qaytarishi va barqaror tartibga ega bo'lishi (order) shart.
+    async function repFetchAll(makeQuery, pageSize = 1000) {
+      const out = [];
+      for (let from = 0; ; from += pageSize) {
+        const { data, error } = await makeQuery().range(from, from + pageSize - 1);
+        if (error) throw error;
+        const rows = data || [];
+        out.push(...rows);
+        if (rows.length < pageSize) break;
+      }
+      return out;
+    }
+    function repIsMissingTable(e) {
+      const s = `${e?.code || ''} ${e?.message || ''}`;
+      return /42P01|PGRST205|does not exist|schema cache/i.test(s);
+    }
+    function repErrorBox(title, e) {
+      return `<div class="empty" style="padding:24px 16px;"><div class="empty-icon">⚠️</div><h3>${esc(title)}</h3>
+        <p style="font-size:12px;color:var(--text3);">${esc(e?.message || e?.code || 'Noma\'lum xatolik')}</p></div>`;
+    }
+    function repMigrationNote(feature) {
+      return `<div class="rep-note">⚠️ <b>${esc(feature)}</b> uchun bazada yangi jadvallar yo'q. Supabase SQL Editor'da
+        <code>reports_v2_migration.sql</code> faylini ishga tushiring.</div>`;
+    }
+    function repSafeName(s) { return String(s).replace(/[^\w\-\u0400-\u04FF]+/g, '_').replace(/_+/g, '_').slice(0, 90); }
     function repNoMembers() {
       return `<div class="empty"><div class="empty-icon">👥</div><h3>O'quvchi yo'q</h3><p style="font-size:13px;">"O'quvchilar" tugmasi orqali guruhga o'quvchi qo'shing.</p></div>`;
     }
-    function repComingSoon(title, sub) {
-      return `<div class="empty"><div class="empty-icon">🔜</div><h3>${title}</h3><p style="font-size:13px;">${sub}</p></div>`;
-    }
     function repExportXlsx(rows, filename, sheetName) {
+      if (!window.XLSX || !XLSX.utils) { showToast('Excel kutubxonasi yuklanmagan (internetni tekshiring)', 3000); return; }
       try {
         const ws = XLSX.utils.json_to_sheet(rows);
         const wb = XLSX.utils.book_new();
         XLSX.utils.book_append_sheet(wb, ws, sheetName || 'Sheet1');
-        XLSX.writeFile(wb, filename.replace(/[^\w\-]/g, '_') + '.xlsx');
+        XLSX.writeFile(wb, repSafeName(filename) + '.xlsx');
         showToast('Excel yuklandi', 1500, 'ok');
       } catch (e) { showToast('Eksport xatosi: ' + (e.message || ''), 3000); }
     }
+
+    // Faylni foydalanuvchiga berish: mobil qurilmada ulashish oynasi (Telegram va h.k.),
+    // aks holda oddiy yuklab olish.
+    async function repDeliverFile(blob, filename) {
+      const isMobile = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+      if (isMobile && typeof File === 'function' && navigator.canShare) {
+        const file = new File([blob], filename, { type: blob.type });
+        if (navigator.canShare({ files: [file] })) {
+          try { await navigator.share({ files: [file], title: filename }); return; }
+          catch (e) { if (e && e.name === 'AbortError') return; /* boshqa xato — yuklab olishga o'tamiz */ }
+        }
+      }
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url; a.download = filename;
+      document.body.appendChild(a); a.click(); a.remove();
+      setTimeout(() => URL.revokeObjectURL(url), 5000);
+      showToast('Rasm yuklandi', 1500, 'ok');
+    }
+
+    // ---- Test natijalari rasmi (PNG) — Canvas'da chiziladi, tashqi kutubxonasiz ----
+    const PNG_COLORS = { 1: '#dc5b4b', 2: '#e09646', 3: '#d9b42b', 4: '#82b450', 5: '#39b167' };
+    function pngRoundRect(ctx, x, y, w, h, r) {
+      ctx.beginPath();
+      ctx.moveTo(x + r, y); ctx.lineTo(x + w - r, y); ctx.quadraticCurveTo(x + w, y, x + w, y + r);
+      ctx.lineTo(x + w, y + h - r); ctx.quadraticCurveTo(x + w, y + h, x + w - r, y + h);
+      ctx.lineTo(x + r, y + h); ctx.quadraticCurveTo(x, y + h, x, y + h - r);
+      ctx.lineTo(x, y + r); ctx.quadraticCurveTo(x, y, x + r, y); ctx.closePath();
+    }
+    function pngFit(ctx, text, maxW) {
+      text = String(text ?? '');
+      if (ctx.measureText(text).width <= maxW) return text;
+      while (text.length > 1 && ctx.measureText(text + '…').width > maxW) text = text.slice(0, -1);
+      return text + '…';
+    }
+    function repDrawTestPng({ groupName, teacher, test, rows }) {
+      const FONT = "Manrope, 'Segoe UI', Roboto, Arial, sans-serif";
+      const W = 900, PAD = 40, HEAD = 176, TH = 42, RH = 46, FOOT = 64;
+      const H = HEAD + TH + rows.length * RH + FOOT;
+      const S = 2; // retina aniqlik
+      const cv = document.createElement('canvas');
+      cv.width = W * S; cv.height = H * S;
+      const ctx = cv.getContext('2d');
+      if (!ctx) throw new Error('Canvas qo\'llab-quvvatlanmaydi');
+      ctx.scale(S, S);
+      ctx.textBaseline = 'middle';
+
+      ctx.fillStyle = '#ffffff'; ctx.fillRect(0, 0, W, H);
+      ctx.fillStyle = '#39b167'; ctx.fillRect(0, 0, W, 8);
+
+      const taken = rows.filter(r => r.correct != null);
+      const avg = taken.length ? testPct(taken.reduce((s, r) => s + r.correct, 0), taken.length * test.total_questions) : null;
+
+      ctx.fillStyle = '#39b167'; ctx.font = `800 14px ${FONT}`; ctx.fillText('JONY MATH • TEST NATIJALARI', PAD, 40);
+      ctx.fillStyle = '#111827'; ctx.font = `800 28px ${FONT}`; ctx.fillText(pngFit(ctx, test.title, W - PAD * 2), PAD, 78);
+      ctx.fillStyle = '#6b7280'; ctx.font = `500 15px ${FONT}`;
+      const sub = [groupName, teacher, repFmtDate(test.test_date), `${test.total_questions} ta savol`].filter(Boolean).join('  •  ');
+      ctx.fillText(pngFit(ctx, sub, W - PAD * 2), PAD, 110);
+      ctx.fillStyle = '#111827'; ctx.font = `700 15px ${FONT}`;
+      ctx.fillText(`O'rtacha natija: ${avg == null ? '—' : avg + '%'}     Qatnashdi: ${taken.length}/${rows.length}`, PAD, 142);
+
+      // Ustunlar: № | O'quvchi | Savollar | To'g'ri | Foiz
+      const cols = { no: PAD, name: PAD + 50, q: 560, c: 680, p: 790 };
+      let y = HEAD;
+      ctx.fillStyle = '#f4f5f4'; pngRoundRect(ctx, PAD - 10, y, W - PAD * 2 + 20, TH, 10); ctx.fill();
+      ctx.fillStyle = '#6b7280'; ctx.font = `700 13px ${FONT}`;
+      ctx.textAlign = 'left'; ctx.fillText('№', cols.no, y + TH / 2); ctx.fillText("O'QUVCHI", cols.name, y + TH / 2);
+      ctx.textAlign = 'center'; ctx.fillText('SAVOLLAR', cols.q, y + TH / 2); ctx.fillText("TO'G'RI", cols.c, y + TH / 2); ctx.fillText('FOIZ', cols.p, y + TH / 2);
+      y += TH;
+
+      rows.forEach((r, i) => {
+        if (i % 2 === 1) { ctx.fillStyle = '#fafbfa'; ctx.fillRect(PAD - 10, y, W - PAD * 2 + 20, RH); }
+        ctx.fillStyle = '#ebedeb'; ctx.fillRect(PAD - 10, y + RH - 1, W - PAD * 2 + 20, 1);
+        const mid = y + RH / 2;
+        ctx.textAlign = 'left';
+        ctx.fillStyle = '#a1a7ac'; ctx.font = `600 14px ${FONT}`; ctx.fillText(String(i + 1), cols.no, mid);
+        ctx.fillStyle = '#111827'; ctx.font = `600 16px ${FONT}`; ctx.fillText(pngFit(ctx, r.name, cols.q - cols.name - 70), cols.name, mid);
+        ctx.textAlign = 'center';
+        ctx.fillStyle = '#6b7280'; ctx.font = `500 15px ${FONT}`; ctx.fillText(String(test.total_questions), cols.q, mid);
+        if (r.correct == null) {
+          ctx.fillStyle = '#a1a7ac'; ctx.fillText('—', cols.c, mid);
+          ctx.font = `500 13px ${FONT}`; ctx.fillText('Qatnashmadi', cols.p, mid);
+        } else {
+          ctx.fillStyle = '#111827'; ctx.font = `700 16px ${FONT}`; ctx.fillText(String(r.correct), cols.c, mid);
+          ctx.fillStyle = PNG_COLORS[testPctLevel(r.pct)]; pngRoundRect(ctx, cols.p - 46, mid - 14, 92, 28, 14); ctx.fill();
+          ctx.fillStyle = '#ffffff'; ctx.font = `800 14px ${FONT}`; ctx.fillText(`${r.pct}%`, cols.p, mid + 1);
+        }
+        y += RH;
+      });
+
+      ctx.textAlign = 'left'; ctx.fillStyle = '#a1a7ac'; ctx.font = `500 12px ${FONT}`;
+      ctx.fillText(`Yaratildi: ${repFmtDateTime(new Date().toISOString())}`, PAD, y + FOOT / 2);
+      ctx.textAlign = 'right'; ctx.fillStyle = '#39b167'; ctx.font = `800 13px ${FONT}`; ctx.fillText('JONY MATH', W - PAD, y + FOOT / 2);
+
+      return new Promise((resolve, reject) => cv.toBlob(b => b ? resolve(b) : reject(new Error('Rasm yaratilmadi')), 'image/png'));
+    }
+
+    // Ilova fonga o'tganda (telefon qulflanishi, boshqa ilovaga o'tish) kutayotgan saqlashlarni yozib qo'yamiz
+    document.addEventListener('visibilitychange', () => {
+      if (document.visibilityState === 'hidden') { coinFlushPending(); testFlushPending(); }
+    });
   </script>
 </body>
 
