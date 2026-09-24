@@ -1253,6 +1253,23 @@
 
     .dark .test-3 { color: #1a1500; }
 
+    /* Admin vakolatlari (checkbox qatorlari) */
+    .perm-list { display: flex; flex-direction: column; gap: 8px; }
+    .inp-group .perm-row {
+      display: flex; align-items: center; gap: 12px; margin: 0; padding: 12px 14px; cursor: pointer;
+      border: 1px solid var(--line); border-radius: 12px; background: var(--bg);
+      font-size: 14px; font-weight: 500; color: var(--text); letter-spacing: 0;
+    }
+    .inp-group .perm-row input[type=checkbox] {
+      width: 20px; height: 20px; min-width: 20px; padding: 0; margin: 0; box-shadow: none; accent-color: var(--accent);
+    }
+    .perm-row span { display: flex; flex-direction: column; gap: 2px; }
+    .perm-row small { font-size: 11px; color: var(--text3); font-weight: 400; }
+    .perm-row:has(input:checked) { border-color: var(--accent); background: var(--accent-soft); }
+    .perm-chip { display: inline-block; font-size: 10px; font-weight: 700; padding: 2px 7px; border-radius: 6px; margin: 3px 4px 0 0; }
+    .perm-chip.on { background: var(--accent-soft); color: var(--accent2); }
+    .perm-chip.off { background: var(--bg3); color: var(--text3); text-decoration: line-through; }
+
     /* Ota-onalar suhbati */
     .ps-chip, .ps-pick { display: inline-block; padding: 4px 10px; border-radius: 8px; font-size: 12px; font-weight: 700; white-space: nowrap; }
     .ps-talked { background: #3f7d4a; color: #fff; }
@@ -2085,7 +2102,7 @@
         <div id="adm-staff">
           <div class="section-header">
             <span class="section-title">Xodimlar</span>
-            <button class="btn btn-sm btn-primary" onclick="openAddStaff()">+ Qo'shish</button>
+            <button class="btn btn-sm btn-primary" onclick="openAddStaff()" id="btn-add-staff">+ Qo'shish</button>
           </div>
           <div id="staff-list"></div>
         </div>
@@ -2478,7 +2495,7 @@
   <div class="modal-overlay" id="modal-admin">
     <div class="modal">
       <div class="modal-handle"></div>
-      <div class="modal-title">Admin qo'shish</div>
+      <div class="modal-title" id="modal-admin-title">Admin qo'shish</div>
       <div class="inp-group">
         <label>To'liq ism *</label>
         <input type="text" id="adm-name" placeholder="Ism Familiya">
@@ -2489,18 +2506,20 @@
       </div>
       <div class="inp-group">
         <label>Parol *</label>
-        <input type="password" id="adm-password" placeholder="Parol">
+        <input type="password" id="adm-password" placeholder="Kamida 4 belgi" autocomplete="new-password">
+        <div id="adm-pass-hint" style="display:none;font-size:11px;color:var(--text3);margin-top:6px;">Bo'sh qoldirilsa — joriy parol o'zgarmaydi.</div>
       </div>
       <div class="inp-group">
-        <label>Ruxsatlar</label>
-        <div style="display:flex;flex-direction:column;gap:8px;" id="perm-checks">
-          <label style="display:flex;align-items:center;gap:8px;font-size:14px;"><input type="checkbox"
-              id="perm-add-staff" checked> Xodim qo'shish/o'chirish</label>
-          <label style="display:flex;align-items:center;gap:8px;font-size:14px;"><input type="checkbox" id="perm-tasks"
-              checked> Vazifa belgilash</label>
-          <label style="display:flex;align-items:center;gap:8px;font-size:14px;"><input type="checkbox"
-              id="perm-reports" checked> Hisobot olish</label>
+        <label>Vakolatlar</label>
+        <div class="perm-list" id="perm-checks">
+          <label class="perm-row"><input type="checkbox" id="perm-add-staff">
+            <span><b>Xodimlarni boshqarish</b><small>Xodim qo'shish, tahrirlash va o'chirish</small></span></label>
+          <label class="perm-row"><input type="checkbox" id="perm-tasks">
+            <span><b>Vazifa berish</b><small>Vazifa yaratish, tahrirlash va o'chirish</small></span></label>
+          <label class="perm-row"><input type="checkbox" id="perm-reports">
+            <span><b>Hisobotlar</b><small>Hisobot bo'limi: coin, test, video, ota-onalar, statistika</small></span></label>
         </div>
+        <div style="font-size:11px;color:var(--text3);margin-top:6px;">Davomatni ko'rish har bir adminda doim bor.</div>
       </div>
       <div style="display:flex;gap:10px;margin-top:8px;">
         <button class="btn btn-secondary" onclick="closeModal('modal-admin')" style="flex:1">Bekor</button>
@@ -2716,7 +2735,7 @@
     // ============================================================
     // STATE
     // ============================================================
-    const APP_VERSION = 'upg 20';
+    const APP_VERSION = 'upg 21';
     let currentUser = null;
     let teachers = [], groups = [], staffList = [], branches = [], tasks = [], attendances = [], admins = [];
     let selectedCIType = 'checkin', selectedTaskType = 'task';
@@ -2988,6 +3007,8 @@
 
     let taskPollTimer = null;
     function afterLogin() {
+      // Parol hech qachon qurilmada (localStorage) saqlanmaydi
+      if (currentUser && 'password' in currentUser) { const { password, ...safe } = currentUser; currentUser = safe; }
       localStorage.setItem('session', JSON.stringify(currentUser));
       document.getElementById('auth-screen').style.display = 'none';
       document.getElementById('main-app').style.display = 'block';
@@ -3057,7 +3078,8 @@
       await withLoader(t('save') + '...', async () => {
         await sb.from(table).update(update).eq('id', currentUser.id);
       });
-      currentUser = { ...currentUser, ...update };
+      const { password: _pw, ...safeUpdate } = update;
+      currentUser = { ...currentUser, ...safeUpdate };
       localStorage.setItem('session', JSON.stringify(currentUser));
       updateProfileDisplay();
       showToast(t('saved'));
@@ -3095,12 +3117,7 @@
         document.getElementById('nav-attendance').style.display = '';
         document.getElementById('nav-admin').style.display = '';
         document.getElementById('nav-reports').style.display = '';
-        document.getElementById('btn-add-task').style.display = '';
-        // Admin uchun hisobot ruxsati (super admin doim ko'radi)
-        if (currentUser.role === 'admin') {
-          const perm = currentUser.permissions || {};
-          document.getElementById('nav-reports').style.display = perm.reports !== false ? '' : 'none';
-        }
+        applyAdminPermsUI();
         if (currentUser.role === 'superadmin') {
           document.getElementById('adm-tab-admins').style.display = '';
           document.getElementById('adm-tab-tags').style.display = '';
@@ -3152,7 +3169,40 @@
     // LOAD DATA
     // ============================================================
     async function loadAll() {
-      await Promise.all([loadTeachers(), loadGroups(), loadStaff(), loadBranches(), loadTasks(), loadAdmins(), loadTags()]);
+      await Promise.all([loadTeachers(), loadGroups(), loadStaff(), loadBranches(), loadTasks(), loadAdmins(), loadTags(), refreshAdminSelf()]);
+    }
+
+    // Admin: o'z yozuvini bazadan qayta o'qish. Superadmin vakolatni o'zgartirsa — darhol kuchga kiradi;
+    // admin o'chirilgan bo'lsa — qurilmadagi sessiya yopiladi.
+    // Vakolatga bog'liq tugma va bo'limlar (setupUI va vakolat yangilanganda chaqiriladi)
+    function applyAdminPermsUI() {
+      if (!currentUser || (currentUser.role !== 'admin' && currentUser.role !== 'superadmin')) return;
+      document.getElementById('btn-add-task').style.display = can('tasks') ? '' : 'none';
+      document.getElementById('btn-add-staff').style.display = can('add_staff') ? '' : 'none';
+      document.getElementById('nav-reports').style.display = can('reports') ? '' : 'none';
+      // Ochiq sahifa vakolati olib qo'yilgan bo'lsa — Davomatga qaytamiz
+      const active = document.querySelector('.page.active');
+      if (active && active.id === 'page-reports' && !can('reports')) showPage('attendance');
+    }
+
+    async function refreshAdminSelf() {
+      if (!currentUser || currentUser.role !== 'admin') return;
+      const { data, error } = await sb.from('admins').select('id, name, login, permissions').eq('id', currentUser.id).limit(1);
+      if (error) { console.warn('refreshAdminSelf:', error); return; } // tarmoq xatosida hech narsa o'zgarmaydi
+      const me = (data || [])[0];
+      if (!me) {
+        showToast('Hisobingiz o\'chirilgan. Superadmin bilan bog\'laning.', 4000);
+        setTimeout(doLogout, 2500);
+        return;
+      }
+      const before = JSON.stringify(currentUser.permissions || {});
+      currentUser = { ...currentUser, name: me.name, login: me.login, permissions: me.permissions || {} };
+      try { localStorage.setItem('session', JSON.stringify(currentUser)); } catch (_) { }
+      if (JSON.stringify(currentUser.permissions) !== before) {
+        applyAdminPermsUI(); renderStaff();
+        if (typeof renderTasks === 'function') renderTasks();
+        showToast('Vakolatlaringiz yangilandi', 2000);
+      }
     }
 
     let appTags = [];
@@ -4652,6 +4702,7 @@
     }
 
     function openAddTask() {
+      if (!can('tasks')) { denyToast(); return; }
       editingTaskId = null;
       const titleEl = document.querySelector('#modal-task .modal-title');
       if (titleEl) titleEl.textContent = 'Yangi vazifa';
@@ -4675,6 +4726,7 @@
     }
 
     async function saveTask() {
+      if (!can('tasks')) { denyToast(); return; }
       const title = document.getElementById('t-title').value.trim();
       if (!title) { showToast('Sarlavha kerak!'); return; }
       const staffId = document.getElementById('t-staff').value;
@@ -4727,8 +4779,8 @@
       } else {
         html += `<button class="btn btn-primary btn-full" onclick="toggleTaskDone(true)" style="margin-bottom:8px;">✓ Bajarildi</button>`;
       }
-      // Tahrirlash/o'chirish — faqat admin
-      if (isAdmin) {
+      // Tahrirlash/o'chirish — "Vazifa berish" vakolati borlarga
+      if (isAdmin && can('tasks')) {
         html += `<div style="display:flex;gap:8px;">
       <button class="btn btn-secondary" onclick="editTask()" style="flex:1;">✏️ Tahrirlash</button>
       <button class="btn btn-danger" onclick="deleteTask()" style="flex:1;">🗑 O'chirish</button>
@@ -4755,6 +4807,7 @@
 
     // Vazifani tahrirlash (admin)
     function editTask() {
+      if (!can('tasks')) { denyToast(); return; }
       const task = tasks.find(x => x.id === currentTaskId);
       if (!task) return;
       closeModal('modal-task-detail');
@@ -4773,6 +4826,7 @@
 
     // Vazifani o'chirish (admin)
     async function deleteTask() {
+      if (!can('tasks')) { denyToast(); return; }
       if (!currentTaskId) return;
       const ok = await confirmDialog('Vazifa o\'chirilsinmi?', 'Bu amalni qaytarib bo\'lmaydi.');
       if (!ok) return;
@@ -5042,18 +5096,19 @@
       el.innerHTML = staffList.map(s => `<div class="card" style="display:flex;align-items:center;gap:12px;">
     <div class="avatar" style="width:40px;height:40px;font-size:14px;flex-shrink:0;">${s.name.split(' ').map(w => w[0]).join('').toUpperCase().slice(0, 2)}</div>
     <div style="flex:1;min-width:0;">
-      <div style="font-weight:700;font-size:14px;">${s.name}</div>
-      <div style="font-size:12px;color:var(--text2);">${s.position || ''} ${s.branch_name ? '• ' + s.branch_name : ''}</div>
-      <div style="font-size:11px;color:var(--text3);">Login: ${s.login}</div>
+      <div style="font-weight:700;font-size:14px;">${esc(s.name)}</div>
+      <div style="font-size:12px;color:var(--text2);">${esc(s.position || '')} ${s.branch_name ? '• ' + esc(s.branch_name) : ''}</div>
+      <div style="font-size:11px;color:var(--text3);">Login: ${esc(s.login)}</div>
     </div>
-    <div style="display:flex;gap:6px;">
+    ${can('add_staff') ? `<div style="display:flex;gap:6px;">
       <button class="btn btn-sm btn-secondary" onclick="editStaff('${s.id}')">✏️</button>
       <button class="btn btn-sm btn-danger" onclick="deleteStaff('${s.id}')">🗑</button>
-    </div>
+    </div>` : ''}
   </div>`).join('');
     }
 
     function openAddStaff() {
+      if (!can('add_staff')) { denyToast(); return; }
       currentEditStaffId = null;
       document.getElementById('st-name').value = ''; document.getElementById('st-login').value = '';
       document.getElementById('st-password').value = ''; document.getElementById('st-position').value = '';
@@ -5064,6 +5119,7 @@
     }
 
     function editStaff(id) {
+      if (!can('add_staff')) { denyToast(); return; }
       const s = staffList.find(x => x.id === id);
       if (!s) return;
       currentEditStaffId = id;
@@ -5102,6 +5158,7 @@
     }
 
     async function saveStaff() {
+      if (!can('add_staff')) { denyToast(); return; }
       const name = document.getElementById('st-name').value.trim();
       const login = document.getElementById('st-login').value.trim();
       const pass = document.getElementById('st-password').value.trim();
@@ -5129,6 +5186,7 @@
     }
 
     async function deleteStaff(id) {
+      if (!can('add_staff')) { denyToast(); return; }
       const st = staffList.find(x => x.id === id);
       if (!await confirmDialog(`"${st?.name || 'Xodim'}" o'chirilsinmi?`,
         'Xodim tizimga boshqa kira olmaydi. Uning davomat tarixi va vazifalari hisobotlarda ismi bilan saqlanib qoladi.')) return;
@@ -5222,33 +5280,114 @@
     // ============================================================
     // ADMINS (Super Admin only)
     // ============================================================
+    // ============================================================
+    // ADMINLAR VA VAKOLATLAR (faqat superadmin boshqaradi)
+    // ============================================================
+    const ADMIN_PERMS = [
+      { key: 'add_staff', el: 'perm-add-staff', label: 'Xodimlar' },
+      { key: 'tasks',     el: 'perm-tasks',     label: 'Vazifalar' },
+      { key: 'reports',   el: 'perm-reports',   label: 'Hisobotlar' }
+    ];
+    // Yangi admin uchun standart vakolatlar (bazadagi default bilan bir xil)
+    const ADMIN_PERM_DEFAULTS = { add_staff: true, tasks: true, reports: true };
+    let currentEditAdminId = null;
+
+    // Joriy foydalanuvchida vakolat bormi. Eski yozuvlarda kalit bo'lmasa — ruxsat (orqaga moslik).
+    function can(perm) {
+      if (!currentUser) return false;
+      if (currentUser.role === 'superadmin') return true;
+      if (currentUser.role !== 'admin') return false;
+      return (currentUser.permissions || {})[perm] !== false;
+    }
+    function denyToast() { showToast('Bu amal uchun vakolatingiz yo\'q', 2500); }
+
     function renderAdmins() {
       if (currentUser.role !== 'superadmin') return;
       const el = document.getElementById('admins-list');
       if (!admins.length) { el.innerHTML = `<div class="empty"><div class="empty-icon">👤</div><h3>${t('no_data')}</h3></div>`; return; }
-      el.innerHTML = admins.map(a => `<div class="card" style="display:flex;align-items:center;gap:12px;">
-    <div class="avatar" style="width:38px;height:38px;font-size:14px;flex-shrink:0;background:linear-gradient(135deg,#d9992b,#cc4d3f);">${a.name.split(' ').map(w => w[0]).join('').toUpperCase().slice(0, 2)}</div>
-    <div style="flex:1;">
-      <div style="font-weight:700;font-size:14px;">${a.name} <span class="role-badge role-admin">Admin</span></div>
-      <div style="font-size:12px;color:var(--text2);">Login: ${a.login}</div>
+      el.innerHTML = admins.map(a => {
+        const perms = a.permissions || {};
+        const chips = ADMIN_PERMS.map(p => `<span class="perm-chip ${perms[p.key] !== false ? 'on' : 'off'}">${p.label}</span>`).join('');
+        const initials = esc((a.name || '?').split(' ').map(w => w[0] || '').join('').toUpperCase().slice(0, 2));
+        return `<div class="card" style="display:flex;align-items:center;gap:12px;">
+    <div class="avatar" style="width:38px;height:38px;font-size:14px;flex-shrink:0;background:linear-gradient(135deg,#d9992b,#cc4d3f);">${initials}</div>
+    <div style="flex:1;min-width:0;">
+      <div style="font-weight:700;font-size:14px;">${esc(a.name)} <span class="role-badge role-admin">Admin</span></div>
+      <div style="font-size:12px;color:var(--text2);">Login: ${esc(a.login)}</div>
+      <div>${chips}</div>
     </div>
-    <button class="btn btn-sm btn-danger btn-icon" onclick="deleteAdmin('${a.id}')">🗑</button>
-  </div>`).join('');
+    <button class="btn btn-sm btn-secondary btn-icon" onclick="openEditAdmin('${a.id}')" title="Tahrirlash">✏️</button>
+    <button class="btn btn-sm btn-danger btn-icon" onclick="deleteAdmin('${a.id}')" title="O'chirish">🗑</button>
+  </div>`;
+      }).join('');
     }
 
-    function openAddAdmin() { document.getElementById('adm-name').value = ''; document.getElementById('adm-login').value = ''; document.getElementById('adm-password').value = ''; openModal('modal-admin'); }
+    function fillAdminForm(a) {
+      document.getElementById('adm-name').value = a ? a.name : '';
+      document.getElementById('adm-login').value = a ? a.login : '';
+      document.getElementById('adm-password').value = '';
+      document.getElementById('adm-pass-hint').style.display = a ? '' : 'none';
+      document.getElementById('adm-password').placeholder = a ? 'Yangi parol (ixtiyoriy)' : 'Kamida 4 belgi';
+      const perms = a ? (a.permissions || {}) : ADMIN_PERM_DEFAULTS;
+      // Har safar qayta o'rnatiladi — oldingi adminning belgilari "yopishib" qolmaydi
+      ADMIN_PERMS.forEach(p => { document.getElementById(p.el).checked = perms[p.key] !== false; });
+    }
+    function openAddAdmin() {
+      if (currentUser.role !== 'superadmin') return;
+      currentEditAdminId = null;
+      document.getElementById('modal-admin-title').textContent = 'Admin qo\'shish';
+      fillAdminForm(null);
+      openModal('modal-admin');
+    }
+    function openEditAdmin(id) {
+      if (currentUser.role !== 'superadmin') return;
+      const a = admins.find(x => x.id === id);
+      if (!a) return;
+      currentEditAdminId = id;
+      document.getElementById('modal-admin-title').textContent = 'Adminni tahrirlash';
+      fillAdminForm(a);
+      openModal('modal-admin');
+    }
+
     async function saveAdmin() {
+      if (currentUser.role !== 'superadmin') return;
       const name = document.getElementById('adm-name').value.trim();
       const login = document.getElementById('adm-login').value.trim();
-      const pass = document.getElementById('adm-password').value.trim();
-      if (!name || !login || !pass) { showToast('Barcha maydonlarni to\'ldiring!'); return; }
-      const perms = { add_staff: document.getElementById('perm-add-staff').checked, tasks: document.getElementById('perm-tasks').checked, reports: document.getElementById('perm-reports').checked };
+      const pass = document.getElementById('adm-password').value;
+      const editing = !!currentEditAdminId;
+      if (!name || name.length > 60) { showToast('Ismni kiriting (60 belgigacha)'); return; }
+      if (!/^[A-Za-z0-9._-]{2,32}$/.test(login)) { showToast('Login: 2–32 belgi, faqat lotin harflari, raqam, . _ -', 3500); return; }
+      if (login.toLowerCase() === 'superadmin') { showToast('Bu login band'); return; }
+      if ((!editing || pass) && pass.trim().length < 4) { showToast('Parol kamida 4 belgi bo\'lsin'); return; }
+      const permissions = {};
+      ADMIN_PERMS.forEach(p => { permissions[p.key] = document.getElementById(p.el).checked; });
+
+      let ok = false;
       await withLoader(t('save') + '...', async () => {
-        await sb.from('admins').insert([{ name, login, password: pass, permissions: perms }]);
+        // Login xodimlar va adminlar orasida yagona bo'lishi kerak (kirishda ikkalasi ham tekshiriladi)
+        const [{ data: st, error: e1 }, { data: ad, error: e2 }] = await Promise.all([
+          sb.from('staff').select('id').eq('login', login).limit(1),
+          sb.from('admins').select('id').eq('login', login).limit(1)
+        ]);
+        if (e1 || e2) throw (e1 || e2);
+        if ((st || []).length || (ad || []).some(x => x.id !== currentEditAdminId)) {
+          const err = new Error('login_taken'); err.userMsg = `"${login}" logini band — boshqasini tanlang`; throw err;
+        }
+        const row = { name, login, permissions };
+        if (pass) row.password = pass.trim();
+        const { error } = editing
+          ? await sb.from('admins').update(row).eq('id', currentEditAdminId)
+          : await sb.from('admins').insert([row]);
+        if (error) throw error;
         await loadAdmins();
-      });
-      showToast(t('saved')); closeModal('modal-admin'); renderAdmins();
+        ok = true;
+      }).catch(e => showToast(e.userMsg || (e.code === '23505' ? `"${login}" logini band` : 'Saqlanmadi: ' + (e.message || '')), 4000));
+      if (!ok) return; // xato bo'lsa oyna ochiq qoladi — kiritilganlar yo'qolmaydi
+      showToast(t('saved'), 1500, 'ok');
+      closeModal('modal-admin');
+      renderAdmins();
     }
+
     async function deleteAdmin(id) {
       if (!await confirmDialog('Admin o\'chirilsinmi?', 'Bu amalni qaytarib bo\'lmaydi.')) return;
       let ok = false;
