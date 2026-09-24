@@ -1253,6 +1253,29 @@
 
     .dark .test-3 { color: #1a1500; }
 
+    /* Haftalik hisobot (qo'lda) */
+    .wk-auto { border: 1px dashed var(--accent); border-radius: 14px; padding: 12px 14px; margin-bottom: 12px; background: var(--accent-soft); }
+    .wk-auto-title { font-size: 12px; font-weight: 800; color: var(--accent2); margin-bottom: 8px; }
+    .wk-auto-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; text-align: center; }
+    .wk-auto-grid b { display: block; font-family: 'Sora', sans-serif; font-size: 18px; }
+    .wk-auto-grid span { font-size: 10px; color: var(--text2); }
+    .wk-sec { font-size: 12px; font-weight: 800; color: var(--text2); margin: 14px 0 8px; }
+    .wk-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 10px; }
+    .wk-field { display: flex; flex-direction: column; gap: 4px; }
+    .wk-field label { font-size: 12px; color: var(--text2); font-weight: 600; }
+    .wk-field input { padding: 10px 12px; border-radius: 10px; border: 1px solid var(--line); background: var(--bg); color: var(--text); font-family: 'Manrope', sans-serif; font-size: 14px; width: 100%; }
+    .wk-field small { font-size: 11px; color: var(--text3); min-height: 14px; }
+    .wk-table th { white-space: normal; min-width: 64px; font-size: 11px; }
+    .wk-table td { font-size: 13px; }
+    .wk-table tr.wk-cur td { background: var(--accent-soft); }
+    .wk-txt { text-align: left !important; font-size: 12px !important; white-space: normal !important; }
+    .wk-zero { color: var(--text3); }
+    .deadline-box { border-radius: 14px; padding: 12px 14px; font-size: 13px; border: 1px solid var(--line); background: var(--card); }
+    .deadline-box.bad { border-color: color-mix(in srgb, var(--red) 40%, transparent); background: color-mix(in srgb, var(--red) 6%, var(--card)); }
+    .deadline-box.ok { color: var(--accent2); }
+    .deadline-box summary { cursor: pointer; font-weight: 700; }
+    .dl-row { padding: 8px 0 0; margin-top: 8px; border-top: 1px solid var(--line); font-size: 12px; }
+
     /* Admin vakolatlari (checkbox qatorlari) */
     .perm-list { display: flex; flex-direction: column; gap: 8px; }
     .inp-group .perm-row {
@@ -2150,6 +2173,8 @@
     <!-- REPORTS PAGE (Hisobot tizimi) -->
     <div class="page" id="page-reports">
       <div class="page-content">
+        <!-- Admin: haftalik hisobot topshirilishi nazorati -->
+        <div id="rep-deadline" style="display:none;margin-bottom:12px;"></div>
         <!-- Guruh tanlash paneli -->
         <div style="display:flex;gap:8px;align-items:center;margin-bottom:14px;">
           <select id="rep-group-select" onchange="onRepGroupChange()"
@@ -2181,6 +2206,7 @@
             <div class="tab" id="rep-tab-test" onclick="switchRepTab('test')">📝 Test</div>
             <div class="tab" id="rep-tab-video" onclick="switchRepTab('video')">🎥 Video</div>
             <div class="tab" id="rep-tab-parent" onclick="switchRepTab('parent')">📞 Ota-onalar</div>
+            <div class="tab" id="rep-tab-weekly" onclick="switchRepTab('weekly')">🗓 Haftalik</div>
             <div class="tab" id="rep-tab-stats" onclick="switchRepTab('stats')">📈 Statistika</div>
           </div>
 
@@ -2201,6 +2227,8 @@
           <div id="rep-pane-video" class="rep-pane" style="display:none;"></div>
           <!-- OTA-ONALAR SUHBATI moduli -->
           <div id="rep-pane-parent" class="rep-pane" style="display:none;"></div>
+          <!-- HAFTALIK HISOBOT moduli -->
+          <div id="rep-pane-weekly" class="rep-pane" style="display:none;"></div>
           <!-- STATISTIKA moduli -->
           <div id="rep-pane-stats" class="rep-pane" style="display:none;"></div>
         </div>
@@ -2627,6 +2655,28 @@
     </div>
   </div>
 
+  <!-- HISOBOT: O'quvchini boshqa guruhga ko'chirish (admin) -->
+  <div class="modal-overlay" id="modal-move-member">
+    <div class="modal">
+      <div class="modal-handle"></div>
+      <div class="modal-title">⇄ Boshqa guruhga ko'chirish</div>
+      <div style="font-size:14px;font-weight:700;margin:-6px 0 4px;" id="mv-name"></div>
+      <div style="font-size:12px;color:var(--text2);margin-bottom:14px;" id="mv-from"></div>
+      <div class="inp-group">
+        <label>Yangi guruh *</label>
+        <select id="mv-target"></select>
+      </div>
+      <div class="rep-note" style="background:var(--bg3);border-color:var(--line);">
+        O'quvchi bilan birga o'tadi: <b>coin tarixi va balansi</b>, <b>test natijalari</b>, video belgilari,
+        ota-onalar suhbatlari. Hech narsa o'chmaydi.
+      </div>
+      <div style="display:flex;gap:10px;margin-top:8px;">
+        <button class="btn btn-secondary" onclick="closeModal('modal-move-member')" style="flex:1">Bekor</button>
+        <button class="btn btn-primary" onclick="doMoveMember()" style="flex:1">Ko'chirish</button>
+      </div>
+    </div>
+  </div>
+
   <!-- HISOBOT: Test yaratish / tahrirlash -->
   <div class="modal-overlay" id="modal-test">
     <div class="modal">
@@ -2755,7 +2805,7 @@
     // ============================================================
     // STATE
     // ============================================================
-    const APP_VERSION = 'upg 22';
+    const APP_VERSION = 'upg 25';
     let currentUser = null;
     let teachers = [], groups = [], staffList = [], branches = [], tasks = [], attendances = [], admins = [];
     let selectedCIType = 'checkin', selectedTaskType = 'task';
@@ -5567,7 +5617,10 @@
       teacherFilter: null, // admin uchun: o'qituvchi bo'yicha filtr (staff_id)
       coinDate: null,    // coin: joriy dars sanasi
       testMonth: null,   // test: joriy oy 'YYYY-MM'
-      videoQuarter: null,// video: joriy kvartal 'YYYY-QN'
+      videoQuarter: null,// video arxivi: kvartal 'YYYY-QN'
+      videoMode: 'week', // video: 'week' (haftalik, asosiy) | 'quarter' (eski kvartal arxivi)
+      videoWeek: null,   // haftalik video: hafta boshi (shanba)
+      weekStart: null,   // haftalik hisobot: hafta boshi (shanba)
       period: {          // davr filtrlari (Kunlik/Haftalik/Oylik)
         test: { mode: 'month', anchor: null },
         stats: { mode: 'week', anchor: null },
@@ -5605,12 +5658,12 @@
       return `${repFmtShort(p.dateStr)} ${String(p.hour).padStart(2, '0')}:${String(p.minute).padStart(2, '0')}`;
     }
 
-    // Davr: 'day' | 'week' (Dushanba–Yakshanba) | 'month' → { from, to, label } (ikkala chegara kiradi)
+    // Davr: 'day' | 'week' (Shanba–Juma) | 'month' → { from, to, label } (ikkala chegara kiradi)
     function repPeriodRange(mode, anchor) {
       const { y, m, d } = repParse(anchor);
       if (mode === 'week') {
         const dow = new Date(Date.UTC(y, m - 1, d)).getUTCDay();
-        const from = repDateAdd(anchor, -((dow + 6) % 7));
+        const from = repDateAdd(anchor, -((dow + 1) % 7)); // hafta shanbadan boshlanadi
         const to = repDateAdd(from, 6);
         return { from, to, label: `${repFmtShort(from)} – ${repFmtShort(to)}` };
       }
@@ -5671,6 +5724,9 @@
       if (!REP.period.test.anchor) REP.period.test.anchor = repToday();
       if (!REP.period.stats.anchor) REP.period.stats.anchor = repToday();
       if (!REP.period.parent.anchor) REP.period.parent.anchor = repToday();
+      if (!REP.weekStart) REP.weekStart = repWeekStart(repToday());
+      if (!REP.videoWeek) REP.videoWeek = repWeekStart(repToday());
+      refreshDeadlineBox();
       // Admin uchun o'qituvchi filtri ko'rsatiladi
       document.getElementById('rep-teacher-filter').style.display = repIsAdmin() ? '' : 'none';
       await loadRepGroups();
@@ -5748,7 +5804,7 @@
     function switchRepTab(tab) {
       coinFlushPending(); testFlushPending();
       REP.tab = tab;
-      ['coin', 'test', 'video', 'parent', 'stats'].forEach(t => {
+      ['coin', 'test', 'video', 'parent', 'weekly', 'stats'].forEach(t => {
         document.getElementById('rep-tab-' + t).classList.toggle('active', t === tab);
         document.getElementById('rep-pane-' + t).style.display = (t === tab) ? '' : 'none';
       });
@@ -5761,6 +5817,7 @@
       else if (REP.tab === 'test') renderTestPane();
       else if (REP.tab === 'video') renderVideoPane();
       else if (REP.tab === 'parent') renderParentPane();
+      else if (REP.tab === 'weekly') renderWeeklyPane();
       else if (REP.tab === 'stats') renderStatsPane();
     }
 
@@ -5863,6 +5920,63 @@
       showToast('Guruh arxivga o\'tkazildi', 1800, 'ok');
     }
 
+    // ---- O'quvchini natijalari bilan boshqa guruhga ko'chirish (faqat admin) ----
+    // Ko'chirish serverdagi reports_move_member funksiyasida bitta tranzaksiyada bajariladi.
+    let moveMemberId = null;
+    async function openMoveMember(memberId) {
+      if (!repIsAdmin()) return;
+      const m = REP.members.find(x => x.id === memberId);
+      if (!m) return;
+      moveMemberId = memberId;
+      const cur = REP.groups.find(g => g.id === REP.groupId);
+      document.getElementById('mv-name').textContent = m.student_name;
+      document.getElementById('mv-from').textContent = `Hozirgi guruh: ${cur?.name || '—'}${cur?.teacher_name ? ' — ' + cur.teacher_name : ''}`;
+      const sel = document.getElementById('mv-target');
+      sel.innerHTML = '<option value="">Yuklanmoqda...</option>';
+      openModal('modal-move-member');
+      // O'qituvchi filtridan qat'i nazar — barcha faol guruhlar
+      const { data, error } = await sb.from('reports_groups').select('id, name, teacher_name').eq('archived', false).order('created_at');
+      if (error) { sel.innerHTML = '<option value="">Guruhlar yuklanmadi</option>'; showToast('Guruhlar yuklanmadi: ' + (error.message || ''), 3500); return; }
+      const others = (data || []).filter(g => g.id !== REP.groupId);
+      sel.innerHTML = others.length
+        ? '<option value="">— guruhni tanlang —</option>' + others.map(g => `<option value="${g.id}">${esc(g.name)}${g.teacher_name ? ' — ' + esc(g.teacher_name) : ''}</option>`).join('')
+        : '<option value="">Boshqa faol guruh yo\'q</option>';
+    }
+
+    async function doMoveMember() {
+      if (!repIsAdmin() || !moveMemberId) return;
+      const target = document.getElementById('mv-target').value;
+      if (!target) { showToast('Yangi guruhni tanlang'); return; }
+      const m = REP.members.find(x => x.id === moveMemberId);
+      const tName = document.getElementById('mv-target').selectedOptions[0]?.textContent || '';
+      if (!await confirmDialog('Ko\'chirilsinmi?', `${m?.student_name || 'O\'quvchi'} → ${tName}.\nBarcha natijalari yangi guruhga o'tadi.`)) return;
+      let res = null;
+      await withLoader('Ko\'chirilmoqda...', async () => {
+        await coinFlushPending(); await testFlushPending(); // saqlanmagan o'zgarishlar avval yozilsin
+        const { data, error } = await sb.rpc('reports_move_member', { p_member_id: moveMemberId, p_new_group_id: target });
+        if (error) throw error;
+        res = data || {};
+      }).catch(e => {
+        const msg = `${e?.code || ''} ${e?.message || ''}`;
+        let text = 'Ko\'chirilmadi: ' + (e?.message || '');
+        if (/PGRST202|42883|Could not find the function|does not exist/i.test(msg)) text = 'Bazada ko\'chirish funksiyasi yo\'q — reports_move_member.sql ni ishga tushiring.';
+        else if (/same_group/.test(msg)) text = 'O\'quvchi allaqachon shu guruhda.';
+        else if (/group_archived/.test(msg)) text = 'Arxivdagi guruhga ko\'chirib bo\'lmaydi.';
+        else if (/not_found/.test(msg)) text = 'O\'quvchi yoki guruh topilmadi — sahifani yangilang.';
+        showToast(text, 5000);
+      });
+      if (!res) return;
+      closeModal('modal-move-member');
+      moveMemberId = null;
+      await loadRepMembers();
+      renderMembersList();
+      const g = REP.groups.find(x => x.id === REP.groupId);
+      document.getElementById('rep-group-info').textContent =
+        `${REP.members.length} o'quvchi` + (repIsAdmin() && g?.teacher_name ? ` • ${g.teacher_name}` : '');
+      renderRepTab();
+      showToast(`✓ Ko'chirildi: ${res.coin || 0} ta coin yozuvi, ${res.video || 0} ta video, ${res.parent_calls || 0} ta suhbat`, 3500, 'ok');
+    }
+
     async function openRepArchive() {
       if (!repIsAdmin()) return;
       const box = document.getElementById('rep-archive-list');
@@ -5906,6 +6020,7 @@
       el.innerHTML = REP.members.map(m => `
         <div style="display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:1px solid var(--line);">
           <span style="flex:1;font-size:14px;font-weight:500;">${esc(m.student_name)}</span>
+          ${repIsAdmin() ? `<button class="btn btn-sm btn-secondary" onclick="openMoveMember('${m.id}')" title="Boshqa guruhga ko'chirish">⇄</button>` : ''}
           <button class="btn btn-sm btn-danger" onclick="deleteMember('${m.id}')">🗑</button>
         </div>`).join('');
     }
@@ -6237,6 +6352,25 @@
         const chunk = testIds.slice(i, i + 100);
         out.push(...await repFetchAll(() => sb.from('reports_test_results')
           .select('id, test_id, member_id, correct').in('test_id', chunk).order('id')));
+      }
+      return out;
+    }
+
+    async function testLoadResultsByMembers(memberIds) {
+      const out = [];
+      for (let i = 0; i < memberIds.length; i += 100) {
+        const chunk = memberIds.slice(i, i + 100);
+        out.push(...await repFetchAll(() => sb.from('reports_test_results')
+          .select('id, test_id, member_id, correct').in('member_id', chunk).order('id')));
+      }
+      return out;
+    }
+    async function testLoadTestsByIds(ids, from, to) {
+      const out = [];
+      for (let i = 0; i < ids.length; i += 100) {
+        const chunk = ids.slice(i, i + 100);
+        out.push(...await repFetchAll(() => sb.from('reports_tests').select('id, title, test_date, total_questions')
+          .in('id', chunk).gte('test_date', from).lte('test_date', to).order('id')));
       }
       return out;
     }
@@ -6587,8 +6721,16 @@
       const pane = document.getElementById('rep-pane-video');
       if (!REP.members.length) { pane.innerHTML = repNoMembers(); return; }
 
-      const { data } = await sb.from('reports_video')
-        .select('*').eq('group_id', REP.groupId).eq('quarter', REP.videoQuarter);
+      const weekly = REP.videoMode !== 'quarter';
+      const { data, error } = weekly
+        ? await sb.from('reports_video_weekly').select('*').eq('group_id', REP.groupId).eq('week_start', REP.videoWeek)
+        : await sb.from('reports_video').select('*').eq('group_id', REP.groupId).eq('quarter', REP.videoQuarter);
+      if (error) {
+        pane.innerHTML = repIsMissingTable(error)
+          ? repMigrationNote('Haftalik video') + `<button class="btn btn-sm btn-secondary" onclick="videoSetMode('quarter')">📦 Kvartal arxivi</button>`
+          : repErrorBox('Video yuklanmadi', error);
+        return;
+      }
       videoData = {};
       (data || []).forEach(r => { videoData[r.member_id] = { id: r.id, taken: r.taken, reason: r.reason, reason_note: r.reason_note }; });
 
@@ -6623,11 +6765,22 @@
       const qOptions = quarters.map(q => `<option value="${q}"${q === REP.videoQuarter ? ' selected' : ''}>${q}</option>`).join('');
 
       pane.innerHTML = `
+        ${weekly ? `
+        <div class="rep-pnav" style="margin-bottom:10px;">
+          <button class="btn btn-sm btn-secondary" onclick="videoShiftWeek(-1)" aria-label="Oldingi hafta">‹</button>
+          <span class="rep-plabel" style="cursor:default;">🎥 ${wkLabel(REP.videoWeek)} · haftalik video</span>
+          <button class="btn btn-sm btn-secondary" onclick="videoShiftWeek(1)" ${REP.videoWeek >= repWeekStart(repToday()) ? 'disabled' : ''} aria-label="Keyingi hafta">›</button>
+        </div>
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px;">
+          <button class="btn btn-sm btn-secondary" onclick="videoSetMode('quarter')">📦 Kvartal arxivi</button>
+          <span class="rep-saving" id="video-save-status" style="margin-left:auto;"></span>
+        </div>` : `
         <div class="rep-period">
-          <span style="font-size:13px;font-weight:600;color:var(--text2);">📅 Kvartal:</span>
+          <button class="btn btn-sm btn-secondary" onclick="videoSetMode('week')">← Haftalik video</button>
+          <span style="font-size:13px;font-weight:600;color:var(--text2);">📦 Kvartal:</span>
           <select id="video-quarter" onchange="videoChangeQuarter(this.value)">${qOptions}</select>
           <span class="rep-saving" id="video-save-status"></span>
-        </div>
+        </div>`}
         <div style="font-size:12px;color:var(--text3);margin-bottom:10px;">
           Video olingan bo'lsa belgilang. Olinmasa — sababini tanlang.
           Olingan: <b style="color:var(--text);">${takenCount}/${REP.members.length}</b>
@@ -6643,6 +6796,12 @@
         </div>`;
     }
 
+    function videoSetMode(mode) { REP.videoMode = mode === 'quarter' ? 'quarter' : 'week'; renderVideoPane(); }
+    function videoShiftWeek(dir) {
+      const nx = repDateAdd(REP.videoWeek, dir * 7);
+      if (nx > repWeekStart(repToday())) return;
+      REP.videoWeek = nx; renderVideoPane();
+    }
     function videoChangeQuarter(val) {
       REP.videoQuarter = val;
       renderVideoPane();
@@ -6701,13 +6860,15 @@
       if (status) { status.textContent = '⏳ saqlanmoqda...'; status.classList.remove('ok'); }
       const v = videoData[memberId] || {};
       try {
-        const { data, error } = await sb.from('reports_video').upsert({
+        const base = {
           group_id: REP.groupId, member_id: memberId,
           teacher_id: (REP.groups.find(g => g.id === REP.groupId)?.teacher_id) || null,
-          quarter: REP.videoQuarter,
           taken: !!v.taken, reason: v.taken ? null : (v.reason || null),
           reason_note: v.taken ? null : (v.reason_note || null)
-        }, { onConflict: 'member_id,quarter' }).select().single();
+        };
+        const { data, error } = REP.videoMode !== 'quarter'
+          ? await sb.from('reports_video_weekly').upsert({ ...base, week_start: REP.videoWeek, updated_at: new Date().toISOString() }, { onConflict: 'member_id,week_start' }).select().single()
+          : await sb.from('reports_video').upsert({ ...base, quarter: REP.videoQuarter }, { onConflict: 'member_id,quarter' }).select().single();
         if (error) throw error;
         if (data) videoData[memberId] = { id: data.id, taken: data.taken, reason: data.reason, reason_note: data.reason_note };
         if (status) { status.textContent = '✓ saqlandi'; status.classList.add('ok'); }
@@ -6725,10 +6886,10 @@
           'O\'quvchi': m.student_name,
           'Video olindi': v.taken ? 'Ha' : 'Yo\'q',
           'Sabab': v.taken ? '' : (v.reason === 'other' ? (v.reason_note || 'Boshqa') : (VIDEO_REASONS[v.reason] || '')),
-          'Kvartal': REP.videoQuarter
+          'Davr': REP.videoMode !== 'quarter' ? wkLabel(REP.videoWeek) : REP.videoQuarter
         };
       });
-      repExportXlsx(rows, `Video_${g?.name || ''}_${REP.videoQuarter}`, 'Video');
+      repExportXlsx(rows, `Video_${g?.name || ''}_${REP.videoMode !== 'quarter' ? REP.videoWeek : REP.videoQuarter}`, 'Video');
     }
     // ================================================================
     // OTA-ONALAR BILAN SUHBAT — har bir qo'ng'iroq alohida yoziladi,
@@ -7040,6 +7201,277 @@
     }
 
     // ================================================================
+    // HAFTALIK HISOBOT — o'qituvchi haftada bir marta QO'LDA to'ldiradi.
+    // Test, video, coin va ota-onalar suhbati mavjud bo'limlardan AVTOMATIK olinadi.
+    // Hisobot haftasi: SHANBA – JUMA.
+    // ================================================================
+    const WK_NUM = [
+      ['missed_lessons',  'Qoldirilgan darslar'],
+      ['missed_students', 'Dars qoldirgan o\'quvchilar'],
+      ['hw_not_done',     'Bajarilmagan uy vazifalari'],
+      ['hw_students',     'Uy vazifasini bajarmaganlar'],
+      ['trial_came',      'Sinov darsiga kelganlar'],
+      ['retained',        'Ushlab qolindi'],
+      ['left_count',      'Ketganlar'],
+      ['frozen_count',    'Muzlatilganlar'],
+      ['returned',        'Qaytganlar'],
+      ['extra_lessons',   'Qo\'shimcha darslar']
+    ];
+    const WK_PLAN = { yes: 'Ha', partial: 'Qisman', no: 'Yo\'q' };
+    let wkRow = null, wkAuto = null, wkMonth = null;
+
+    function repWeekStart(ds) { const { y, m, d } = repParse(ds); const dow = new Date(Date.UTC(y, m - 1, d)).getUTCDay(); return repDateAdd(ds, -((dow + 1) % 7)); }
+    function wkLabel(ws) { return `${repFmtShort(ws).slice(0, 5)} – ${repFmtShort(repDateAdd(ws, 6)).slice(0, 5)}`; }
+    function wkPct(a, b) { return b ? Math.round(a / b * 100) : null; }
+    function wkShift(dir) {
+      const nx = repDateAdd(REP.weekStart, dir * 7);
+      if (nx > repWeekStart(repToday())) return;
+      REP.weekStart = nx; renderWeeklyPane();
+    }
+    function wkSetWeek(ws) { REP.weekStart = ws; renderWeeklyPane(); }
+
+    // Avtomatik ko'rsatkichlar: test, video, coin, ota-onalar ([from..to] oralig'i, haftalar bo'yicha)
+    async function wkLoadAuto(groupId, from, to) {
+      const safe = p => p.catch(e => { if (repIsMissingTable(e)) return null; throw e; });
+      const [tests, video, coins, calls] = await Promise.all([
+        safe(repFetchAll(() => sb.from('reports_tests').select('id, test_date, total_questions').eq('group_id', groupId).gte('test_date', from).lte('test_date', to).order('id'))),
+        safe(repFetchAll(() => sb.from('reports_video_weekly').select('member_id, week_start, taken').eq('group_id', groupId).gte('week_start', from).lte('week_start', to).order('id'))),
+        safe(repFetchAll(() => sb.from('reports_coin').select('coins, lesson_date').eq('group_id', groupId).gte('lesson_date', from).lte('lesson_date', to).order('id'))),
+        safe(parentLoadCalls(groupId, from, to))
+      ]);
+      const results = tests && tests.length ? await safe(testLoadResults(tests.map(t => t.id))) : [];
+      return { tests: tests || [], results: results || [], video, coins: coins || [], calls: calls || [] };
+    }
+    function wkAutoFor(auto, ws) {
+      const we = repDateAdd(ws, 6);
+      const T = auto.tests.filter(t => t.test_date >= ws && t.test_date <= we);
+      const tq = {}; T.forEach(t => { tq[t.id] = t.total_questions; });
+      const R = auto.results.filter(r => tq[r.test_id]);
+      const q = R.reduce((s, r) => s + tq[r.test_id], 0);
+      const V = auto.video ? auto.video.filter(v => v.week_start === ws) : null;
+      return {
+        tests: T.length, testPct: q ? Math.round(R.reduce((s, r) => s + r.correct, 0) / q * 100) : null,
+        videoTaken: V ? V.filter(v => v.taken).length : null, videoAll: V ? V.length : null,
+        coins: auto.coins.filter(c => c.lesson_date >= ws && c.lesson_date <= we).reduce((s, c) => s + (c.coins || 0), 0),
+        talked: auto.calls.filter(c => { const d = tashDate(c.called_at); return d >= ws && d <= we && c.status === 'talked'; }).length
+      };
+    }
+
+    async function renderWeeklyPane() {
+      const pane = document.getElementById('rep-pane-weekly');
+      const groupId = REP.groupId, ws = REP.weekStart;
+      const ym = repDateAdd(ws, 6).slice(0, 7); // oy — hafta oxiri bo'yicha
+      const reqKey = `${groupId}|${ws}`; REP._wkReq = reqKey;
+      pane.innerHTML = '<p style="font-size:13px;color:var(--text3);text-align:center;padding:20px;">Yuklanmoqda...</p>';
+
+      // Oy jadvali uchun: shu oyga tegishli haftalar
+      const [yy, mm] = ym.split('-').map(Number);
+      const mFirst = `${ym}-01`, mLast = new Date(Date.UTC(yy, mm, 0)).toISOString().slice(0, 10);
+      const weeks = [];
+      for (let s = repWeekStart(mFirst); s <= mLast && s <= repWeekStart(repToday()); s = repDateAdd(s, 7)) if (repDateAdd(s, 6) >= mFirst) weeks.push(s);
+      const from = weeks[0] || ws, to = repDateAdd(weeks[weeks.length - 1] || ws, 6);
+
+      let rows, auto;
+      try {
+        [rows, auto] = await Promise.all([
+          repFetchAll(() => sb.from('reports_weekly').select('*').eq('group_id', groupId).gte('week_start', from).lte('week_start', to > ws ? to : ws).order('week_start')),
+          wkLoadAuto(groupId, from < ws ? from : ws, to > repDateAdd(ws, 6) ? to : repDateAdd(ws, 6))
+        ]);
+      } catch (e) {
+        if (REP._wkReq !== reqKey) return;
+        pane.innerHTML = repIsMissingTable(e) ? repMigrationNote('Haftalik hisobot') : repErrorBox('Hisobot yuklanmadi', e);
+        return;
+      }
+      if (REP._wkReq !== reqKey) return;
+      wkRow = rows.find(r => r.week_start === ws) || null;
+      wkAuto = wkAutoFor(auto, ws);
+      wkMonth = { ym, weeks, rows, auto };
+      const r = wkRow || {};
+      const students = wkRow ? r.students : REP.members.length;
+      const A = wkAuto;
+
+      const numInput = ([k, label]) => `
+        <div class="wk-field">
+          <label for="wk-${k}">${label}</label>
+          <input type="number" id="wk-${k}" inputmode="numeric" min="0" max="500" value="${r[k] ?? ''}" placeholder="0" oninput="wkLivePct()">
+          ${k === 'missed_students' || k === 'hw_students' ? `<small id="wk-pct-${k}"></small>` : ''}
+        </div>`;
+
+      pane.innerHTML = `
+        <div class="rep-pnav" style="margin-bottom:12px;">
+          <button class="btn btn-sm btn-secondary" onclick="wkShift(-1)" aria-label="Oldingi hafta">‹</button>
+          <span class="rep-plabel" style="cursor:default;">🗓 ${wkLabel(ws)} · shanba–juma</span>
+          <button class="btn btn-sm btn-secondary" onclick="wkShift(1)" ${ws >= repWeekStart(repToday()) ? 'disabled' : ''} aria-label="Keyingi hafta">›</button>
+        </div>
+
+        <div class="wk-auto">
+          <div class="wk-auto-title">⚡ Avtomatik (boshqa bo'limlardan)</div>
+          <div class="wk-auto-grid">
+            <div><b>${A.tests ? `${A.testPct ?? '—'}%` : '—'}</b><span>Test${A.tests ? ` (${A.tests} ta)` : ''}</span></div>
+            <div><b>${A.videoAll == null ? '—' : `${A.videoTaken}/${REP.members.length}`}</b><span>Haftalik video</span></div>
+            <div><b>${A.coins}</b><span>Coin berildi</span></div>
+            <div><b>${A.talked}</b><span>Ota-ona suhbati</span></div>
+          </div>
+        </div>
+
+        <div class="rep-stat">
+          <div class="wk-field" style="margin-bottom:12px;">
+            <label for="wk-students">O'quvchilar soni <small style="color:var(--text3);">(avtomatik, kerak bo'lsa tuzating)</small></label>
+            <input type="number" id="wk-students" inputmode="numeric" min="0" max="500" value="${students}" oninput="wkLivePct()">
+          </div>
+          <div class="wk-sec">📉 Davomat</div>
+          <div class="wk-grid">${WK_NUM.slice(0, 2).map(numInput).join('')}</div>
+          <div class="wk-sec">📝 Uy vazifasi</div>
+          <div class="wk-grid">${WK_NUM.slice(2, 4).map(numInput).join('')}</div>
+          <div class="wk-sec">👥 O'quvchilar oqimi</div>
+          <div class="wk-grid">${WK_NUM.slice(4, 6).map(numInput).join('')}</div>
+          <div class="wk-grid">
+            ${numInput(WK_NUM[6])}
+            <div class="wk-field"><label for="wk-left_reasons">Ketish sababi</label><input type="text" id="wk-left_reasons" maxlength="300" value="${esc(r.left_reasons || '')}" placeholder="Narx, Sport..."></div>
+            ${numInput(WK_NUM[7])}
+            <div class="wk-field"><label for="wk-frozen_reasons">Muzlatish sababi</label><input type="text" id="wk-frozen_reasons" maxlength="300" value="${esc(r.frozen_reasons || '')}" placeholder="Kasallik, Ta'til..."></div>
+          </div>
+          <div class="wk-grid">${WK_NUM.slice(8, 10).map(numInput).join('')}</div>
+          <div class="wk-sec">📚 Dars rejasi</div>
+          <div class="wk-field"><label for="wk-plan_topic">O'tilgan mavzular</label>
+            <input type="text" id="wk-plan_topic" maxlength="300" value="${esc(r.plan_topic || '')}" placeholder="Masalan: EKUB va EKUK"></div>
+          <div class="wk-field" style="margin-top:10px;"><label>Dars rejasi bajarildimi?</label>
+            <div class="pill-row" id="wk-plan-done">${Object.entries(WK_PLAN).map(([k, v]) =>
+              `<button type="button" class="pill${r.plan_done === k ? ' selected' : ''}" data-k="${k}" onclick="wkPickPlan('${k}')">${v}</button>`).join('')}</div></div>
+          <div class="wk-field" style="margin-top:10px;"><label for="wk-note">Izoh (ixtiyoriy)</label>
+            <input type="text" id="wk-note" maxlength="500" value="${esc(r.note || '')}"></div>
+          <div style="display:flex;align-items:center;gap:10px;margin-top:16px;flex-wrap:wrap;">
+            <button class="btn btn-primary" onclick="saveWeekly()">${wkRow ? '💾 Yangilash' : '💾 Saqlash'}</button>
+            <span style="font-size:12px;color:var(--text3);">${wkRow ? `Oxirgi saqlangan: ${repFmtDateTime(wkRow.updated_at)}${wkRow.updated_by ? ' — ' + esc(wkRow.updated_by) : ''}` : 'Bu hafta hali to\'ldirilmagan'}</span>
+          </div>
+        </div>
+
+        <div style="font-size:14px;font-weight:700;margin:18px 0 10px;">📅 ${ymLabel(ym)} — haftalar</div>
+        ${wkMonthTable()}
+        <div style="display:flex;gap:8px;margin-top:12px;"><button class="btn btn-sm btn-secondary" onclick="exportWeekly()">📊 Excel eksport</button></div>`;
+      wkLivePct();
+    }
+
+    function wkPickPlan(k) {
+      document.querySelectorAll('#wk-plan-done .pill').forEach(b => b.classList.toggle('selected', b.dataset.k === k && !b.classList.contains('selected')));
+    }
+    function wkLivePct() {
+      const st = Number(document.getElementById('wk-students')?.value) || 0;
+      ['missed_students', 'hw_students'].forEach(k => {
+        const el = document.getElementById('wk-pct-' + k); if (!el) return;
+        const v = Number(document.getElementById('wk-' + k).value) || 0;
+        el.textContent = st && v ? `${wkPct(v, st)}% o'quvchilar` : '';
+      });
+    }
+
+    async function saveWeekly() {
+      const ws = REP.weekStart;
+      if (ws > repWeekStart(repToday())) { showToast('Kelajak haftani to\'ldirib bo\'lmaydi'); return; }
+      const row = { group_id: REP.groupId, week_start: ws, updated_by: currentUser?.name || null };
+      const num = id => { const s = document.getElementById('wk-' + id).value.trim(); return s === '' ? 0 : Number(s); };
+      for (const k of ['students', ...WK_NUM.map(x => x[0])]) {
+        const v = num(k);
+        if (!Number.isInteger(v) || v < 0 || v > 500) { showToast('Raqamlar 0 dan 500 gacha butun son bo\'lsin'); document.getElementById('wk-' + k).focus(); return; }
+        row[k] = v;
+      }
+      if (row.missed_students > row.students) { showToast('Dars qoldirganlar o\'quvchilar sonidan ko\'p bo\'lolmaydi'); return; }
+      if (row.hw_students > row.students) { showToast('Uy vazifasini bajarmaganlar o\'quvchilar sonidan ko\'p bo\'lolmaydi'); return; }
+      if (row.retained > row.trial_came) { showToast('Ushlab qolinganlar sinovga kelganlardan ko\'p bo\'lolmaydi'); return; }
+      if (row.missed_students > 0 && row.missed_lessons < row.missed_students) { showToast('Qoldirilgan darslar qoldirgan o\'quvchilardan kam bo\'lolmaydi'); return; }
+      for (const k of ['left_reasons', 'frozen_reasons', 'plan_topic', 'note']) row[k] = document.getElementById('wk-' + k).value.trim() || null;
+      if (row.left_count && !row.left_reasons) { showToast('Ketish sababini yozing'); document.getElementById('wk-left_reasons').focus(); return; }
+      if (row.frozen_count && !row.frozen_reasons) { showToast('Muzlatish sababini yozing'); document.getElementById('wk-frozen_reasons').focus(); return; }
+      row.plan_done = document.querySelector('#wk-plan-done .pill.selected')?.dataset.k || null;
+      let ok = false;
+      await withLoader(t('save') + '...', async () => {
+        const { error } = await sb.from('reports_weekly').upsert(row, { onConflict: 'group_id,week_start' });
+        if (error) throw error;
+        ok = true;
+      }).catch(e => showToast((repIsMissingTable(e) ? 'Bazada jadval yo\'q — reports_weekly_migration.sql ni ishga tushiring. ' : 'Saqlanmadi: ') + (e.message || ''), 4500));
+      if (!ok) return;
+      showToast('✓ Haftalik hisobot saqlandi', 1500, 'ok');
+      renderWeeklyPane(); refreshDeadlineBox();
+    }
+
+    // Oy jadvali — Sheets'dagi ko'rinishga yaqin; qatorni bosib o'sha haftani ochish mumkin
+    function wkMonthTable() {
+      const { weeks, rows, auto } = wkMonth;
+      const z = v => v ? v : '<span class="wk-zero">0</span>';
+      const pct = v => v == null ? '<span class="wk-zero">—</span>' : `${v}%`;
+      const trs = weeks.map(w => {
+        const r = rows.find(x => x.week_start === w);
+        const a = wkAutoFor(auto, w);
+        const cur = w === REP.weekStart ? ' class="wk-cur"' : '';
+        if (!r) return `<tr${cur} onclick="wkSetWeek('${w}')" style="cursor:pointer;"><td class="rep-name-col">${wkLabel(w)}</td>
+          <td colspan="13" style="color:var(--red);font-size:12px;text-align:left;">⏰ To'ldirilmagan</td>
+          <td>${a.tests ? pct(a.testPct) : '—'}</td><td>${a.videoAll ? `${a.videoTaken}/${a.videoAll}` : '—'}</td><td>—</td></tr>`;
+        return `<tr${cur} onclick="wkSetWeek('${w}')" style="cursor:pointer;">
+          <td class="rep-name-col">${wkLabel(w)}</td><td>${r.students}</td>
+          <td>${z(r.missed_lessons)}</td><td>${z(r.missed_students)}</td><td>${pct(wkPct(r.missed_students, r.students))}</td>
+          <td>${z(r.hw_not_done)}</td><td>${z(r.hw_students)}</td><td>${pct(wkPct(r.hw_students, r.students))}</td>
+          <td>${z(r.trial_came)}</td><td>${z(r.retained)}</td>
+          <td class="wk-txt">${r.left_count ? `${r.left_count} (${esc(r.left_reasons || '')})` : z(0)}</td>
+          <td class="wk-txt">${r.frozen_count ? `${r.frozen_count} (${esc(r.frozen_reasons || '')})` : z(0)}</td>
+          <td>${z(r.returned)}</td><td>${z(r.extra_lessons)}</td>
+          <td>${a.tests ? pct(a.testPct) : '—'}</td><td>${a.videoAll ? `${a.videoTaken}/${a.videoAll}` : '—'}</td>
+          <td class="wk-txt" style="min-width:150px;">${esc(r.plan_topic || '')}${r.plan_done ? ` <small>(${WK_PLAN[r.plan_done]})</small>` : ''}</td>
+        </tr>`;
+      }).join('');
+      return `<div class="rep-table-wrap"><table class="rep-table wk-table">
+        <thead><tr><th class="rep-name-col">Hafta</th><th>O'quvchilar</th><th>Qoldirilgan darslar</th><th>Qoldirganlar</th><th>%</th>
+          <th>Bajarilmagan H/W</th><th>H/W bajarmaganlar</th><th>%</th><th>Sinovga kelgan</th><th>Ushlab qolindi</th>
+          <th>Ketganlar (sabab)</th><th>Muzlatilgan (sabab)</th><th>Qaytgan</th><th>Qo'shimcha dars</th><th>Test</th><th>Video</th><th>Dars rejasi</th></tr></thead>
+        <tbody>${trs}</tbody></table></div>
+        <div style="font-size:11px;color:var(--text3);margin-top:6px;">Qatorni bosing — o'sha hafta ochiladi. % — o'quvchilar soniga nisbatan.</div>`;
+    }
+
+    function exportWeekly() {
+      if (!wkMonth) return;
+      const g = REP.groups.find(x => x.id === REP.groupId);
+      const out = wkMonth.weeks.map(w => {
+        const r = wkMonth.rows.find(x => x.week_start === w) || {};
+        const a = wkAutoFor(wkMonth.auto, w);
+        return {
+          'Hafta': `${repFmtShort(w)} – ${repFmtShort(repDateAdd(w, 6))}`, 'Holat': r.id ? 'To\'ldirilgan' : 'To\'ldirilmagan',
+          'O\'quvchilar soni': r.students ?? '', 'Qoldirilgan darslar': r.missed_lessons ?? '', 'Qoldirgan o\'quvchilar': r.missed_students ?? '',
+          'Qoldirganlar %': r.id ? (wkPct(r.missed_students, r.students) ?? '') : '',
+          'Bajarilmagan H/W': r.hw_not_done ?? '', 'H/W bajarmaganlar': r.hw_students ?? '', 'H/W bajarmaganlar %': r.id ? (wkPct(r.hw_students, r.students) ?? '') : '',
+          'Sinov darsiga kelganlar': r.trial_came ?? '', 'Ushlab qolindi': r.retained ?? '',
+          'Ketganlar': r.left_count ?? '', 'Ketish sababi': r.left_reasons || '', 'Muzlatilganlar': r.frozen_count ?? '', 'Muzlatish sababi': r.frozen_reasons || '',
+          'Qaytganlar': r.returned ?? '', 'Qo\'shimcha darslar': r.extra_lessons ?? '',
+          'Test %': a.testPct ?? '', 'Haftalik video': a.videoAll ? `${a.videoTaken}/${a.videoAll}` : '', 'Coin': a.coins, 'Ota-ona suhbatlari': a.talked,
+          'Dars rejasi': r.plan_topic || '', 'Reja bajarildimi': r.plan_done ? WK_PLAN[r.plan_done] : '', 'Izoh': r.note || ''
+        };
+      });
+      repExportXlsx(out, `Haftalik_${g?.name || ''}_${wkMonth.ym}`, 'Haftalik');
+    }
+
+    // ---- Admin: o'tgan hafta hisobotini topshirmagan guruhlar ----
+    async function refreshDeadlineBox() {
+      const box = document.getElementById('rep-deadline');
+      if (!box) return;
+      if (!repIsAdmin()) { box.style.display = 'none'; return; }
+      const cur = repWeekStart(repToday()), prev = repDateAdd(cur, -7);
+      const [gr, wr] = await Promise.all([
+        sb.from('reports_groups').select('id, name, teacher_name').eq('archived', false).order('created_at'),
+        sb.from('reports_weekly').select('group_id, week_start').in('week_start', [prev, cur])
+      ]);
+      if (gr.error || wr.error) { box.style.display = 'none'; return; } // migratsiyasiz — blok ko'rinmaydi
+      const groups = gr.data || [];
+      const done = w => new Set((wr.data || []).filter(x => x.week_start === w).map(x => x.group_id));
+      const dPrev = done(prev), dCur = done(cur);
+      const missing = groups.filter(g => !dPrev.has(g.id));
+      box.style.display = groups.length ? '' : 'none';
+      box.innerHTML = missing.length ? `
+        <details class="deadline-box bad">
+          <summary>⏰ O'tgan hafta (${wkLabel(prev)}) hisobotini topshirmagan: <b>${missing.length}</b> guruh
+            <span style="color:var(--text3);font-weight:500;">· bu hafta: ${dCur.size}/${groups.length}</span></summary>
+          ${missing.map(g => `<div class="dl-row"><b>${esc(g.name)}</b>${g.teacher_name ? ' — ' + esc(g.teacher_name) : ''}</div>`).join('')}
+        </details>`
+        : `<div class="deadline-box ok">✅ O'tgan hafta (${wkLabel(prev)}) hisobotlari to'liq topshirilgan · bu hafta: ${dCur.size}/${groups.length}</div>`;
+    }
+
+    // ================================================================
     // STATISTIKA MODULI — tanlangan davr (kunlik / haftalik / oylik)
     // Barcha yozuvlar sahifalab yuklanadi (1000 qator chegarasi yo'q).
     // ================================================================
@@ -7053,6 +7485,8 @@
       pane.innerHTML = repPeriodBar('stats') + `<div class="empty"><div class="empty-icon">⏳</div><p style="font-size:13px;">Statistika hisoblanmoqda...</p></div>`;
 
       let totals, tests = [], results = [], videos, testsMissing = false, pcalls = null; // pcalls=null — jadval yo'q
+      let extraTests = []; // o'quvchilar boshqa guruhda yozgan (davrdagi) testlar
+      let weeklyRows = null, vwRows = null; // null — jadval hali yaratilmagan
       const smr = repPeriodRange('month', REP.period.stats.anchor);
       const pFrom = r.from < smr.from ? r.from : smr.from, pTo = r.to > smr.to ? r.to : smr.to;
       try {
@@ -7067,7 +7501,20 @@
           repFetchAll(() => sb.from('reports_video').select('member_id, taken, reason, quarter').eq('group_id', groupId).order('id')),
           parentP
         ]);
-        results = tests.length ? await testLoadResults(tests.map(t => t.id)) : [];
+        if (!testsMissing) {
+          // O'quvchilar bo'yicha barcha natijalar — boshqa guruhdan ko'chib kelganlarning testlari ham kiradi
+          results = await testLoadResultsByMembers(REP.members.map(m => m.id));
+          const known = new Set(tests.map(t => t.id));
+          const extraIds = [...new Set(results.map(x => x.test_id))].filter(id => !known.has(id));
+          extraTests = extraIds.length ? await testLoadTestsByIds(extraIds, r.from, r.to) : [];
+        }
+        // Davrga tegishli haftalar (hafta boshi davr ichida yoki davrdan oldingi shanba)
+        const wFrom = repWeekStart(r.from);
+        const orNull = e => { if (repIsMissingTable(e)) return null; throw e; };
+        [weeklyRows, vwRows] = await Promise.all([
+          repFetchAll(() => sb.from('reports_weekly').select('*').eq('group_id', groupId).gte('week_start', wFrom).lte('week_start', r.to).order('week_start')).catch(orNull),
+          repFetchAll(() => sb.from('reports_video_weekly').select('member_id, week_start, taken, reason').eq('group_id', groupId).gte('week_start', wFrom).lte('week_start', r.to).order('id')).catch(orNull)
+        ]);
       } catch (e) {
         if (REP._statsReq === reqKey) pane.innerHTML = repPeriodBar('stats') + repErrorBox('Statistika yuklanmadi', e);
         return;
@@ -7087,7 +7534,7 @@
       periodEx.forEach(x => { per[x.member_id].exchanged += x.amount || 0; });
 
       // --- Test: o'quvchi bo'yicha umumiy foiz = to'g'ri javoblar / jami savollar ---
-      const testById = {}; tests.forEach(t => { testById[t.id] = t; });
+      const testById = {}; tests.forEach(t => { testById[t.id] = t; }); extraTests.forEach(t => { testById[t.id] = t; });
       const periodResults = results.filter(x => testById[x.test_id] && per[x.member_id]);
       periodResults.forEach(x => {
         const p = per[x.member_id];
@@ -7189,9 +7636,15 @@
         <div style="font-size:14px;font-weight:700;margin:16px 0 10px;">📞 Ota-onalar suhbati</div>
         <div class="rep-stat">${parentHtml}</div>
 
-        <div style="font-size:14px;font-weight:700;margin:16px 0 10px;">🎥 Video ${lastQ ? '(' + esc(lastQ) + ')' : ''}</div>
+        <div style="font-size:14px;font-weight:700;margin:16px 0 10px;">🗓 Haftalik hisobotlar</div>
+        <div class="rep-stat">${statsWeeklyHtml(weeklyRows, r)}</div>
+
+        <div style="font-size:14px;font-weight:700;margin:16px 0 10px;">🎥 Haftalik video</div>
+        <div class="rep-stat">${statsVideoWeeklyHtml(vwRows, nameById)}</div>
+
+        <div style="font-size:14px;font-weight:700;margin:16px 0 10px;">📦 Video arxivi (kvartal) ${lastQ ? '(' + esc(lastQ) + ')' : ''}</div>
         <div class="rep-stat">
-          <div style="font-size:11px;color:var(--text3);margin-bottom:8px;">Video kvartal bo'yicha yuritiladi — oxirgi kvartal ko'rsatilgan.</div>
+          <div style="font-size:11px;color:var(--text3);margin-bottom:8px;">Eski kvartal videolari — oxirgi kvartal ko'rsatilgan.</div>
           <div style="display:flex;justify-content:space-between;margin-bottom:10px;">
             <span style="font-size:13px;color:var(--text2);">Olingan videolar</span>
             <span style="font-weight:700;">${takenCount}/${REP.members.length}</span>
@@ -7208,7 +7661,42 @@
           <button class="btn btn-sm btn-secondary" onclick="exportStats()">📊 Davr bo'yicha Excel eksport</button>
         </div>`;
 
-      REP._statsCache = { range: r, ranking, periodCoinRows, periodResults, periodEx, testById, nameById, lastQVideos, lastQ, parentRows };
+      REP._statsCache = { range: r, ranking, periodCoinRows, periodResults, periodEx, testById, nameById, lastQVideos, lastQ, parentRows, weeklyRows: weeklyRows || [] };
+    }
+
+    // Statistika: haftalik hisobotlar yig'indisi (davr bo'yicha)
+    function statsWeeklyHtml(rows, r) {
+      if (rows === null) return repMigrationNote('Haftalik hisobot');
+      const weeksInPeriod = []; for (let w = repWeekStart(r.from); w <= r.to && w <= repWeekStart(repToday()); w = repDateAdd(w, 7)) weeksInPeriod.push(w);
+      if (!rows.length) return `<span style="font-size:12px;color:var(--text3);">Bu davrda haftalik hisobot to'ldirilmagan (${weeksInPeriod.length} ta hafta).</span>`;
+      const sum = k => rows.reduce((s, x) => s + (x[k] || 0), 0);
+      const avgStudents = Math.round(rows.reduce((s, x) => s + x.students, 0) / rows.length);
+      const pctOf = (k) => { const den = rows.reduce((s, x) => s + x.students, 0); return den ? Math.round(sum(k) / den * 100) : 0; };
+      const reasonsJoin = k => rows.map(x => x[k]).filter(Boolean).join('; ');
+      const line = (label, val, sub = '') => `<div style="display:flex;justify-content:space-between;gap:10px;font-size:13px;padding:5px 0;border-bottom:1px solid var(--line);">
+        <span style="color:var(--text2);">${label}</span><span style="text-align:right;"><b>${val}</b>${sub ? ` <small style="color:var(--text3);">${sub}</small>` : ''}</span></div>`;
+      const trial = sum('trial_came'), ret = sum('retained');
+      return `
+        <div style="font-size:12px;color:var(--text3);margin-bottom:6px;">To'ldirilgan: <b style="color:var(--text);">${rows.length}/${weeksInPeriod.length}</b> hafta · o'rtacha ${avgStudents} o'quvchi</div>
+        ${line('Qoldirilgan darslar', sum('missed_lessons'), `${sum('missed_students')} o'quvchi-hafta · ${pctOf('missed_students')}%`)}
+        ${line('Bajarilmagan uy vazifalari', sum('hw_not_done'), `${sum('hw_students')} o'quvchi-hafta · ${pctOf('hw_students')}%`)}
+        ${line('Sinov darsi → qoldi', `${trial} → ${ret}`, trial ? `${Math.round(ret / trial * 100)}% konversiya` : '')}
+        ${line('Ketganlar', sum('left_count'), esc(reasonsJoin('left_reasons')))}
+        ${line('Muzlatilganlar', sum('frozen_count'), esc(reasonsJoin('frozen_reasons')))}
+        ${line('Qaytganlar', sum('returned'))}
+        ${line('Qo\'shimcha darslar', sum('extra_lessons'))}
+        ${line('Dars rejasi bajarildi', `${rows.filter(x => x.plan_done === 'yes').length}/${rows.filter(x => x.plan_done).length}`, 'hafta')}`;
+    }
+    function statsVideoWeeklyHtml(rows, nameById) {
+      if (rows === null) return repMigrationNote('Haftalik video');
+      const mine = rows.filter(v => nameById[v.member_id] !== undefined);
+      if (!mine.length) return '<span style="font-size:12px;color:var(--text3);">Bu davrda haftalik video belgilanmagan.</span>';
+      const weeks = [...new Set(mine.map(v => v.week_start))].sort();
+      const taken = mine.filter(v => v.taken).length;
+      const reasons = {}; mine.filter(v => !v.taken && v.reason).forEach(v => { reasons[v.reason] = (reasons[v.reason] || 0) + 1; });
+      return `<div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:8px;">
+          <span style="color:var(--text2);">Olingan videolar (${weeks.length} hafta)</span><b>${taken}/${mine.length} · ${Math.round(taken / mine.length * 100)}%</b></div>
+        ${Object.entries(reasons).map(([k, n]) => `<div style="display:flex;justify-content:space-between;font-size:12px;padding:3px 0;"><span style="color:var(--text2);">${esc(VIDEO_REASONS[k] || k)}</span><b>${n}</b></div>`).join('')}`;
     }
 
     async function statsOpenTest(id) {
@@ -7236,6 +7724,13 @@
           return { 'Sana': t.test_date, 'Test': t.title, 'O\'quvchi': c.nameById[x.member_id] || '', 'Savollar soni': t.total_questions, 'To\'g\'ri': x.correct, 'Foiz (%)': testPct(x.correct, t.total_questions) };
         }).sort((a, b) => a['Sana'].localeCompare(b['Sana'])), 'Testlar');
         add(c.periodEx.map(x => ({ 'Sana': repFmtDateTime(x.exchanged_at), 'O\'quvchi': c.nameById[x.member_id] || '', 'Coin': x.amount, 'Kim': x.exchanged_by || '' })), 'Almashtirish');
+        add(c.weeklyRows.map(w => ({
+          'Hafta': `${repFmtShort(w.week_start)} – ${repFmtShort(repDateAdd(w.week_start, 6))}`, 'O\'quvchilar': w.students,
+          'Qoldirilgan darslar': w.missed_lessons, 'Qoldirganlar': w.missed_students, 'Bajarilmagan H/W': w.hw_not_done, 'H/W bajarmaganlar': w.hw_students,
+          'Sinovga kelgan': w.trial_came, 'Ushlab qolindi': w.retained, 'Ketganlar': w.left_count, 'Ketish sababi': w.left_reasons || '',
+          'Muzlatilgan': w.frozen_count, 'Muzlatish sababi': w.frozen_reasons || '', 'Qaytgan': w.returned, 'Qo\'shimcha darslar': w.extra_lessons,
+          'Dars rejasi': w.plan_topic || '', 'Reja bajarildimi': w.plan_done ? WK_PLAN[w.plan_done] : ''
+        })), 'Haftalik');
         add(c.parentRows.slice().sort((a, b) => a.called_at.localeCompare(b.called_at)).map(x => ({
           'Sana va vaqt': repFmtDateTime(x.called_at), 'O\'quvchi': c.nameById[x.member_id] || '', 'Telefon': phoneFmt(x.phone || ''),
           'Holati': PARENT_STATUS[x.status]?.label || x.status, 'Izoh': x.note || '', 'Kim': x.created_by || '' })), 'Ota-onalar');
