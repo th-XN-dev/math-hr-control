@@ -1253,6 +1253,35 @@
 
     .dark .test-3 { color: #1a1500; }
 
+    /* Dashboard */
+    #page-dashboard .page-content { max-width: 1200px; }
+    .dash-filters { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin-bottom: 14px; }
+    .dash-filters select, .dash-filters input { padding: 9px 10px; border-radius: 10px; border: 1px solid var(--line); background: var(--card); color: var(--text); font-family: 'Manrope', sans-serif; font-size: 13px; max-width: 100%; }
+    .dash-range { font-size: 11px; color: var(--text3); margin-left: auto; }
+    .dash-kpis { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 10px; margin-bottom: 12px; }
+    .dash-kpi { background: var(--card); border: 1px solid var(--line); border-radius: 14px; padding: 12px 14px; }
+    .dk-l { font-size: 11px; color: var(--text2); font-weight: 600; }
+    .dk-v { font-family: 'Sora', sans-serif; font-size: 24px; font-weight: 700; margin: 2px 0; }
+    .dk-s { font-size: 11px; color: var(--text3); }
+    .dd { font-weight: 700; } .dd-up { color: var(--accent2); } .dd-down { color: var(--red); } .dd-flat { color: var(--text3); font-weight: 600; }
+    .dash-grid { display: grid; grid-template-columns: 1fr; gap: 12px; }
+    @media (min-width: 900px) { .dash-grid { grid-template-columns: 1.4fr 1fr; } .dash-grid .dash-wide { grid-row: span 1; } }
+    .dash-card { background: var(--card); border: 1px solid var(--line); border-radius: 16px; padding: 14px 16px; min-width: 0; }
+    .dash-ct { font-size: 13px; font-weight: 800; margin-bottom: 10px; }
+    .dash-chart { position: relative; height: 240px; }
+    .dash-alerts { display: flex; flex-direction: column; gap: 6px; max-height: 240px; overflow-y: auto; }
+    .da { font-size: 12px; display: flex; gap: 8px; padding: 7px 9px; border-radius: 9px; background: var(--bg3); line-height: 1.4; }
+    .da-danger { background: color-mix(in srgb, var(--red) 9%, transparent); }
+    .da-warn { background: color-mix(in srgb, var(--yellow) 12%, transparent); }
+    .dash-table th { cursor: pointer; user-select: none; }
+    .dash-table th.on { color: var(--accent2); }
+    .dash-score { display: inline-block; min-width: 34px; padding: 3px 6px; border-radius: 7px; font-weight: 800; color: #fff; }
+    .s-hi { background: #1D9E75; } .s-mid { background: #BA7517; } .s-lo { background: #E24B4A; }
+    .dash-detail { padding: 10px 12px; background: var(--bg); }
+    .dash-howto { margin-top: 10px; font-size: 12px; color: var(--text2); }
+    .dash-howto summary { cursor: pointer; font-weight: 700; }
+    .dash-howto div { margin-top: 6px; line-height: 1.6; }
+
     /* Haftalik hisobot (qo'lda) */
     .wk-auto { border: 1px dashed var(--accent); border-radius: 14px; padding: 12px 14px; margin-bottom: 12px; background: var(--accent-soft); }
     .wk-auto-title { font-size: 12px; font-weight: 800; color: var(--accent2); margin-bottom: 8px; }
@@ -1672,6 +1701,11 @@
       /* Davomat ochilganda shell kengroq (2 panelli hisobot uchun) */
       #main-app:has(#page-attendance.active) {
         max-width: 1180px;
+      }
+
+      /* Dashboard ochilganda shell eng keng — grafiklar va jadval uchun */
+      #main-app:has(#page-dashboard.active) {
+        max-width: 1360px;
       }
 
       /* Top bar: contained, sticky instead of full-width fixed */
@@ -2171,6 +2205,11 @@
     </div>
 
     <!-- REPORTS PAGE (Hisobot tizimi) -->
+    <!-- DASHBOARD (admin) -->
+    <div class="page" id="page-dashboard">
+      <div class="page-content dash-page" id="dash-root"></div>
+    </div>
+
     <div class="page" id="page-reports">
       <div class="page-content">
         <!-- Admin: haftalik hisobot topshirilishi nazorati -->
@@ -2335,6 +2374,13 @@
         <span id="nav-lbl-tasks">Vazifalar</span>
         <span id="tasks-badge"
           style="display:none;position:absolute;top:6px;right:50%;margin-right:-22px;background:var(--red);color:#fff;font-size:10px;font-weight:800;min-width:18px;height:18px;border-radius:9px;display:none;align-items:center;justify-content:center;padding:0 5px;">0</span>
+      </div>
+      <div class="nav-item" onclick="showPage('dashboard')" id="nav-dashboard" style="display:none">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+          <rect x="3" y="3" width="7" height="9" rx="1.5" /><rect x="14" y="3" width="7" height="5" rx="1.5" />
+          <rect x="14" y="12" width="7" height="9" rx="1.5" /><rect x="3" y="16" width="7" height="5" rx="1.5" />
+        </svg>
+        <span>Dashboard</span>
       </div>
       <div class="nav-item" onclick="showPage('reports')" id="nav-reports" style="display:none">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
@@ -2805,7 +2851,7 @@
     // ============================================================
     // STATE
     // ============================================================
-    const APP_VERSION = 'upg 25';
+    const APP_VERSION = 'upg 26';
     let currentUser = null;
     let teachers = [], groups = [], staffList = [], branches = [], tasks = [], attendances = [], admins = [];
     let selectedCIType = 'checkin', selectedTaskType = 'task';
@@ -3174,6 +3220,7 @@
       if (isStaff) {
         // Xodim (o'qituvchi) faqat: Davomatim + Vazifalar + Hisobot + Sozlamalar
         document.getElementById('nav-myattend').style.display = '';
+        document.getElementById('nav-dashboard').style.display = 'none';
         document.getElementById('nav-attendance').style.display = 'none';
         document.getElementById('nav-admin').style.display = 'none';
         document.getElementById('nav-tasks').style.display = '';
@@ -3225,13 +3272,14 @@
       const navEl = document.getElementById('nav-' + page);
       if (pageEl) pageEl.classList.add('active');
       if (navEl) navEl.classList.add('active');
-      const titles = { myattend: t('attend'), attendance: t('attend'), tasks: t('tasks'), reports: t('reports'), admin: t('mgmt'), settings: t('settings') };
+      const titles = { myattend: t('attend'), attendance: t('attend'), tasks: t('tasks'), reports: t('reports'), admin: t('mgmt'), settings: t('settings'), dashboard: 'Dashboard' };
       const titleEl = document.getElementById('page-title');
       if (titleEl) titleEl.textContent = titles[page] || '';
       if (page === 'myattend') refreshMyAttendance();
       if (page === 'attendance') { loadAttendance(); loadLate(); }
       if (page === 'tasks') { renderTasks(); renderMyLates(); markTasksSeen(); }
       if (page === 'reports') { initReports(); }
+      if (page === 'dashboard') { renderDashboard(); }
       if (page === 'admin') { renderStaff(); renderBranches(); renderAdmins(); }
     }
 
@@ -3251,9 +3299,10 @@
       document.getElementById('btn-add-staff').style.display = can('add_staff') ? '' : 'none';
       document.getElementById('btn-checkin-manual').style.display = can('attendance_mark') ? '' : 'none';
       document.getElementById('nav-reports').style.display = can('reports') ? '' : 'none';
+      document.getElementById('nav-dashboard').style.display = can('reports') ? '' : 'none';
       // Ochiq sahifa vakolati olib qo'yilgan bo'lsa — Davomatga qaytamiz
       const active = document.querySelector('.page.active');
-      if (active && active.id === 'page-reports' && !can('reports')) showPage('attendance');
+      if (active && (active.id === 'page-reports' || active.id === 'page-dashboard') && !can('reports')) showPage('attendance');
     }
 
     async function refreshAdminSelf() {
@@ -7469,6 +7518,368 @@
           ${missing.map(g => `<div class="dl-row"><b>${esc(g.name)}</b>${g.teacher_name ? ' — ' + esc(g.teacher_name) : ''}</div>`).join('')}
         </details>`
         : `<div class="deadline-box ok">✅ O'tgan hafta (${wkLabel(prev)}) hisobotlari to'liq topshirilgan · bu hafta: ${dCur.size}/${groups.length}</div>`;
+    }
+
+    // ================================================================
+    // DASHBOARD — admin uchun umumiy statistika (barcha o'qituvchilar va guruhlar)
+    // Yangi ma'lumot kiritilmaydi: test, video, coin, haftalik hisobot, ota-onalar,
+    // xodim davomati va vazifalar bazadagi mavjud yozuvlardan yig'iladi.
+    // ================================================================
+    const CHART_JS_URL = 'https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.js';
+    const CHART_JS_SRI = 'sha384-dug+JxfBvklEQdJ4AYuBBAIScUz0bVN73xpy273gcAwHjb3qI0fXmuYNaNfdyYJG';
+    // Umumiy ball: komponentlar og'irligi (ma'lumoti yo'q komponent chiqarilib, qolganlari qayta taqsimlanadi)
+    const DASH_WEIGHTS = [
+      ['test',    25, 'Test natijasi'],
+      ['video',   15, 'Haftalik video'],
+      ['attend',  15, 'O\'quvchilar davomati'],
+      ['hw',      10, 'Uy vazifasi'],
+      ['reports', 15, 'Haftalik hisobot topshirish'],
+      ['parent',  10, 'Ota-onalar bilan aloqa'],
+      ['punct',    5, 'O\'z vaqtida kelish'],
+      ['tasks',    5, 'Vazifalarni bajarish']
+    ];
+    const DASH = { preset: 'month', from: null, to: null, branch: '', teacher: '', group: '', sort: 'score', dir: -1, data: null, charts: [], open: null };
+    let chartJsPromise = null;
+
+    function loadChartJs() {
+      if (window.Chart) return Promise.resolve(window.Chart);
+      if (!chartJsPromise) chartJsPromise = new Promise((resolve, reject) => {
+        const sc = document.createElement('script');
+        sc.src = CHART_JS_URL; sc.integrity = CHART_JS_SRI; sc.crossOrigin = 'anonymous';
+        sc.onload = () => resolve(window.Chart);
+        sc.onerror = () => { chartJsPromise = null; reject(new Error('Chart.js yuklanmadi')); };
+        document.head.appendChild(sc);
+      });
+      return chartJsPromise;
+    }
+    function canDashboard() { return can('reports') && currentUser && (currentUser.role === 'admin' || currentUser.role === 'superadmin'); }
+
+    // ---- Davrlar ----
+    function dashRange() {
+      const today = repToday(), ws = repWeekStart(today);
+      const mStart = d => d.slice(0, 7) + '-01';
+      const mEnd = d => { const { y, m } = repParse(d); return new Date(Date.UTC(y, m, 0)).toISOString().slice(0, 10); };
+      let from, to;
+      switch (DASH.preset) {
+        case 'week': from = ws; to = today; break;
+        case 'prevweek': from = repDateAdd(ws, -7); to = repDateAdd(ws, -1); break;
+        case 'prevmonth': { const p = repDateAdd(mStart(today), -1); from = mStart(p); to = mEnd(p); break; }
+        case '30d': from = repDateAdd(today, -29); to = today; break;
+        case 'custom': from = DASH.from || mStart(today); to = DASH.to || today; break;
+        default: from = mStart(today); to = today;
+      }
+      if (to > today) to = today;
+      if (from > to) from = to;
+      const days = Math.round((Date.parse(to) - Date.parse(from)) / 864e5) + 1;
+      return { from, to, pfrom: repDateAdd(from, -days), pto: repDateAdd(from, -1), days };
+    }
+    const tashIso = (d, end) => new Date(`${end ? repDateAdd(d, 1) : d}T00:00:00+05:00`).toISOString();
+
+    // ---- Ma'lumotlarni yuklash (joriy + oldingi davr + 8 haftalik trend) ----
+    async function dashLoad() {
+      const r = dashRange();
+      const trendStart = repDateAdd(repWeekStart(r.to), -7 * 7);
+      const min = [r.pfrom, trendStart].sort()[0], max = r.to;
+      const soft = p => p.catch(e => { if (repIsMissingTable(e)) return []; throw e; });
+      const chunked = async (ids, fn) => { const out = []; for (let i = 0; i < ids.length; i += 100) out.push(...await fn(ids.slice(i, i + 100))); return out; };
+      const [groups, members, tests, videoW, weekly, calls, coins, att, tasks] = await Promise.all([
+        repFetchAll(() => sb.from('reports_groups').select('*').eq('archived', false).order('created_at')),
+        repFetchAll(() => sb.from('reports_members').select('*').eq('active', true).order('id')),
+        soft(repFetchAll(() => sb.from('reports_tests').select('id, group_id, test_date, total_questions').gte('test_date', min).lte('test_date', max).order('id'))),
+        soft(repFetchAll(() => sb.from('reports_video_weekly').select('group_id, member_id, week_start, taken').gte('week_start', repWeekStart(min)).lte('week_start', max).order('id'))),
+        soft(repFetchAll(() => sb.from('reports_weekly').select('*').gte('week_start', repWeekStart(min)).lte('week_start', max).order('id'))),
+        soft(repFetchAll(() => sb.from('reports_parent_calls').select('group_id, member_id, status, called_at').gte('called_at', tashIso(min)).lt('called_at', tashIso(max, true)).order('id'))),
+        soft(repFetchAll(() => sb.from('reports_coin').select('group_id, lesson_date, coins').gte('lesson_date', min).lte('lesson_date', max).order('id'))),
+        soft(repFetchAll(() => sb.from('attendance').select('staff_id, time, late_minutes').eq('type', 'checkin').gte('time', tashIso(min)).lt('time', tashIso(max, true)).order('time'))),
+        soft(repFetchAll(() => sb.from('tasks').select('assigned_to, done, deadline, created_at, type').gte('created_at', tashIso(min)).lt('created_at', tashIso(max, true)).order('created_at')))
+      ]);
+      const results = tests.length ? await soft(chunked(tests.map(t => t.id), ids => repFetchAll(() => sb.from('reports_test_results').select('test_id, member_id, correct').in('test_id', ids).order('id')))) : [];
+      return { r, groups, members, tests, results, videoW, weekly, calls, coins, att, tasks, trendStart };
+    }
+
+    // ---- Ko'rsatkichlar: guruhlar va xodimlar to'plami uchun [a..b] davrda ----
+    function dashMetrics(D, groupIds, staffIds, a, b) {
+      const G = new Set(groupIds), S = new Set(staffIds);
+      const inD = d => d >= a && d <= b;
+      const students = D.members.filter(m => G.has(m.group_id) && !['frozen', 'left'].includes(m.status)).length;
+      const T = {}; D.tests.filter(t => G.has(t.group_id) && inD(t.test_date)).forEach(t => { T[t.id] = t.total_questions; });
+      const R = D.results.filter(x => T[x.test_id] != null);
+      const q = R.reduce((s, x) => s + T[x.test_id], 0);
+      const V = D.videoW.filter(v => G.has(v.group_id) && inD(v.week_start));
+      // Haftalik hisobot: hafta boshi davr ichida bo'lganlar
+      const W = D.weekly.filter(w => G.has(w.group_id) && w.week_start >= repWeekStart(a) && w.week_start <= b);
+      const wSum = k => W.reduce((s, w) => s + (w[k] || 0), 0);
+      const wStud = wSum('students');
+      // Kutilgan hisobotlar: davrdagi TUGAGAN haftalar × guruhlar
+      const lastDone = repDateAdd(repWeekStart(repToday()), -1);
+      let expWeeks = 0; for (let w = repWeekStart(a); w <= b; w = repDateAdd(w, 7)) if (repDateAdd(w, 6) <= lastDone) expWeeks++;
+      const filledDone = W.filter(w => repDateAdd(w.week_start, 6) <= lastDone).length;
+      const C = D.calls.filter(c => G.has(c.group_id) && inD(tashDate(c.called_at)));
+      const talkedMembers = new Set(C.filter(c => c.status === 'talked').map(c => c.member_id)).size;
+      const A = D.att.filter(x => S.has(x.staff_id) && inD(tashDate(x.time)));
+      const late = A.filter(x => (x.late_minutes || 0) > 0);
+      const K = D.tasks.filter(x => S.has(x.assigned_to) && (x.type || 'task') === 'task' && inD(tashDate(x.created_at)));
+      const pct = (n, d) => d ? Math.round(n / d * 1000) / 10 : null;
+      const m = {
+        groups: groupIds.length, students,
+        testPct: pct(R.reduce((s, x) => s + (x.correct || 0), 0), q), tests: Object.keys(T).length,
+        videoPct: pct(V.filter(v => v.taken).length, V.length), videoRows: V.length,
+        missPct: pct(wSum('missed_students'), wStud), hwPct: pct(wSum('hw_students'), wStud),
+        missedLessons: wSum('missed_lessons'), trial: wSum('trial_came'), retained: wSum('retained'),
+        left: wSum('left_count'), frozen: wSum('frozen_count'), returned: wSum('returned'),
+        leftReasons: W.map(w => w.left_reasons).filter(Boolean), frozenReasons: W.map(w => w.frozen_reasons).filter(Boolean),
+        reportsFilled: filledDone, reportsExpected: expWeeks * groupIds.length, weeklyRows: W.length,
+        parentPct: students ? pct(talkedMembers, students) : null, talked: talkedMembers,
+        coins: D.coins.filter(c => G.has(c.group_id) && inD(c.lesson_date)).reduce((s, c) => s + (c.coins || 0), 0),
+        checkins: A.length, lates: late.length, lateMin: late.reduce((s, x) => s + x.late_minutes, 0),
+        tasks: K.length, tasksDone: K.filter(x => x.done).length,
+        tasksOverdue: K.filter(x => !x.done && x.deadline && new Date(x.deadline) < new Date()).length
+      };
+      m.convPct = pct(m.retained, m.trial);
+      m.reportsPct = pct(m.reportsFilled, m.reportsExpected);
+      // Ball komponentlari (0–100). Ma'lumoti yo'q komponent — null
+      const comp = {
+        test: m.testPct, video: m.videoPct,
+        attend: m.missPct == null ? null : 100 - m.missPct, hw: m.hwPct == null ? null : 100 - m.hwPct,
+        reports: m.reportsPct, parent: m.parentPct,
+        punct: m.checkins ? 100 - pct(m.lates, m.checkins) : null,
+        tasks: m.tasks ? pct(m.tasksDone, m.tasks) : null
+      };
+      let wsum = 0, acc = 0;
+      DASH_WEIGHTS.forEach(([k, w]) => { if (comp[k] != null) { wsum += w; acc += w * Math.max(0, Math.min(100, comp[k])); } });
+      m.comp = comp;
+      m.score = wsum ? Math.round(acc / wsum) : null;
+      m.scoreCoverage = wsum; // ball nechta foiz og'irlik asosida hisoblangani
+      return m;
+    }
+
+    // ---- Filtrlangan ko'lam ----
+    function dashScope(D) {
+      const staffById = {}; staffList.forEach(s => { staffById[s.id] = s; });
+      let groups = D.groups;
+      if (DASH.branch) groups = groups.filter(g => staffById[g.teacher_id]?.branch_id === DASH.branch);
+      if (DASH.teacher) groups = groups.filter(g => g.teacher_id === DASH.teacher);
+      if (DASH.group) groups = groups.filter(g => g.id === DASH.group);
+      const teacherIds = [...new Set(groups.map(g => g.teacher_id).filter(Boolean))];
+      return { groups, teacherIds, staffById };
+    }
+
+    async function renderDashboard() {
+      const root = document.getElementById('dash-root');
+      if (!canDashboard()) { root.innerHTML = `<div class="empty"><div class="empty-icon">🔒</div><h3>Dashboard uchun vakolat yo'q</h3></div>`; return; }
+      root.innerHTML = dashFiltersHtml(null) + `<div class="empty"><div class="empty-icon">⏳</div><p style="font-size:13px;">Statistika yig'ilmoqda...</p></div>`;
+      const req = Symbol(); DASH._req = req;
+      let D;
+      try { D = await dashLoad(); }
+      catch (e) { if (DASH._req === req) root.innerHTML = dashFiltersHtml(null) + repErrorBox('Statistika yuklanmadi', e); return; }
+      if (DASH._req !== req) return;
+      DASH.data = D;
+      dashDraw();
+    }
+
+    function dashFiltersHtml(D) {
+      const presets = [['week', 'Bu hafta'], ['prevweek', 'O\'tgan hafta'], ['month', 'Bu oy'], ['prevmonth', 'O\'tgan oy'], ['30d', 'Oxirgi 30 kun'], ['custom', 'Oraliq...']];
+      const groups = D ? D.groups : [];
+      const teachers = [...new Set(groups.map(g => g.teacher_id).filter(Boolean))].map(id => staffList.find(s => s.id === id)).filter(Boolean);
+      const r = dashRange();
+      const opt = (v, l, cur) => `<option value="${esc(v)}" ${v === cur ? 'selected' : ''}>${esc(l)}</option>`;
+      return `<div class="dash-filters">
+        <select onchange="dashSet('preset', this.value)" aria-label="Davr">${presets.map(([k, l]) => opt(k, l, DASH.preset)).join('')}</select>
+        ${DASH.preset === 'custom' ? `<input type="date" value="${r.from}" max="${repToday()}" onchange="dashSet('from', this.value)" aria-label="Boshlanish">
+          <input type="date" value="${r.to}" max="${repToday()}" onchange="dashSet('to', this.value)" aria-label="Tugash">` : ''}
+        <select onchange="dashSet('branch', this.value)" aria-label="Filial">${opt('', 'Barcha filiallar', DASH.branch)}${branches.map(b => opt(b.id, b.name, DASH.branch)).join('')}</select>
+        <select onchange="dashSet('teacher', this.value)" aria-label="O'qituvchi">${opt('', 'Barcha o\'qituvchilar', DASH.teacher)}${teachers.map(s => opt(s.id, s.name, DASH.teacher)).join('')}</select>
+        <select onchange="dashSet('group', this.value)" aria-label="Guruh">${opt('', 'Barcha guruhlar', DASH.group)}${groups.filter(g => !DASH.teacher || g.teacher_id === DASH.teacher).map(g => opt(g.id, g.name, DASH.group)).join('')}</select>
+        <span class="dash-range">${repFmtShort(r.from)} – ${repFmtShort(r.to)} · solishtirish: ${repFmtShort(r.pfrom).slice(0, 5)}–${repFmtShort(r.pto).slice(0, 5)}</span>
+      </div>`;
+    }
+    function dashSet(k, v) {
+      if (k === 'from' || k === 'to') { if (!repIsDate(v)) return; DASH.preset = 'custom'; }
+      DASH[k] = v;
+      if (k === 'teacher') DASH.group = '';
+      if (k === 'preset' && v === 'custom' && !DASH.from) { const r = dashRange(); DASH.from = r.from; DASH.to = r.to; }
+      DASH.open = null;
+      if (['preset', 'from', 'to'].includes(k)) renderDashboard(); else dashDraw(); // filial/o'qituvchi/guruh — qayta yuklash shart emas
+    }
+
+    function dashDelta(cur, prev, unit = '%', invert = false) {
+      if (cur == null || prev == null) return '<span class="dd dd-flat">—</span>';
+      const d = Math.round((cur - prev) * 10) / 10;
+      if (Math.abs(d) < 0.5) return '<span class="dd dd-flat">≈ oldingidek</span>';
+      const good = invert ? d < 0 : d > 0;
+      return `<span class="dd ${good ? 'dd-up' : 'dd-down'}">${d > 0 ? '▲' : '▼'} ${Math.abs(d)}${unit}</span>`;
+    }
+    const fmtPct = v => v == null ? '—' : `${Math.round(v)}%`;
+
+    function dashDraw() {
+      const D = DASH.data; if (!D) return;
+      const root = document.getElementById('dash-root');
+      const { groups, teacherIds, staffById } = dashScope(D);
+      const r = D.r;
+      const gIds = groups.map(g => g.id);
+      const cur = dashMetrics(D, gIds, teacherIds, r.from, r.to);
+      const prev = dashMetrics(D, gIds, teacherIds, r.pfrom, r.pto);
+
+      // O'qituvchilar
+      const rows = teacherIds.map(id => {
+        const tg = groups.filter(g => g.teacher_id === id);
+        const m = dashMetrics(D, tg.map(g => g.id), [id], r.from, r.to);
+        const p = dashMetrics(D, tg.map(g => g.id), [id], r.pfrom, r.pto);
+        return { id, name: staffById[id]?.name || tg[0]?.teacher_name || '—', groups: tg, m, p };
+      });
+      const sortKey = { score: x => x.m.score, name: x => x.name, students: x => x.m.students, test: x => x.m.testPct, video: x => x.m.videoPct,
+        miss: x => x.m.missPct, hw: x => x.m.hwPct, parent: x => x.m.parentPct, reports: x => x.m.reportsPct, lates: x => x.m.lates, tasks: x => (x.m.tasks ? x.m.tasksDone / x.m.tasks : null) }[DASH.sort] || (x => x.m.score);
+      rows.sort((a, b) => { const va = sortKey(a), vb = sortKey(b); if (va == null) return 1; if (vb == null) return -1; return (va > vb ? 1 : va < vb ? -1 : 0) * DASH.dir; });
+
+      // Diqqat talab qiladi
+      const alerts = [];
+      const lastWeek = repDateAdd(repWeekStart(repToday()), -7);
+      groups.forEach(g => { if (!D.weekly.some(w => w.group_id === g.id && w.week_start === lastWeek)) alerts.push(['danger', '📋', `${g.name} — o'tgan hafta (${wkLabel(lastWeek)}) hisoboti topshirilmagan`]); });
+      rows.forEach(x => {
+        if (x.m.testPct != null && x.p.testPct != null && x.m.testPct - x.p.testPct <= -10) alerts.push(['danger', '📉', `${x.name} — test natijasi ${Math.round(x.p.testPct)}% → ${Math.round(x.m.testPct)}%`]);
+        if (x.m.videoPct != null && x.p.videoPct != null && x.m.videoPct - x.p.videoPct <= -10) alerts.push(['warn', '🎥', `${x.name} — video ${Math.round(x.p.videoPct)}% → ${Math.round(x.m.videoPct)}%`]);
+        if (x.m.lates >= 3) alerts.push(['warn', '⏰', `${x.name} — ${x.m.lates} marta kechikkan (${fmtDuration(x.m.lateMin)})`]);
+        if (x.m.tasksOverdue) alerts.push(['warn', '✅', `${x.name} — ${x.m.tasksOverdue} ta vazifa muddati o'tgan`]);
+        if (r.days >= 14 && x.m.parentPct != null && x.m.parentPct < 50) alerts.push(['warn', '📞', `${x.name} — ota-onalar bilan aloqa ${Math.round(x.m.parentPct)}%`]);
+      });
+      if (cur.left > prev.left && cur.left >= 2) alerts.push(['danger', '🚪', `Ketganlar ko'paydi: ${prev.left} → ${cur.left}`]);
+
+      const kpi = (label, val, delta, sub = '') => `<div class="dash-kpi"><div class="dk-l">${label}</div><div class="dk-v">${val}</div><div class="dk-s">${delta}${sub ? ` <span>${sub}</span>` : ''}</div></div>`;
+      const th = (k, l) => `<th onclick="dashSort('${k}')" class="${DASH.sort === k ? 'on' : ''}">${l}${DASH.sort === k ? (DASH.dir < 0 ? ' ▼' : ' ▲') : ''}</th>`;
+      const scoreCell = v => v == null ? '<span class="wk-zero">—</span>' : `<span class="dash-score ${v >= 80 ? 's-hi' : v >= 60 ? 's-mid' : 's-lo'}">${v}</span>`;
+      const tRows = rows.map(x => `
+        <tr onclick="dashToggle('${x.id}')" style="cursor:pointer;" class="${DASH.open === x.id ? 'wk-cur' : ''}">
+          <td class="rep-name-col">${esc(x.name)}</td><td>${scoreCell(x.m.score)}</td><td>${x.m.groups}</td><td>${x.m.students}</td>
+          <td>${fmtPct(x.m.testPct)}</td><td>${fmtPct(x.m.videoPct)}</td><td>${fmtPct(x.m.missPct)}</td><td>${fmtPct(x.m.hwPct)}</td>
+          <td>${fmtPct(x.m.parentPct)}</td><td>${x.m.reportsExpected ? `${x.m.reportsFilled}/${x.m.reportsExpected}` : '—'}</td>
+          <td>${x.m.lates ? `<b style="color:var(--red);">${x.m.lates}</b>` : '0'}</td><td>${x.m.tasks ? `${x.m.tasksDone}/${x.m.tasks}` : '—'}</td>
+        </tr>
+        ${DASH.open === x.id ? `<tr><td colspan="12" style="padding:0;">${dashTeacherDetail(D, x)}</td></tr>` : ''}`).join('');
+
+      root.innerHTML = dashFiltersHtml(D) + `
+        <div class="dash-kpis">
+          ${kpi('Faol o\'quvchilar', cur.students, `<span class="dd dd-flat">${cur.groups} guruh</span>`)}
+          ${kpi('Test o\'rtacha', fmtPct(cur.testPct), dashDelta(cur.testPct, prev.testPct), cur.tests ? `${cur.tests} test` : '')}
+          ${kpi('Haftalik video', fmtPct(cur.videoPct), dashDelta(cur.videoPct, prev.videoPct))}
+          ${kpi('Dars qoldirish', fmtPct(cur.missPct), dashDelta(cur.missPct, prev.missPct, '%', true))}
+          ${kpi('Uy vazifasi bajarmagan', fmtPct(cur.hwPct), dashDelta(cur.hwPct, prev.hwPct, '%', true))}
+          ${kpi('Sinov → qoldi', cur.trial ? fmtPct(cur.convPct) : '—', `<span class="dd dd-flat">${cur.trial} → ${cur.retained}</span>`)}
+          ${kpi('Ketgan / muzlatilgan', `${cur.left} / ${cur.frozen}`, dashDelta(cur.left, prev.left, '', true), cur.returned ? `${cur.returned} qaytdi` : '')}
+          ${kpi('Ota-ona bilan aloqa', fmtPct(cur.parentPct), dashDelta(cur.parentPct, prev.parentPct))}
+          ${kpi('Hisobot topshirildi', cur.reportsExpected ? `${cur.reportsFilled}/${cur.reportsExpected}` : '—', dashDelta(cur.reportsPct, prev.reportsPct))}
+          ${kpi('Xodim kechikishlari', cur.lates, dashDelta(cur.lates, prev.lates, '', true), cur.lateMin ? fmtDuration(cur.lateMin) : '')}
+        </div>
+
+        <div class="dash-grid">
+          <div class="dash-card dash-wide"><div class="dash-ct">📈 Oxirgi 8 hafta trendi</div><div class="dash-chart"><canvas id="dash-trend"></canvas></div></div>
+          <div class="dash-card"><div class="dash-ct">⚠️ Diqqat talab qiladi (${alerts.length})</div>
+            <div class="dash-alerts">${alerts.length ? alerts.slice(0, 12).map(([k, i, tx]) => `<div class="da da-${k}"><span>${i}</span>${esc(tx)}</div>`).join('') + (alerts.length > 12 ? `<div class="da">… yana ${alerts.length - 12} ta</div>` : '') : '<div class="da" style="color:var(--accent2);">✅ Hammasi joyida</div>'}</div></div>
+          <div class="dash-card"><div class="dash-ct">🏆 O'qituvchilar bali</div><div class="dash-chart"><canvas id="dash-score"></canvas></div></div>
+          <div class="dash-card"><div class="dash-ct">🚪 Ketish va muzlatish sabablari</div><div class="dash-chart"><canvas id="dash-reasons"></canvas></div></div>
+        </div>
+
+        <div class="dash-card" style="margin-top:12px;">
+          <div class="dash-ct" style="display:flex;align-items:center;gap:8px;">👩‍🏫 O'qituvchilar kesimida <span style="flex:1"></span>
+            <button class="btn btn-sm btn-secondary" onclick="exportDashboard()">📊 Excel</button></div>
+          <div class="rep-table-wrap"><table class="rep-table wk-table dash-table">
+            <thead><tr>${th('name', 'O\'qituvchi')}${th('score', 'Ball')}<th>Guruh</th>${th('students', 'O\'quvchi')}${th('test', 'Test')}${th('video', 'Video')}
+              ${th('miss', 'Qoldirish')}${th('hw', 'H/W bajarmagan')}${th('parent', 'Ota-ona')}${th('reports', 'Hisobot')}${th('lates', 'Kechikish')}${th('tasks', 'Vazifa')}</tr></thead>
+            <tbody>${tRows || '<tr><td colspan="12" style="color:var(--text3);">Tanlangan filtrda o\'qituvchi yo\'q</td></tr>'}</tbody>
+          </table></div>
+          <details class="dash-howto"><summary>Ball qanday hisoblanadi?</summary>
+            <div>${DASH_WEIGHTS.map(([, w, l]) => `${l} — ${w}%`).join(' · ')}.<br>
+            Davomat va uy vazifasi — "100 − bajarmaganlar %". O'z vaqtida kelish — kechikmagan kelishlar ulushi.
+            Davrda ma'lumoti bo'lmagan ko'rsatkich hisobga olinmaydi, qolganlari mutanosib qayta taqsimlanadi.
+            Ball — yo'nalish ko'rsatkichi: xulosa qilishdan oldin alohida ustunlarni ham ko'ring.</div></details>
+        </div>`;
+      DASH._rows = rows;
+      dashCharts(D, gIds, teacherIds, rows, cur);
+    }
+
+    function dashTeacherDetail(D, x) {
+      const r = D.r;
+      const g = x.groups.map(gr => ({ gr, m: dashMetrics(D, [gr.id], [], r.from, r.to) }));
+      return `<div class="dash-detail">
+        <div style="font-size:12px;color:var(--text2);margin-bottom:6px;">Ball tarkibi: ${DASH_WEIGHTS.map(([k, , l]) => `${l}: <b>${x.m.comp[k] == null ? '—' : Math.round(x.m.comp[k])}</b>`).join(' · ')}</div>
+        <table class="rep-table" style="font-size:12px;"><thead><tr><th class="rep-name-col">Guruh</th><th>O'quvchi</th><th>Test</th><th>Video</th><th>Qoldirish</th><th>H/W</th><th>Ota-ona</th><th>Hisobot</th><th>Coin</th></tr></thead>
+        <tbody>${g.map(({ gr, m }) => `<tr><td class="rep-name-col">${esc(gr.name)}</td><td>${m.students}</td><td>${fmtPct(m.testPct)}</td><td>${fmtPct(m.videoPct)}</td>
+          <td>${fmtPct(m.missPct)}</td><td>${fmtPct(m.hwPct)}</td><td>${fmtPct(m.parentPct)}</td><td>${m.reportsExpected ? `${m.reportsFilled}/${m.reportsExpected}` : '—'}</td><td>${m.coins}</td></tr>`).join('')}</tbody></table>
+      </div>`;
+    }
+    function dashToggle(id) { DASH.open = DASH.open === id ? null : id; dashDraw(); }
+    function dashSort(k) { if (DASH.sort === k) DASH.dir = -DASH.dir; else { DASH.sort = k; DASH.dir = k === 'name' ? 1 : -1; } dashDraw(); }
+
+    async function dashCharts(D, gIds, teacherIds, rows, cur) {
+      DASH.charts.forEach(c => { try { c.destroy(); } catch (_) { } }); DASH.charts = [];
+      let Chart;
+      try { Chart = await loadChartJs(); }
+      catch (e) {
+        document.querySelectorAll('.dash-chart').forEach(el => { el.innerHTML = '<p style="font-size:12px;color:var(--text3);text-align:center;padding:30px 0;">Grafik kutubxonasi yuklanmadi — internetni tekshiring. Raqamlar yuqorida.</p>'; });
+        return;
+      }
+      if (DASH.data !== D || !document.getElementById('dash-trend')) return; // bu orada filtr o'zgargan
+      const css = getComputedStyle(document.body);
+      const txt = css.getPropertyValue('--text2').trim() || '#666', grid = css.getPropertyValue('--line').trim() || '#ddd';
+      Chart.defaults.color = txt; Chart.defaults.font.family = "Manrope, 'Segoe UI', sans-serif"; Chart.defaults.font.size = 11;
+      const base = { responsive: true, maintainAspectRatio: false, animation: { duration: 250 }, plugins: { legend: { labels: { boxWidth: 12 } } } };
+
+      // 1) Trend: oxirgi 8 hafta
+      const weeks = []; for (let w = D.trendStart; w <= repWeekStart(D.r.to); w = repDateAdd(w, 7)) weeks.push(w);
+      const tm = weeks.map(w => dashMetrics(D, gIds, teacherIds, w, repDateAdd(w, 6)));
+      DASH.charts.push(new Chart(document.getElementById('dash-trend'), {
+        type: 'line',
+        data: { labels: weeks.map(w => repFmtShort(w).slice(0, 5)), datasets: [
+          { label: 'Test %', data: tm.map(m => m.testPct), borderColor: '#1D9E75', backgroundColor: '#1D9E75', tension: .3, spanGaps: true },
+          { label: 'Video %', data: tm.map(m => m.videoPct), borderColor: '#7F77DD', backgroundColor: '#7F77DD', tension: .3, spanGaps: true },
+          { label: 'Dars qoldirish %', data: tm.map(m => m.missPct), borderColor: '#D85A30', backgroundColor: '#D85A30', tension: .3, spanGaps: true },
+          { label: 'H/W bajarmagan %', data: tm.map(m => m.hwPct), borderColor: '#BA7517', backgroundColor: '#BA7517', tension: .3, spanGaps: true }
+        ] },
+        options: { ...base, scales: { y: { min: 0, max: 100, grid: { color: grid }, ticks: { callback: v => v + '%' } }, x: { grid: { display: false } } } }
+      }));
+      // 2) O'qituvchilar bali
+      const sc = rows.filter(x => x.m.score != null);
+      DASH.charts.push(new Chart(document.getElementById('dash-score'), {
+        type: 'bar',
+        data: { labels: sc.map(x => x.name), datasets: [{ label: 'Ball', data: sc.map(x => x.m.score),
+          backgroundColor: sc.map(x => x.m.score >= 80 ? '#1D9E75' : x.m.score >= 60 ? '#EF9F27' : '#E24B4A'), borderRadius: 6 }] },
+        options: { ...base, indexAxis: 'y', plugins: { legend: { display: false } }, scales: { x: { min: 0, max: 100, grid: { color: grid } }, y: { grid: { display: false } } } }
+      }));
+      // 3) Sabablar: "Narx, Sport; Kasallik" → alohida sabablar
+      const count = {};
+      const add = (list, pre) => list.forEach(s => s.split(/[,;]+/).map(x => x.trim()).filter(Boolean).forEach(x => { const k = `${pre}: ${x[0].toUpperCase()}${x.slice(1)}`; count[k] = (count[k] || 0) + 1; }));
+      add(cur.leftReasons, 'Ketdi'); add(cur.frozenReasons, 'Muzlatildi');
+      const ent = Object.entries(count).sort((a, b) => b[1] - a[1]).slice(0, 8);
+      const el = document.getElementById('dash-reasons');
+      if (!ent.length) { el.parentElement.innerHTML = '<p style="font-size:12px;color:var(--text3);text-align:center;padding:40px 0;">Bu davrda ketgan yoki muzlatilgan o\'quvchi yo\'q 🎉</p>'; return; }
+      DASH.charts.push(new Chart(el, {
+        type: 'doughnut',
+        data: { labels: ent.map(e => e[0]), datasets: [{ data: ent.map(e => e[1]), backgroundColor: ['#E24B4A', '#D85A30', '#EF9F27', '#7F77DD', '#378ADD', '#1D9E75', '#D4537E', '#888780'], borderWidth: 0 }] },
+        options: { ...base, cutout: '60%', plugins: { legend: { position: 'right', labels: { boxWidth: 10 } } } }
+      }));
+    }
+
+    function exportDashboard() {
+      const D = DASH.data; if (!D || !DASH._rows) return;
+      if (!window.XLSX || !XLSX.utils) { showToast('Excel kutubxonasi yuklanmagan (internetni tekshiring)', 3000); return; }
+      try {
+        const wb = XLSX.utils.book_new();
+        const r = D.r;
+        XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(DASH._rows.map(x => ({
+          'O\'qituvchi': x.name, 'Ball': x.m.score ?? '', 'Guruhlar': x.m.groups, 'O\'quvchilar': x.m.students,
+          'Test %': x.m.testPct ?? '', 'Video %': x.m.videoPct ?? '', 'Dars qoldirish %': x.m.missPct ?? '', 'H/W bajarmagan %': x.m.hwPct ?? '',
+          'Ota-ona aloqa %': x.m.parentPct ?? '', 'Hisobot': x.m.reportsExpected ? `${x.m.reportsFilled}/${x.m.reportsExpected}` : '',
+          'Sinovga kelgan': x.m.trial, 'Ushlab qolindi': x.m.retained, 'Ketgan': x.m.left, 'Muzlatilgan': x.m.frozen,
+          'Kechikishlar': x.m.lates, 'Kechikish (daqiqa)': x.m.lateMin, 'Vazifalar': x.m.tasks ? `${x.m.tasksDone}/${x.m.tasks}` : '', 'Coin': x.m.coins
+        }))), 'O\'qituvchilar');
+        const gRows = [];
+        DASH._rows.forEach(x => x.groups.forEach(g => { const m = dashMetrics(D, [g.id], [], r.from, r.to);
+          gRows.push({ 'Guruh': g.name, 'O\'qituvchi': x.name, 'O\'quvchilar': m.students, 'Test %': m.testPct ?? '', 'Video %': m.videoPct ?? '',
+            'Dars qoldirish %': m.missPct ?? '', 'H/W bajarmagan %': m.hwPct ?? '', 'Ota-ona aloqa %': m.parentPct ?? '',
+            'Hisobot': m.reportsExpected ? `${m.reportsFilled}/${m.reportsExpected}` : '', 'Coin': m.coins }); }));
+        XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(gRows), 'Guruhlar');
+        XLSX.writeFile(wb, repSafeName(`Dashboard_${r.from}_${r.to}`) + '.xlsx');
+        showToast('Excel yuklandi', 1500, 'ok');
+      } catch (e) { showToast('Eksport xatosi: ' + (e.message || ''), 3000); }
     }
 
     // ================================================================
