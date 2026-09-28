@@ -1253,6 +1253,7 @@
 
     .dark .test-3 { color: #1a1500; }
 
+    #cw-amount.bad { border-color: var(--red); }
     /* Dashboard */
     #page-dashboard .page-content { max-width: 1200px; }
     .dash-filters { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin-bottom: 14px; }
@@ -2750,6 +2751,32 @@
     </div>
   </div>
 
+  <!-- HISOBOT: Balansdan coin yechish (admin) -->
+  <div class="modal-overlay" id="modal-coin-withdraw">
+    <div class="modal" style="max-width:420px;">
+      <div class="modal-handle"></div>
+      <div class="modal-title">🎁 Balansdan coin yechish</div>
+      <div style="font-size:14px;font-weight:700;margin:-6px 0 4px;" id="cw-name"></div>
+      <div style="font-size:13px;color:var(--text2);margin-bottom:14px;">Joriy balans: <b id="cw-balance" style="color:var(--text);"></b> coin</div>
+      <div class="inp-group">
+        <label for="cw-amount">Yechiladigan coin *</label>
+        <input type="number" id="cw-amount" inputmode="numeric" min="1" step="1" oninput="cwPreview()"
+          onkeydown="if(event.key==='Enter')coinWithdrawSave()" style="font-size:20px;font-weight:800;text-align:center;">
+        <div class="pill-row" id="cw-quick" style="margin-top:8px;"></div>
+      </div>
+      <div class="rep-note" style="background:var(--bg3);border-color:var(--line);text-align:center;font-size:14px;" id="cw-preview"></div>
+      <div class="inp-group">
+        <label for="cw-note">Nimaga almashtirildi (ixtiyoriy)</label>
+        <input type="text" id="cw-note" maxlength="200" placeholder="Masalan: ruchka, daftar, sovg'a">
+      </div>
+      <div style="display:flex;gap:10px;">
+        <button class="btn btn-secondary" onclick="closeModal('modal-coin-withdraw')" style="flex:1">Bekor</button>
+        <button class="btn btn-primary" onclick="coinWithdrawSave()" style="flex:1">Yechish</button>
+      </div>
+      <div style="font-size:11px;color:var(--text3);margin-top:10px;text-align:center;">Dars coinlari o'chmaydi. Xato bo'lsa — "Almashtirish tarixi"dan bekor qilinadi.</div>
+    </div>
+  </div>
+
   <!-- HISOBOT: Coin almashtirish tarixi (admin) -->
   <div class="modal-overlay" id="modal-coin-ex">
     <div class="modal">
@@ -2851,7 +2878,7 @@
     // ============================================================
     // STATE
     // ============================================================
-    const APP_VERSION = 'upg 26';
+    const APP_VERSION = 'upg 27';
     let currentUser = null;
     let teachers = [], groups = [], staffList = [], branches = [], tasks = [], attendances = [], admins = [];
     let selectedCIType = 'checkin', selectedTaskType = 'task';
@@ -6116,7 +6143,7 @@
     // ================================================================
     // COIN MODULI — dars bo'yicha coin, balans va almashtirish (exchange)
     // Balans = barcha darslardagi coinlar yig'indisi − almashtirilgan coinlar.
-    // "0 ga tenglashtirish" hech narsani o'chirmaydi: reports_coin_exchange
+    // "Coin yechish" hech narsani o'chirmaydi: reports_coin_exchange
     // jadvaliga yozuv qo'shadi, dars coinlari tarixi to'liq saqlanadi.
     // ================================================================
     let coinData = {};        // { member_id: {id, coins} } — tanlangan dars sanasi uchun
@@ -6179,7 +6206,7 @@
           </td>
           <td class="coin-bal-cell">
             <span class="coin-bal${bal < 0 ? ' neg' : ''}" id="coin-b-${m.id}">${bal}</span>
-            ${canExchange ? `<button class="coin-ex-btn" title="Balansni 0 ga tenglashtirish" onclick="coinExchange('${m.id}')">⇄</button>` : ''}
+            ${canExchange ? `<button class="coin-ex-btn" title="Balansdan coin yechish" onclick="coinExchange('${m.id}')">−</button>` : ''}
           </td>
         </tr>`;
       }).join('');
@@ -6281,6 +6308,8 @@
     }
 
     // ---- Almashtirish (faqat admin) ----
+    // ---- Balansdan coin yechish (faqat admin): istalgan miqdor, 1 .. balans ----
+    let cwMember = null, cwBalance = 0;
     async function coinExchange(memberId) {
       if (!repIsAdmin() || REP.exchangeMissing) return;
       const m = REP.members.find(x => x.id === memberId);
@@ -6289,10 +6318,46 @@
       let bal;
       try { bal = coinBalances(await repLoadCoinTotals(REP.groupId))[memberId] || 0; } // serverdagi yangi qiymat
       catch (e) { showToast('Balans tekshirilmadi: ' + (e.message || ''), 3500); return; }
-      if (bal <= 0) { showToast(bal < 0 ? `Balans manfiy (${bal}) — almashtirib bo'lmaydi` : 'Balans 0 — almashtirish uchun coin yo\'q', 3000); return; }
-      if (!await confirmDialog('Coin almashtirildimi?',
-        `${m.student_name}: ${bal} coin almashtirildi deb belgilanadi va balans 0 bo'ladi.\nDars coinlari tarixi o'chmaydi, xato bo'lsa "Almashtirish tarixi"dan bekor qilish mumkin.`)) return;
-      await coinInsertExchanges([{ member_id: memberId, amount: bal }]);
+      if (bal <= 0) { showToast(bal < 0 ? `Balans manfiy (${bal}) — yechib bo'lmaydi` : 'Balans 0 — yechish uchun coin yo\'q', 3000); return; }
+      cwMember = memberId; cwBalance = bal;
+      document.getElementById('cw-name').textContent = m.student_name;
+      document.getElementById('cw-balance').textContent = bal;
+      const inp = document.getElementById('cw-amount');
+      inp.value = bal; inp.max = bal;
+      document.getElementById('cw-note').value = '';
+      // Tezkor tugmalar: balansdan oshmaydiganlari
+      document.getElementById('cw-quick').innerHTML = [10, 20, 50, 100].filter(v => v < bal)
+        .map(v => `<button type="button" class="pill" onclick="cwSet(${v})">${v}</button>`).join('') +
+        `<button type="button" class="pill" onclick="cwSet(${bal})">Hammasi (${bal})</button>`;
+      cwPreview();
+      openModal('modal-coin-withdraw');
+      setTimeout(() => { inp.focus(); inp.select(); }, 250);
+    }
+    function cwSet(v) { document.getElementById('cw-amount').value = v; cwPreview(); }
+    function cwPreview() {
+      const s2 = document.getElementById('cw-amount').value.trim();
+      const n = Number(s2);
+      const el = document.getElementById('cw-preview');
+      const ok = /^\d+$/.test(s2) && n >= 1 && n <= cwBalance;
+      document.getElementById('cw-amount').classList.toggle('bad', !ok && s2 !== '');
+      el.innerHTML = ok
+        ? `${cwBalance} <b style="color:var(--red);">− ${n}</b> = <b>${cwBalance - n}</b> coin qoladi`
+        : `<span style="color:var(--red);">1 dan ${cwBalance} gacha butun son kiriting</span>`;
+      return ok ? n : null;
+    }
+    async function coinWithdrawSave() {
+      if (!repIsAdmin() || !cwMember) return;
+      const n = cwPreview();
+      if (!n) { document.getElementById('cw-amount').focus(); return; }
+      const note = document.getElementById('cw-note').value.trim().slice(0, 200) || null;
+      // Saqlashdan oldin balansni serverdan qayta tekshiramiz (boshqa admin bu orada yechgan bo'lishi mumkin)
+      let bal;
+      try { bal = coinBalances(await repLoadCoinTotals(REP.groupId))[cwMember] || 0; }
+      catch (e) { showToast('Balans tekshirilmadi: ' + (e.message || ''), 3500); return; }
+      if (n > bal) { showToast(`Balans o'zgargan: hozir ${bal} coin. Qayta kiriting.`, 4000); cwBalance = bal; cwPreview(); return; }
+      closeModal('modal-coin-withdraw');
+      await coinInsertExchanges([{ member_id: cwMember, amount: n, note }], `✓ ${n} coin yechildi, ${bal - n} qoldi`);
+      cwMember = null;
     }
 
     async function coinExchangeAll() {
@@ -6306,22 +6371,22 @@
       const sum = list.reduce((s, x) => s + x.amount, 0);
       if (!await confirmDialog('Hammasini 0 ga tenglashtirish',
         `${list.length} ta o'quvchining jami ${sum} coini almashtirildi deb belgilanadi va balanslari 0 bo'ladi.\nDars coinlari tarixi o'chmaydi.`)) return;
-      await coinInsertExchanges(list);
+      await coinInsertExchanges(list, '✓ Balanslar 0 ga tenglashtirildi');
     }
 
-    async function coinInsertExchanges(list) {
+    async function coinInsertExchanges(list, okMsg) {
       const groupId = REP.groupId;
       let ok = false;
       await withLoader('Saqlanmoqda...', async () => {
         // Bitta so'rov = bitta tranzaksiya: yo hammasi yoziladi, yo hech biri
         const { error } = await sb.from('reports_coin_exchange').insert(list.map(x => ({
           group_id: groupId, member_id: x.member_id, amount: x.amount,
-          exchanged_by: currentUser?.name || null
+          note: x.note || null, exchanged_by: currentUser?.name || null
         })));
         if (error) throw error;
         ok = true;
       }).catch(e => showToast('Almashtirish saqlanmadi: ' + (e.message || ''), 4000));
-      if (ok) { showToast('✓ Balans 0 ga tenglashtirildi', 1800, 'ok'); renderCoinPane(); }
+      if (ok) { showToast(okMsg || '✓ Saqlandi', 2200, 'ok'); renderCoinPane(); }
     }
 
     async function openCoinExchangeHistory() {
@@ -6331,13 +6396,14 @@
       openModal('modal-coin-ex');
       try {
         const rows = await repFetchAll(() => sb.from('reports_coin_exchange')
-          .select('id, member_id, amount, exchanged_by, exchanged_at').eq('group_id', REP.groupId).order('id'));
+          .select('id, member_id, amount, note, exchanged_by, exchanged_at').eq('group_id', REP.groupId).order('id'));
         rows.sort((a, b) => (b.exchanged_at || '').localeCompare(a.exchanged_at || ''));
         const nameById = {}; REP.members.forEach(m => { nameById[m.id] = m.student_name; });
         box.innerHTML = rows.length ? rows.map(x => `
           <div class="ex-row">
             <div style="flex:1;min-width:0;">
-              <div style="font-weight:600;font-size:14px;">${esc(nameById[x.member_id] || 'O\'chirilgan o\'quvchi')} — ${x.amount} coin</div>
+              <div style="font-weight:600;font-size:14px;">${esc(nameById[x.member_id] || 'O\'chirilgan o\'quvchi')} <span style="color:var(--red);">−${x.amount}</span> coin</div>
+              ${x.note ? `<div style="font-size:12px;margin-top:2px;">🎁 ${esc(x.note)}</div>` : ''}
               <div style="font-size:12px;color:var(--text2);">${repFmtDateTime(x.exchanged_at)}${x.exchanged_by ? ' • ' + esc(x.exchanged_by) : ''}</div>
             </div>
             <button class="btn btn-sm btn-secondary" onclick="coinUndoExchange('${x.id}')" title="Bekor qilish">↶</button>
