@@ -1391,6 +1391,7 @@
       background: color-mix(in srgb, var(--red) 7%, var(--card));
     }
     .late-row { display: flex; align-items: center; gap: 10px; padding: 9px 0; border-top: 1px solid var(--line); }
+    .early-badge { color: var(--danger-fg) !important; border-color: color-mix(in srgb, var(--danger-fg) 35%, transparent) !important; }
     .late-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--red); flex-shrink: 0; }
     .late-notice-card {
       text-align: left; border-radius: 12px; padding: 12px 14px;
@@ -1899,7 +1900,7 @@
       --border: #e3e7ec;
       --border-strong: #d2d8e0;
       --brand-soft: #edf7f1;
-      --glass-bg: rgba(255, 255, 255, .68);
+      --glass-bg: rgba(255, 255, 255, .76);
       --glass-strong: rgba(255, 255, 255, .82);
       --glass-edge: rgba(255, 255, 255, .85);
       --glass-line: rgba(15, 23, 42, .06);
@@ -1934,7 +1935,7 @@
       --warning-bg: rgba(242, 180, 90, .13);
       --danger-bg: rgba(240, 124, 135, .13);
       --info-bg: rgba(157, 180, 214, .12);
-      --glass-bg: rgba(28, 31, 37, .66);
+      --glass-bg: rgba(28, 31, 37, .74);
       --glass-strong: rgba(26, 29, 34, .84);
       --glass-edge: rgba(255, 255, 255, .06);
       --glass-line: rgba(255, 255, 255, .05);
@@ -1955,6 +1956,7 @@
     body { background: var(--bg-app); }
     body::before {
       content: ''; position: fixed; inset: 0; z-index: -1; pointer-events: none;
+      transform: translateZ(0); will-change: transform; contain: strict; /* o'z qatlami — scrollda repaint yo'q */
       background:
         radial-gradient(900px 620px at -5% -5%, var(--glow-1), transparent 60%),
         radial-gradient(820px 600px at 105% 8%, var(--glow-2), transparent 60%),
@@ -1964,9 +1966,17 @@
     /* Shisha qatlamlar — blur faqat shu yerda (qotib turgan, soni kam) */
     .top-bar, .bottom-nav {
       background: var(--glass-strong);
-      backdrop-filter: saturate(170%) blur(18px);
-      -webkit-backdrop-filter: saturate(170%) blur(18px);
+      backdrop-filter: saturate(160%) blur(14px);
+      -webkit-backdrop-filter: saturate(160%) blur(14px);
       border-color: var(--glass-line);
+      transform: translateZ(0);            /* iOS Safari'da fixed + blur miltillashining oldini oladi */
+      -webkit-backface-visibility: hidden;
+      backface-visibility: hidden;
+    }
+    /* Kompyuterda pastki menyu — chapdagi vertikal panel: markazlash transformi saqlanishi SHART
+       (yuqoridagi translateZ(0) uni bekor qilib, menyuni pastga tushirib yuborgan edi) */
+    @media (min-width: 768px) {
+      .bottom-nav { transform: translateY(-50%) translateZ(0); }
     }
 
     /* Kartalar — oq shisha + yumshoq bo'rtma */
@@ -1975,9 +1985,6 @@
       border: 1px solid var(--glass-edge);
       border-radius: var(--r-card);
       box-shadow: var(--clay-card);
-    }
-    @media (min-width: 1024px) and (hover: hover) {
-      .card, .rep-stat, .dash-card, .dash-kpi { backdrop-filter: blur(10px) saturate(140%); -webkit-backdrop-filter: blur(10px) saturate(140%); }
     }
     .stat-card:active { box-shadow: var(--clay-press); }
     .wk-auto { border-style: solid; }
@@ -2066,12 +2073,12 @@
     #tags-groups input { min-width: 0; }
     .late-box > div:first-child { flex-wrap: wrap; row-gap: 6px; }
     @media (max-width: 767px) {
-      /* Adminda menyuda 6 ta bo'lim sig'maydi — Sozlamalar yuqoridagi avatar orqali ochiladi */
-      body[data-role="admin"] #nav-settings, body[data-role="superadmin"] #nav-settings { display: none !important; }
+      /* Adminda 6 ta bo'lim: yozuvlar ixchamroq, ikonka joyi saqlanadi */
+      body[data-role="admin"] .nav-item span, body[data-role="superadmin"] .nav-item span { font-size: 9.5px; letter-spacing: -.1px; }
       #user-avatar { cursor: pointer; }
     }
     @media (max-width: 359px) {
-      .nav-item span { font-size: 9.5px; }
+      .nav-item span { font-size: 8.5px !important; }
       .top-bar { padding-left: 12px; padding-right: 12px; }
       .page-content { padding-left: 12px; padding-right: 12px; }
     }
@@ -2149,15 +2156,20 @@
   <div class="modal-overlay" id="modal-late-notice">
     <div class="modal" style="max-width:400px;text-align:center;">
       <div class="modal-handle"></div>
-      <div style="font-size:46px;margin-bottom:6px;">⏰</div>
+      <div style="font-size:46px;margin-bottom:6px;" id="late-notice-icon">⏰</div>
       <div class="modal-title" id="late-notice-title" style="text-align:center;color:var(--red);">Kech qoldingiz</div>
       <div style="font-size:13px;color:var(--text2);margin-bottom:12px;" id="late-notice-times"></div>
       <div class="late-notice-card" id="late-notice-card">
         <div style="font-size:12px;font-weight:700;margin-bottom:6px;" id="late-notice-month"></div>
         <p id="late-notice-text" style="font-size:14px;line-height:1.5;margin:0;"></p>
       </div>
-      <div style="font-size:12px;color:var(--text3);margin:12px 0 16px;">Barcha kechikishlaringiz "Vazifalar" bo'limida ko'rinadi.</div>
-      <button class="btn btn-primary btn-full" onclick="closeModal('modal-late-notice')">Tushundim</button>
+      <div class="inp-group" style="text-align:left;margin-top:14px;">
+        <label id="late-notice-label">Kechikish sababi *</label>
+        <div class="pill-row" id="late-notice-reasons"></div>
+        <textarea id="late-notice-other" rows="2" maxlength="300" placeholder="Sababni yozing..." style="display:none;margin-top:8px;width:100%;"></textarea>
+      </div>
+      <div style="font-size:12px;color:var(--text3);margin:4px 0 14px;">Sabab rahbariyat hisobotida ko'rinadi. Barcha kechikishlaringiz "Vazifalar" bo'limida.</div>
+      <button class="btn btn-primary btn-full" id="late-notice-submit" onclick="submitLateNoticeReason()">Yuborish</button>
     </div>
   </div>
 
@@ -2280,7 +2292,7 @@
         <div class="tabs">
           <div class="tab active" onclick="switchAttTab('checkin')" id="att-tab-checkin">Kelish/Ketish</div>
           <div class="tab" onclick="switchAttTab('report')" id="att-tab-report">Hisobot</div>
-          <div class="tab" onclick="switchAttTab('late')" id="att-tab-late">Kechikkan</div>
+          <div class="tab" onclick="switchAttTab('late')" id="att-tab-late">Kech / Erta</div>
         </div>
         <!-- CHECK IN TAB -->
         <div id="att-checkin">
@@ -3111,7 +3123,7 @@
     // ============================================================
     // STATE
     // ============================================================
-    const APP_VERSION = 'upg 30';
+    const APP_VERSION = 'upg 32';
     let currentUser = null;
     let teachers = [], groups = [], staffList = [], branches = [], tasks = [], attendances = [], admins = [];
     let selectedCIType = 'checkin', selectedTaskType = 'task';
@@ -3655,7 +3667,7 @@
       const seen = seenTaskIds();
       const seenL = isStaffUser() ? seenLateIds() : [];
       const unseen = tasks.filter(t => !seen.includes(t.id)).length
-        + (isStaffUser() ? myLatesCurrent.filter(a => !seenL.includes(a.id)).length : 0);
+        + (isStaffUser() ? [...myLatesCurrent, ...myEarlyCurrent].filter(a => !seenL.includes(a.id)).length : 0);
       const badge = document.getElementById('tasks-badge');
       if (!badge) return;
       if (unseen > 0) {
@@ -3698,8 +3710,13 @@
     }
 
     async function loadLate() {
-      const { data } = await sb.from('attendance').select('*').eq('type', 'checkin').order('time', { ascending: false }).limit(100);
-      renderLate(data || []);
+      const [lr, er] = await Promise.all([
+        sb.from('attendance').select('*').eq('type', 'checkin').gt('late_minutes', 0).order('time', { ascending: false }).limit(100),
+        sb.from('attendance').select('*').eq('type', 'checkout').gt('early_leave_minutes', 0).order('time', { ascending: false }).limit(100)
+      ]);
+      // er.error — ustun hali yo'q (migratsiyasiz): faqat kechikishlar ko'rsatiladi
+      const rows = [...(lr.data || []), ...(er.error ? [] : (er.data || []))].sort((a, b) => b.time.localeCompare(a.time));
+      renderLate(rows);
     }
 
     // ============================================================
@@ -3901,6 +3918,7 @@
     const UZ_WEEKDAYS = ['Yakshanba', 'Dushanba', 'Seshanba', 'Chorshanba', 'Payshanba', 'Juma', 'Shanba'];
     let myLatesCurrent = [];       // joriy oy kechikishlari (nishon/badge uchun)
     let myLatesView = [];          // ko'rilayotgan oy
+    let myEarlyCurrent = [], myEarlyView = []; // erta ketishlar (joriy / ko'rilayotgan oy)
     let myLatesMonth = null;       // 'YYYY-MM' — "Vazifalar"da ko'rilayotgan oy
 
     function isStaffUser() { return currentUser && currentUser.role !== 'admin' && currentUser.role !== 'superadmin'; }
@@ -3923,6 +3941,17 @@
       return `${mn[0].toUpperCase() + mn.slice(1)} ${y}`;
     }
 
+    // Erta ketishlar — ustun hali yo'q bo'lsa (migratsiyasiz) bo'sh ro'yxat
+    async function fetchMyEarly(ym) {
+      const r = monthRangeUtc(ym);
+      const { data, error } = await sb.from('attendance')
+        .select('id, time, early_leave_minutes, branch_name, late_reason, late_comment')
+        .eq('staff_id', currentUser.id).eq('type', 'checkout').gt('early_leave_minutes', 0)
+        .gte('time', r.from).lt('time', r.to).order('time', { ascending: false });
+      if (error) { if (/early_leave_minutes/.test(error.message || '')) return []; throw error; }
+      return data || [];
+    }
+
     async function fetchMyLates(ym) {
       const r = monthRangeUtc(ym);
       const { data, error } = await sb.from('attendance')
@@ -3939,11 +3968,12 @@
       if (!isStaffUser()) return;
       try {
         const cur = uzNow().dateStr.slice(0, 7);
-        myLatesCurrent = await fetchMyLates(cur);
-        if (!myLatesMonth || myLatesMonth === cur) { myLatesMonth = cur; myLatesView = myLatesCurrent; }
+        [myLatesCurrent, myEarlyCurrent] = await Promise.all([fetchMyLates(cur), fetchMyEarly(cur)]);
+        if (!myLatesMonth || myLatesMonth === cur) { myLatesMonth = cur; myLatesView = myLatesCurrent; myEarlyView = myEarlyCurrent; }
       } catch (e) { console.warn('loadMyLates:', e); }
       renderMyLates();
       updateTasksBadge();
+      checkPendingLateReason();
     }
 
     async function myLatesChangeMonth(dir) {
@@ -3953,7 +3983,10 @@
       myLatesMonth = next;
       const box = document.getElementById('my-lates');
       if (box) box.style.opacity = '0.5';
-      try { myLatesView = next === cur ? myLatesCurrent : await fetchMyLates(next); }
+      try {
+        if (next === cur) { myLatesView = myLatesCurrent; myEarlyView = myEarlyCurrent; }
+        else [myLatesView, myEarlyView] = await Promise.all([fetchMyLates(next), fetchMyEarly(next)]);
+      }
       catch (e) { showToast('Kechikishlar yuklanmadi: ' + (e.message || ''), 3000); }
       finally { if (box) box.style.opacity = ''; }
       renderMyLates();
@@ -3982,6 +4015,9 @@
             <div style="font-size:12px;color:var(--text2);margin-top:2px;">
               Smena ${minToHHMM(((start % 1440) + 1440) % 1440)} → keldingiz ${minToHHMM(arrive)}${a.branch_name ? ' • ' + esc(a.branch_name) : ''}
             </div>
+            <div style="font-size:12px;margin-top:3px;">${a.late_reason || a.late_comment
+              ? `💬 ${esc(a.late_reason === 'Boshqa' && a.late_comment ? a.late_comment : [a.late_reason, a.late_comment].filter(Boolean).join(' — '))}`
+              : `<span style="color:var(--danger-fg);">Sabab kiritilmagan</span>`}</div>
           </div>
           <span class="late-badge">+${fmtDuration(a.late_minutes)}</span>
         </div>`;
@@ -3990,18 +4026,31 @@
       box.innerHTML = `
         <div class="late-box ${list.length >= LATE_STRICT_COUNT ? 'strict' : ''}">
           <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px;">
-            <span style="font-size:15px;font-weight:800;flex:1;">⏰ Kechikishlarim</span>
+            <span style="font-size:15px;font-weight:800;flex:1;">⏰ Kechikish va erta ketishlarim</span>
             <button class="btn btn-sm btn-secondary" onclick="myLatesChangeMonth(-1)" aria-label="Oldingi oy">‹</button>
             <span style="font-size:13px;font-weight:700;min-width:96px;text-align:center;">${ymLabel(ym)}</span>
             <button class="btn btn-sm btn-secondary" onclick="myLatesChangeMonth(1)" ${ym >= cur ? 'disabled style="opacity:.4"' : ''} aria-label="Keyingi oy">›</button>
           </div>
+          ${myEarlyView.length ? `
+            <div style="font-size:13px;margin:4px 0 6px;"><b>${myEarlyView.length}</b> marta erta ketgansiz, jami <b>${fmtDuration(myEarlyView.reduce((s2, a) => s2 + (a.early_leave_minutes || 0), 0))}</b>.</div>
+            ${myEarlyView.map(a => { const p = uzParts(new Date(a.time));
+              return `<div class="late-row">
+                <div style="flex:1;min-width:0;">
+                  <div style="font-weight:700;font-size:14px;display:flex;align-items:center;gap:6px;">${!seenLateIds().includes(a.id) ? '<span class="late-dot"></span>' : ''}🏃 ${repFmtDate(p.dateStr)}, ${UZ_WEEKDAYS[p.dow]}</div>
+                  <div style="font-size:12px;color:var(--text2);margin-top:2px;">Ketdingiz ${minToHHMM(p.hour * 60 + p.minute)}${a.branch_name ? ' • ' + esc(a.branch_name) : ''}</div>
+                  <div style="font-size:12px;margin-top:3px;">${a.late_reason || a.late_comment
+                    ? `💬 ${esc(a.late_reason === 'Boshqa' && a.late_comment ? a.late_comment : [a.late_reason, a.late_comment].filter(Boolean).join(' — '))}`
+                    : '<span style="color:var(--danger-fg);">Sabab kiritilmagan</span>'}</div>
+                </div>
+                <span class="late-badge early-badge">−${fmtDuration(a.early_leave_minutes)}</span>
+              </div>`; }).join('')}` : ''}
           ${list.length ? `
             <div style="font-size:13px;margin-bottom:6px;">
               <b>${list.length}</b> marta kech qolgansiz, jami <b>${fmtDuration(totalMin)}</b>.
               ${list.length >= LATE_STRICT_COUNT ? '<div style="color:var(--red);font-weight:600;margin-top:4px;">⚠️ Bu ko\'rsatkich rahbariyat hisobotida ko\'rinadi. Iltimos, ish vaqtiga rioya qiling.</div>' : ''}
             </div>
             ${rows}`
-          : `<div style="font-size:13px;color:var(--text2);">✅ ${ym === cur ? 'Bu oyda' : 'Bu oyda ham'} kechikish yo'q — barakalla!</div>`}
+          : (myEarlyView.length ? '' : `<div style="font-size:13px;color:var(--text2);">✅ ${ym === cur ? 'Bu oyda' : 'Bu oyda ham'} kechikish va erta ketish yo'q — barakalla!</div>`)}
         </div>`;
     }
 
@@ -4012,12 +4061,102 @@
     }
     function markLatesSeen() {
       if (!isStaffUser()) return;
-      const ids = [...new Set([...seenLateIds(), ...myLatesCurrent.map(a => a.id)])].slice(-200);
+      const ids = [...new Set([...seenLateIds(), ...myLatesCurrent.map(a => a.id), ...myEarlyCurrent.map(a => a.id)])].slice(-200);
       localStorage.setItem('seenLates_' + currentUser.id, JSON.stringify(ids));
     }
 
     // Kech kelgan zahoti ko'rsatiladigan tanbeh oynasi
-    async function showLateNotice(lateMin, shiftStart, when) {
+    // ---- Kechikish sababi: tanbeh oynasida majburiy tanlanadi (Teglar → "Kechikish sabablari") ----
+    let lateNoticeRowId = null, lateNoticePick = null, noticeMode = 'late';
+    const NOTICE_TAG_KIND = { late: 'late', early: 'early' };
+    function renderLateReasonPills() {
+      const tags = tagsByKind(NOTICE_TAG_KIND[noticeMode]);
+      lateNoticePick = null;
+      document.getElementById('late-notice-reasons').innerHTML =
+        tags.map((tg, i) => `<button type="button" class="pill" data-i="${i}" onclick="pickLateNoticeReason(${i})">${esc(tg.label)}</button>`).join('') +
+        `<button type="button" class="pill" data-i="other" onclick="pickLateNoticeReason('other')">✍️ Boshqa</button>`;
+      const other = document.getElementById('late-notice-other');
+      other.value = ''; other.style.display = 'none';
+    }
+    function pickLateNoticeReason(i) {
+      lateNoticePick = i;
+      document.querySelectorAll('#late-notice-reasons .pill').forEach(b => b.classList.toggle('selected', String(b.dataset.i) === String(i)));
+      const other = document.getElementById('late-notice-other');
+      other.style.display = i === 'other' ? '' : 'none';
+      if (i === 'other') setTimeout(() => other.focus(), 50);
+    }
+    async function submitLateNoticeReason() {
+      if (lateNoticePick === null) { showToast(noticeMode === 'early' ? 'Erta ketish sababini tanlang' : 'Kechikish sababini tanlang', 2500); return; }
+      let reason, comment = null;
+      if (lateNoticePick === 'other') {
+        comment = document.getElementById('late-notice-other').value.trim();
+        if (!comment) { showToast('Sababni yozing', 2500); document.getElementById('late-notice-other').focus(); return; }
+        if (comment.length > 300) { showToast('Sabab 300 belgidan oshmasin'); return; }
+        reason = 'Boshqa';
+      } else {
+        reason = tagsByKind(NOTICE_TAG_KIND[noticeMode])[lateNoticePick]?.label || null;
+        if (!reason) { showToast('Sababni qayta tanlang'); return; }
+      }
+      if (!lateNoticeRowId) { closeModal('modal-late-notice'); return; }
+      const btn = document.getElementById('late-notice-submit');
+      btn.disabled = true; btn.textContent = 'Yuborilmoqda...';
+      const { error } = await sb.from('attendance').update({ late_reason: reason, late_comment: comment })
+        .eq('id', lateNoticeRowId).eq('staff_id', currentUser.id);
+      btn.disabled = false; btn.textContent = 'Yuborish';
+      if (error) { showToast('Sabab saqlanmadi: ' + (error.message || '') + ' — qayta urinib ko\'ring', 4000); return; }
+      closeModal('modal-late-notice');
+      showToast('✓ Sabab yuborildi', 1600, 'ok');
+      const cur = [...myLatesCurrent, ...myEarlyCurrent].find(a => a.id === lateNoticeRowId);
+      if (cur) { cur.late_reason = reason; cur.late_comment = comment; }
+      lateNoticeRowId = null;
+      renderMyLates();
+    }
+    // Sababi kiritilmay qolgan bugungi kechikish (masalan, ilova yopilib qolgan) — keyingi ochilishda so'raladi
+    async function checkPendingLateReason() {
+      if (!isStaffUser() || document.getElementById('modal-late-notice').classList.contains('open')) return;
+      const today = uzNow().dateStr;
+      const noReason = a => tashDate(a.time) === today && !a.late_reason && !a.late_comment;
+      const pending = myLatesCurrent.find(noReason);
+      if (pending) { await showLateNotice(pending.late_minutes, null, new Date(pending.time), pending.id); return; }
+      const pendingEarly = myEarlyCurrent.find(noReason);
+      if (pendingEarly) await showEarlyNotice(pendingEarly.early_leave_minutes, null, new Date(pendingEarly.time), pendingEarly.id);
+    }
+
+    // ---- Erta ketish: bildirishnoma + majburiy sabab (Teglar → "Erta ketish sabablari") ----
+    async function showEarlyNotice(earlyMin, shiftEnd, when, rowId) {
+      noticeMode = 'early';
+      lateNoticeRowId = rowId || null;
+      renderLateReasonPills();
+      const cur = uzNow().dateStr.slice(0, 7);
+      let monthList = [];
+      try { monthList = await fetchMyEarly(cur); myEarlyCurrent = monthList; if (!myLatesMonth || myLatesMonth === cur) { myLatesMonth = cur; myEarlyView = monthList; } }
+      catch (e) { console.warn('early count:', e); }
+      const count = Math.max(1, monthList.length);
+      const totalMin = monthList.reduce((s2, a) => s2 + (a.early_leave_minutes || 0), 0) || earlyMin;
+      const p = uzParts(when);
+      const leftAt = p.hour * 60 + p.minute;
+      document.getElementById('late-notice-icon').textContent = '🏃';
+      document.getElementById('late-notice-title').textContent = `Siz ${fmtDuration(earlyMin)} erta ketdingiz`;
+      document.getElementById('late-notice-times').textContent =
+        `Ish vaqti tugashi: ${shiftEnd || minToHHMM((leftAt + earlyMin) % 1440)}  •  Ketdingiz: ${minToHHMM(leftAt)}`;
+      document.getElementById('late-notice-month').textContent = `Bu oyda: ${count} marta erta ketish, jami ${fmtDuration(totalMin)}`;
+      document.getElementById('late-notice-text').textContent = count >= LATE_STRICT_COUNT
+        ? 'Erta ketishlaringiz rahbariyat hisobotida ko\'rinadi. Iltimos, ish vaqtini to\'liq bajaring.'
+        : 'Belgilangan ish vaqti tugamasdan ketdingiz. Bu davomat hisobotida qayd etildi.';
+      document.getElementById('late-notice-label').textContent = 'Erta ketish sababi *';
+      document.getElementById('late-notice-card').classList.toggle('strict', count >= LATE_STRICT_COUNT);
+      openModal('modal-late-notice');
+      renderMyLates();
+      updateTasksBadge();
+      if ('vibrate' in navigator) { try { navigator.vibrate([120, 60, 120]); } catch (_) { } }
+    }
+
+    async function showLateNotice(lateMin, shiftStart, when, rowId) {
+      noticeMode = 'late';
+      lateNoticeRowId = rowId || null;
+      document.getElementById('late-notice-icon').textContent = '⏰';
+      document.getElementById('late-notice-label').textContent = 'Kechikish sababi *';
+      renderLateReasonPills();
       const cur = uzNow().dateStr.slice(0, 7);
       let monthList = [];
       try { monthList = await fetchMyLates(cur); myLatesCurrent = monthList; if (!myLatesMonth || myLatesMonth === cur) { myLatesMonth = cur; myLatesView = monthList; } }
@@ -4038,7 +4177,7 @@
 
       document.getElementById('late-notice-title').textContent = `Siz ${fmtDuration(lateMin)} kech qoldingiz`;
       document.getElementById('late-notice-times').textContent =
-        `Smena: ${shiftStart || '—'}  •  Keldingiz: ${String(p.hour).padStart(2, '0')}:${String(p.minute).padStart(2, '0')}`;
+        `Smena: ${shiftStart || minToHHMM(((p.hour * 60 + p.minute - lateMin) % 1440 + 1440) % 1440)}  •  Keldingiz: ${String(p.hour).padStart(2, '0')}:${String(p.minute).padStart(2, '0')}`;
       document.getElementById('late-notice-month').textContent =
         `Bu oyda: ${count} marta, jami ${fmtDuration(totalMin)}`;
       const tb = document.getElementById('late-notice-text');
@@ -4293,6 +4432,7 @@
     }
 
     const EARLY_LIMIT_MIN = 60; // smenadan necha daqiqa oldin kelishga ruxsat
+    const EARLY_LEAVE_GRACE_MIN = 0; // smena tugashidan necha daqiqa oldin ketish "erta" hisoblanmaydi (0 — har qanday oldin ketish)
 
     // Bugun qaysi smenalar bor (ish kunlari bo'yicha), boshlanish vaqti bilan tartiblangan
     function todayShiftsFor(dow) {
@@ -4449,12 +4589,34 @@
           }
         }
 
-        // Sabab so'ralmaydi — kech bo'lsa ham jim yoziladi (hisobotda ko'rinadi)
-        let lateReason = null, lateComment = null;
+        // Ketdim: ochiq sessiya qaysi smenaga tegishli bo'lsa, o'sha smena tugashidan oldinmi?
+        let leaveEarlyMin = 0, leaveShiftEnd = null;
+        if (type === 'checkout' && session) {
+          const ci = uzParts(new Date(session.time));
+          const ciMin = ci.hour * 60 + ci.minute;
+          const shifts = todayShiftsFor(ci.dow).filter(sh => sh.end); // faqat tugash vaqti aniq smenalar
+          if (shifts.length) {
+            let chosen = shifts[0];
+            shifts.forEach(sh => { if (Math.abs(ciMin - sh.startMin) < Math.abs(ciMin - chosen.startMin)) chosen = sh; });
+            let end = chosen.endMin, now = hm;
+            if (end <= chosen.startMin) end += 1440;                      // tungi smena (masalan 22:00–06:00)
+            if (ci.dateStr !== local.dateStr || now < chosen.startMin - 60) now += 1440; // yarim tundan keyin
+            if (now < end - EARLY_LEAVE_GRACE_MIN) { leaveEarlyMin = end - now; leaveShiftEnd = chosen.end; }
+          }
+          if (leaveEarlyMin > 0) {
+            const ok = await confirmDialog('Ish vaqti hali tugamagan',
+              `Ish vaqtingiz ${leaveShiftEnd} da tugaydi. Hozir ${minToHHMM(hm)} — ${fmtDuration(leaveEarlyMin)} erta ketyapsiz.\n` +
+              'Erta ketish rahbariyat hisobotida ko\'rinadi. Baribir "Ketdim" qilasizmi?');
+            if (!ok) return; // finally tugmani tiklaydi
+          }
+        }
+
+        // Vaqt DARHOL qayd etiladi; kechikish sababi keyin tanbeh oynasida majburiy so'raladi
+        let lateReason = null, lateComment = null, savedRowId = null;
 
         // 4. Saqlash
         await withLoader(t('save') + '...', async () => {
-          const { error } = await sb.from('attendance').insert([{
+          const { data: savedRow, error } = await sb.from('attendance').insert([{
             staff_id: currentUser.id,
             staff_name: currentUser.name,
             branch_id: chosenBranch.id,
@@ -4462,17 +4624,31 @@
             type,
             time: nowUtc.toISOString(),
             late_minutes: lateMin,
+            ...(leaveEarlyMin > 0 ? { early_leave_minutes: leaveEarlyMin } : {}),
             late_reason: lateReason,
             late_comment: lateComment,
             lat: coords.latitude,
             lng: coords.longitude
-          }]);
-          if (error) throw error;
+          }]).select('id').single();
+          if (error && leaveEarlyMin > 0 && /early_leave_minutes/.test(error.message || '')) {
+            // Migratsiya hali yo'q: ketish vaqti yo'qolmasin — ustunsiz qayta yozamiz
+            const retry = await sb.from('attendance').insert([{ staff_id: currentUser.id, staff_name: currentUser.name,
+              branch_id: chosenBranch.id, branch_name: chosenBranch.name, type, time: nowUtc.toISOString(),
+              late_minutes: 0, lat: coords.latitude, lng: coords.longitude }]).select('id').single();
+            if (retry.error) throw retry.error;
+            savedRowId = retry.data?.id || null;
+          } else {
+            if (error) throw error;
+            savedRowId = savedRow?.id || null;
+          }
         });
 
         // 5. Kech qolgan bo'lsa — tanbeh oynasi, aks holda motivatsion xabar
-        if (type === 'checkin' && lateMin > 0) {
-          try { await showLateNotice(lateMin, lateShiftStart, nowUtc); }
+        if (type === 'checkout' && leaveEarlyMin > 0) {
+          try { await showEarlyNotice(leaveEarlyMin, leaveShiftEnd, nowUtc, savedRowId); }
+          catch (e) { console.warn('earlyNotice:', e); showToast(`🏃 Siz ${fmtDuration(leaveEarlyMin)} erta ketdingiz`, 4000, 'warn'); }
+        } else if (type === 'checkin' && lateMin > 0) {
+          try { await showLateNotice(lateMin, lateShiftStart, nowUtc, savedRowId); }
           catch (e) { console.warn('lateNotice:', e); showToast(`⏰ Siz ${fmtDuration(lateMin)} kech qoldingiz`, 4000, 'warn'); }
         } else {
           motivationalMessage(type, lateMin, earlyMin);
@@ -4756,9 +4932,9 @@
     }
 
     function renderLate(data) {
-      const late = data.filter(a => a.late_minutes > 0);
+      const late = data.filter(a => a.late_minutes > 0 || a.early_leave_minutes > 0);
       const el = document.getElementById('late-list');
-      if (!late.length) { el.innerHTML = `<div class="empty"><div class="empty-icon">✅</div><h3>Kechikkanlar yo'q</h3></div>`; return; }
+      if (!late.length) { el.innerHTML = `<div class="empty"><div class="empty-icon">✅</div><h3>Kechikish va erta ketish yo'q</h3></div>`; return; }
       el.innerHTML = late.map(a => {
         const d = new Date(a.time);
         return `<div class="shift-card">
@@ -4767,7 +4943,9 @@
           <div style="font-weight:700;font-size:14px;">${esc(a.staff_name)}</div>
           <div style="font-size:12px;color:var(--text2);">${esc(a.branch_name || '')} • ${d.toLocaleDateString('uz')} ${d.toLocaleTimeString('uz', { hour: '2-digit', minute: '2-digit' })}</div>
         </div>
-        <span class="late-badge">+${fmtDuration(a.late_minutes)}</span>
+        ${a.type === 'checkout'
+          ? `<span class="late-badge early-badge" title="Erta ketgan">🏃 −${fmtDuration(a.early_leave_minutes)}</span>`
+          : `<span class="late-badge" title="Kech qolgan">+${fmtDuration(a.late_minutes)}</span>`}
       </div>
       ${(a.late_reason || a.late_comment) ? `<div style="margin-top:8px;padding-top:8px;border-top:1px solid var(--glass-border);">
         ${a.late_reason ? `<span class="tag tag-yellow">${esc(a.late_reason)}</span>` : ''}
@@ -5259,6 +5437,7 @@
       { kind: 'parent_note', label: '📞 Ota-ona suhbati izohlari' },
       { kind: 'level', label: '🎓 Talaba darajalari' },
       { kind: 'late', label: '⏰ Kechikish sabablari' },
+      { kind: 'early', label: '🏃 Erta ketish sabablari' },
       { kind: 'frozen', label: '❄️ Muzlatish sabablari' },
       { kind: 'left', label: '🚪 Ketish sabablari' },
       { kind: 'returned', label: '↩️ Qaytish sabablari' },
@@ -7835,7 +8014,7 @@
       ['hw',      10, 'Uy vazifasi'],
       ['reports', 15, 'Haftalik hisobot topshirish'],
       ['parent',  10, 'Ota-onalar bilan aloqa'],
-      ['punct',    5, 'O\'z vaqtida kelish'],
+      ['punct',    5, 'O\'z vaqtida kelish va ketish'],
       ['tasks',    5, 'Vazifalarni bajarish']
     ];
     const DASH = { preset: 'month', from: null, to: null, branch: '', teacher: '', group: '', sort: 'score', dir: -1, data: null, charts: [], open: null };
@@ -7893,8 +8072,11 @@
         soft(repFetchAll(() => sb.from('attendance').select('staff_id, time, late_minutes').eq('type', 'checkin').gte('time', tashIso(min)).lt('time', tashIso(max, true)).order('time'))),
         soft(repFetchAll(() => sb.from('tasks').select('assigned_to, done, deadline, created_at, type').gte('created_at', tashIso(min)).lt('created_at', tashIso(max, true)).order('created_at')))
       ]);
+      // Erta ketishlar — ustun bo'lmasa (migratsiyasiz) bo'sh
+      const early = await repFetchAll(() => sb.from('attendance').select('staff_id, time, early_leave_minutes').eq('type', 'checkout').gt('early_leave_minutes', 0)
+        .gte('time', tashIso(min)).lt('time', tashIso(max, true)).order('time')).catch(() => []);
       const results = tests.length ? await soft(chunked(tests.map(t => t.id), ids => repFetchAll(() => sb.from('reports_test_results').select('test_id, member_id, correct').in('test_id', ids).order('id')))) : [];
-      return { r, groups, members, tests, results, videoW, weekly, calls, coins, att, tasks, trendStart };
+      return { r, groups, members, tests, results, videoW, weekly, calls, coins, att, tasks, early, trendStart };
     }
 
     // ---- Ko'rsatkichlar: guruhlar va xodimlar to'plami uchun [a..b] davrda ----
@@ -7918,6 +8100,7 @@
       const talkedMembers = new Set(C.filter(c => c.status === 'talked').map(c => c.member_id)).size;
       const A = D.att.filter(x => S.has(x.staff_id) && inD(tashDate(x.time)));
       const late = A.filter(x => (x.late_minutes || 0) > 0);
+      const E = (D.early || []).filter(x => S.has(x.staff_id) && inD(tashDate(x.time)));
       const K = D.tasks.filter(x => S.has(x.assigned_to) && (x.type || 'task') === 'task' && inD(tashDate(x.created_at)));
       const pct = (n, d) => d ? Math.round(n / d * 1000) / 10 : null;
       const m = {
@@ -7932,6 +8115,7 @@
         parentPct: students ? pct(talkedMembers, students) : null, talked: talkedMembers,
         coins: D.coins.filter(c => G.has(c.group_id) && inD(c.lesson_date)).reduce((s, c) => s + (c.coins || 0), 0),
         checkins: A.length, lates: late.length, lateMin: late.reduce((s, x) => s + x.late_minutes, 0),
+        earlyLeaves: E.length, earlyMin: E.reduce((s, x) => s + (x.early_leave_minutes || 0), 0),
         tasks: K.length, tasksDone: K.filter(x => x.done).length,
         tasksOverdue: K.filter(x => !x.done && x.deadline && new Date(x.deadline) < new Date()).length
       };
@@ -7942,7 +8126,7 @@
         test: m.testPct, video: m.videoPct,
         attend: m.missPct == null ? null : 100 - m.missPct, hw: m.hwPct == null ? null : 100 - m.hwPct,
         reports: m.reportsPct, parent: m.parentPct,
-        punct: m.checkins ? 100 - pct(m.lates, m.checkins) : null,
+        punct: m.checkins ? Math.max(0, 100 - pct(m.lates + m.earlyLeaves, m.checkins)) : null,
         tasks: m.tasks ? pct(m.tasksDone, m.tasks) : null
       };
       let wsum = 0, acc = 0;
@@ -8039,6 +8223,7 @@
         if (x.m.testPct != null && x.p.testPct != null && x.m.testPct - x.p.testPct <= -10) alerts.push(['danger', '📉', `${x.name} — test natijasi ${Math.round(x.p.testPct)}% → ${Math.round(x.m.testPct)}%`]);
         if (x.m.videoPct != null && x.p.videoPct != null && x.m.videoPct - x.p.videoPct <= -10) alerts.push(['warn', '🎥', `${x.name} — video ${Math.round(x.p.videoPct)}% → ${Math.round(x.m.videoPct)}%`]);
         if (x.m.lates >= 3) alerts.push(['warn', '⏰', `${x.name} — ${x.m.lates} marta kechikkan (${fmtDuration(x.m.lateMin)})`]);
+        if (x.m.earlyLeaves >= 2) alerts.push(['warn', '🏃', `${x.name} — ${x.m.earlyLeaves} marta erta ketgan (${fmtDuration(x.m.earlyMin)})`]);
         if (x.m.tasksOverdue) alerts.push(['warn', '✅', `${x.name} — ${x.m.tasksOverdue} ta vazifa muddati o'tgan`]);
         if (r.days >= 14 && x.m.parentPct != null && x.m.parentPct < 50) alerts.push(['warn', '📞', `${x.name} — ota-onalar bilan aloqa ${Math.round(x.m.parentPct)}%`]);
       });
@@ -8052,7 +8237,7 @@
           <td class="rep-name-col">${esc(x.name)}</td><td>${scoreCell(x.m.score)}</td><td>${x.m.groups}</td><td>${x.m.students}</td>
           <td>${fmtPct(x.m.testPct)}</td><td>${fmtPct(x.m.videoPct)}</td><td>${fmtPct(x.m.missPct)}</td><td>${fmtPct(x.m.hwPct)}</td>
           <td>${fmtPct(x.m.parentPct)}</td><td>${x.m.reportsExpected ? `${x.m.reportsFilled}/${x.m.reportsExpected}` : '—'}</td>
-          <td>${x.m.lates ? `<b style="color:var(--red);">${x.m.lates}</b>` : '0'}</td><td>${x.m.tasks ? `${x.m.tasksDone}/${x.m.tasks}` : '—'}</td>
+          <td>${x.m.lates ? `<b style="color:var(--red);">${x.m.lates}</b>` : '0'}${x.m.earlyLeaves ? ` <small style="color:var(--danger-fg);" title="Erta ketgan">/ 🏃${x.m.earlyLeaves}</small>` : ''}</td><td>${x.m.tasks ? `${x.m.tasksDone}/${x.m.tasks}` : '—'}</td>
         </tr>
         ${DASH.open === x.id ? `<tr><td colspan="12" style="padding:0;">${dashTeacherDetail(D, x)}</td></tr>` : ''}`).join('');
 
@@ -8169,7 +8354,7 @@
           'Test %': x.m.testPct ?? '', 'Video %': x.m.videoPct ?? '', 'Dars qoldirish %': x.m.missPct ?? '', 'H/W bajarmagan %': x.m.hwPct ?? '',
           'Ota-ona aloqa %': x.m.parentPct ?? '', 'Hisobot': x.m.reportsExpected ? `${x.m.reportsFilled}/${x.m.reportsExpected}` : '',
           'Sinovga kelgan': x.m.trial, 'Ushlab qolindi': x.m.retained, 'Ketgan': x.m.left, 'Muzlatilgan': x.m.frozen,
-          'Kechikishlar': x.m.lates, 'Kechikish (daqiqa)': x.m.lateMin, 'Vazifalar': x.m.tasks ? `${x.m.tasksDone}/${x.m.tasks}` : '', 'Coin': x.m.coins
+          'Kechikishlar': x.m.lates, 'Kechikish (daqiqa)': x.m.lateMin, 'Erta ketishlar': x.m.earlyLeaves, 'Erta ketish (daqiqa)': x.m.earlyMin, 'Vazifalar': x.m.tasks ? `${x.m.tasksDone}/${x.m.tasks}` : '', 'Coin': x.m.coins
         }))), 'O\'qituvchilar');
         const gRows = [];
         DASH._rows.forEach(x => x.groups.forEach(g => { const m = dashMetrics(D, [g.id], [], r.from, r.to);
