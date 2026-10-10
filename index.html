@@ -2834,6 +2834,17 @@
         </div>
         <div style="font-size:11px;color:var(--text3);margin-top:6px;">Davomatni ko'rish har bir adminda doim bor.</div>
       </div>
+      <div class="inp-group">
+        <label>Yo'qlama</label>
+        <div class="perm-list">
+          <label class="perm-row"><input type="checkbox" id="adm-self-attend" onchange="toggleAdmAttStaff()">
+            <span><b>Yo'qlamadan o'tadi</b><small>Admin ham "Davomatim" orqali Keldim/Ketdim qiladi (GPS bilan)</small></span></label>
+        </div>
+        <div id="adm-att-staff-wrap" style="display:none;margin-top:8px;">
+          <select id="adm-att-staff"></select>
+          <div style="font-size:11px;color:var(--text3);margin-top:6px;">Smena va filial shu xodim hisobidan olinadi; davomat hisobotlarda shu nom bilan ko'rinadi.</div>
+        </div>
+      </div>
       <div style="display:flex;gap:10px;margin-top:8px;">
         <button class="btn btn-secondary" onclick="closeModal('modal-admin')" style="flex:1">Bekor</button>
         <button class="btn btn-primary" onclick="saveAdmin()" style="flex:1">Saqlash</button>
@@ -3490,8 +3501,7 @@
         document.getElementById('btn-add-task').style.display = 'none';
         try { setupMyAttendance(); } catch (e) { console.warn('setupMyAttendance:', e); }
       } else {
-        // Admin / Super admin — to'liq panel
-        document.getElementById('nav-myattend').style.display = 'none';
+        // Admin / Super admin — to'liq panel (Davomatim — applyAdminPermsUI hal qiladi)
         document.getElementById('nav-attendance').style.display = '';
         document.getElementById('nav-admin').style.display = '';
         document.getElementById('nav-reports').style.display = '';
@@ -3549,6 +3559,7 @@
     // ============================================================
     async function loadAll() {
       await Promise.all([loadTeachers(), loadGroups(), loadStaff(), loadBranches(), loadTasks(), loadAdmins(), loadTags(), refreshAdminSelf()]);
+      if (currentUser && currentUser.role === 'admin') applyAdminPermsUI();
     }
 
     // Admin: o'z yozuvini bazadan qayta o'qish. Superadmin vakolatni o'zgartirsa — darhol kuchga kiradi;
@@ -3561,9 +3572,14 @@
       document.getElementById('btn-checkin-manual').style.display = can('attendance_mark') ? '' : 'none';
       document.getElementById('nav-reports').style.display = can('reports') ? '' : 'none';
       document.getElementById('nav-dashboard').style.display = can('reports') ? '' : 'none';
+      // Yo'qlama: superadmin belgilagan admin ham Keldim/Ketdim qiladi
+      const selfAtt = !!attSelf();
+      document.getElementById('nav-myattend').style.display = selfAtt ? '' : 'none';
+      if (selfAtt) { try { setupMyAttendance(); } catch (e) { console.warn('setupMyAttendance:', e); } }
       // Ochiq sahifa vakolati olib qo'yilgan bo'lsa — Davomatga qaytamiz
       const active = document.querySelector('.page.active');
       if (active && (active.id === 'page-reports' || active.id === 'page-dashboard') && !can('reports')) showPage('attendance');
+      if (active && active.id === 'page-myattend' && !selfAtt) showPage('attendance');
     }
 
     async function refreshAdminSelf() {
@@ -4074,6 +4090,20 @@
     let myClockTimer = null;
     let myTodayRecords = [];
 
+    // Admin uchun superadmin bog'lagan davomat hisobi (xodim id). Belgilanmagan bo'lsa — null.
+    function adminAttStaffId() {
+      if (!currentUser || currentUser.role !== 'admin') return null;
+      const p = currentUser.permissions || {};
+      return p.self_attend === true && p.att_staff_id ? p.att_staff_id : null;
+    }
+    // Davomat qiluvchi shaxs: xodim — o'zi; admin — bog'langan xodim hisobi (smena/filial shundan)
+    function attSelf() {
+      if (!currentUser || currentUser.role === 'superadmin') return null;
+      if (currentUser.role !== 'admin') return currentUser;
+      const sid = adminAttStaffId();
+      return sid ? (staffList.find(s => s.id === sid) || null) : null;
+    }
+
     // O'zbekiston (Tashkent, UTC+5) vaqtini olish
     // Tashkent (Asia/Tashkent, UTC+5) vaqtini ishonchli olish.
     // Qurilma soatining vaqt zonasidan qat'i nazar, har doim Tashkent vaqtini qaytaradi.
@@ -4101,10 +4131,12 @@
     function uzNow() { return uzParts(); }
 
     function setupMyAttendance() {
-      const initials = currentUser.name.split(' ').map(w => w[0]).join('').toUpperCase().slice(0, 2);
+      const me = attSelf();
+      if (!me) return;
+      const initials = me.name.split(' ').map(w => w[0]).join('').toUpperCase().slice(0, 2);
       document.getElementById('my-avatar').textContent = initials;
-      document.getElementById('my-name').textContent = currentUser.name;
-      document.getElementById('my-position').textContent = (currentUser.position || '') + (currentUser.branch_name ? ' • ' + currentUser.branch_name : '');
+      document.getElementById('my-name').textContent = me.name;
+      document.getElementById('my-position').textContent = (me.position || '') + (me.branch_name ? ' • ' + me.branch_name : '');
       if (myClockTimer) clearInterval(myClockTimer);
       tickClock();
       myClockTimer = setInterval(tickClock, 1000);
@@ -4126,6 +4158,8 @@
     }
 
     async function refreshMyAttendance() {
+      const me = attSelf();
+      if (!me) return;
       // Avval unutilgan (eski) sessiyani avtomatik yopamiz
       try { await autoCloseStaleSession(); } catch (e) { console.warn(e); }
       // Bugungi (Tashkent) kun chegarasi. Tashkent UTC+5 (DST yo'q).
@@ -4134,7 +4168,7 @@
       const fromUtc = new Date(`${n.dateStr}T00:00:00+05:00`);
       const toUtc = new Date(fromUtc.getTime() + 24 * 3600 * 1000);
       const { data } = await sb.from('attendance').select('*')
-        .eq('staff_id', currentUser.id)
+        .eq('staff_id', me.id)
         .gte('time', fromUtc.toISOString())
         .lt('time', toUtc.toISOString())
         .order('time', { ascending: true });
@@ -4216,7 +4250,7 @@
     // Berilgan checkin yozuvi uchun smena davomiyligini (daqiqalarда) aniqlash.
     // Checkin vaqtidagi kunга tegishli smenalardан, eng yaqin boshlanишли smena olinади.
     function shiftDurationForCheckin(rec) {
-      let shifts = currentUser.shifts;
+      let shifts = (attSelf() || {}).shifts;
       if (typeof shifts === 'string') { try { shifts = JSON.parse(shifts); } catch (_) { shifts = []; } }
       if (!Array.isArray(shifts)) shifts = [];
       if (!shifts.length) return null; // smenasiz xodim — avtomatik yopilmaydi
@@ -4252,9 +4286,11 @@
     // Smena tugashidan AUTO_CLOSE_GRACE_MIN o'tган bo'lsa — avtomatik Ketdim qo'shadi.
     // Qaytaradi: true (yopildi) yoki false.
     async function autoCloseStaleSession() {
+      const me = attSelf();
+      if (!me) return false;
       // Eng oxirgi yozuvni olamiz (har qanday sanadan)
       const { data: lastArr } = await sb.from('attendance').select('*')
-        .eq('staff_id', currentUser.id)
+        .eq('staff_id', me.id)
         .order('time', { ascending: false })
         .limit(1);
       const last = lastArr && lastArr[0];
@@ -4271,8 +4307,8 @@
       // Avtomatik Ketdim: vaqt = checkin + smena davomiyligi
       const autoOutTime = new Date(expectedOut).toISOString();
       const { error } = await sb.from('attendance').insert([{
-        staff_id: currentUser.id,
-        staff_name: currentUser.name,
+        staff_id: me.id,
+        staff_name: me.name,
         branch_id: last.branch_id || null,
         branch_name: last.branch_name || null,
         type: 'checkout',
@@ -4296,7 +4332,7 @@
 
     // Bugun qaysi smenalar bor (ish kunlari bo'yicha), boshlanish vaqti bilan tartiblangan
     function todayShiftsFor(dow) {
-      let shifts = currentUser.shifts;
+      let shifts = (attSelf() || {}).shifts;
       if (typeof shifts === 'string') { try { shifts = JSON.parse(shifts); } catch (_) { shifts = []; } }
       if (!Array.isArray(shifts)) shifts = [];
       const list = shifts.filter(sh => {
@@ -4340,14 +4376,16 @@
     }
 
     async function myCheck(type) {
+      const me = attSelf();
+      if (!me) { showToast('Davomat hisobi bog\'lanmagan. Superadmin bilan bog\'laning.', 3500); return; }
       // Smena ma'lumotini bazadan yangilaymiz (admin yangilagan bo'lsa, darhol kuchga kirsin).
       // localStorage'dagi eski shifts'ga ishonmaymiz.
       if (type === 'checkin') {
         try {
-          const { data: fresh } = await sb.from('staff').select('shifts').eq('id', currentUser.id).single();
+          const { data: fresh } = await sb.from('staff').select('shifts').eq('id', me.id).single();
           if (fresh && 'shifts' in fresh) {
-            currentUser.shifts = fresh.shifts;
-            localStorage.setItem('session', JSON.stringify(currentUser));
+            me.shifts = fresh.shifts;
+            if (me === currentUser) localStorage.setItem('session', JSON.stringify(currentUser));
           }
         } catch (e) { console.warn('shifts yangilash:', e); }
       }
@@ -4455,8 +4493,8 @@
         // 4. Saqlash
         await withLoader(t('save') + '...', async () => {
           const { error } = await sb.from('attendance').insert([{
-            staff_id: currentUser.id,
-            staff_name: currentUser.name,
+            staff_id: me.id,
+            staff_name: me.name,
             branch_id: chosenBranch.id,
             branch_name: chosenBranch.name,
             type,
@@ -5691,7 +5729,9 @@
       if (!admins.length) { el.innerHTML = `<div class="empty"><div class="empty-icon">👤</div><h3>${t('no_data')}</h3></div>`; return; }
       el.innerHTML = admins.map(a => {
         const perms = a.permissions || {};
-        const chips = ADMIN_PERMS.map(p => `<span class="perm-chip ${perms[p.key] !== false ? 'on' : 'off'}">${p.label}</span>`).join('');
+        const attStaff = perms.self_attend === true ? staffList.find(st => st.id === perms.att_staff_id) : null;
+        const chips = ADMIN_PERMS.map(p => `<span class="perm-chip ${perms[p.key] !== false ? 'on' : 'off'}">${p.label}</span>`).join('')
+          + `<span class="perm-chip ${attStaff ? 'on' : 'off'}"${attStaff ? ` title="Hisob: ${esc(attStaff.name)}"` : ''}>Yo'qlama</span>`;
         const initials = esc((a.name || '?').split(' ').map(w => w[0] || '').join('').toUpperCase().slice(0, 2));
         return `<div class="card" style="display:flex;align-items:center;gap:12px;">
     <div class="avatar" style="width:38px;height:38px;font-size:14px;flex-shrink:0;background:linear-gradient(135deg,#d9992b,#cc4d3f);">${initials}</div>
@@ -5715,6 +5755,15 @@
       const perms = a ? (a.permissions || {}) : ADMIN_PERM_DEFAULTS;
       // Har safar qayta o'rnatiladi — oldingi adminning belgilari "yopishib" qolmaydi
       ADMIN_PERMS.forEach(p => { document.getElementById(p.el).checked = perms[p.key] !== false; });
+      // Yo'qlama — faqat aniq belgilangan bo'lsa (eski yozuvlarda o'chiq)
+      document.getElementById('adm-self-attend').checked = perms.self_attend === true;
+      document.getElementById('adm-att-staff').innerHTML = '<option value="">— Xodim hisobini tanlang —</option>' +
+        staffList.map(st => `<option value="${st.id}">${esc(st.name)}${st.position ? ' — ' + esc(st.position) : ''}</option>`).join('');
+      document.getElementById('adm-att-staff').value = perms.att_staff_id || '';
+      toggleAdmAttStaff();
+    }
+    function toggleAdmAttStaff() {
+      document.getElementById('adm-att-staff-wrap').style.display = document.getElementById('adm-self-attend').checked ? '' : 'none';
     }
     function openAddAdmin() {
       if (currentUser.role !== 'superadmin') return;
@@ -5745,6 +5794,10 @@
       if ((!editing || pass) && pass.trim().length < 4) { showToast('Parol kamida 4 belgi bo\'lsin'); return; }
       const permissions = {};
       ADMIN_PERMS.forEach(p => { permissions[p.key] = document.getElementById(p.el).checked; });
+      permissions.self_attend = document.getElementById('adm-self-attend').checked;
+      const attStaffId = document.getElementById('adm-att-staff').value;
+      if (permissions.self_attend && !attStaffId) { showToast('Yo\'qlama uchun xodim hisobini tanlang (smena shundan olinadi)', 3500); return; }
+      if (permissions.self_attend) permissions.att_staff_id = attStaffId;
 
       let ok = false;
       await withLoader(t('save') + '...', async () => {
